@@ -6,3 +6,5 @@ Tasks:
 > Добавить Д\З
 
 > reboot
+
+> logi !
