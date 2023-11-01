@@ -1,4 +1,6 @@
 ﻿import os
+import psutil
+import platform
 from time import sleep
 
 import telebot
@@ -23,6 +25,47 @@ def status_text(message):
     loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Send status . . .')
     bot.send_chat_action(message.chat.id, action='typing')
 
+def send_message(user_id: int, text: str, i=0):
+    res = db.return_all_user_id()
+    try:
+        if i <= 29:
+            bot.send_message(res[i], text)
+            loging(logger_level='INFO', user_id=f'{user_id}', do=f'Sent: {res[i]}')
+            i += 1
+            send_message(user_id=user_id, text=text, i=i)
+    except telebot.apihelper.ApiException as Error:
+        if Error.result.status_code == 403 or Error.result.status_code == 400:
+            loging(logger_level='WARN', user_id=str(res[i]), do=f'User {res[i]} has blocked the bot!')
+            # db.remove_user_id(user_id=f'{user_id}')
+            i += 1
+            send_message(user_id=user_id, text=text, i=i)
+    except TypeError:
+        sleep(1)
+        bot.send_message(config.admin_id_1, text)
+        loging(logger_level='INFO', user_id=f'{user_id}', do=f'Sent: {config.admin_id_1}')
+        sleep(1)
+        bot.send_message(config.admin_id_2, text)
+        loging(logger_level='INFO', user_id=f'{user_id}', do=f'Sent: {config.admin_id_2}')
+        sleep(1)
+        bot.send_message(config.admin_id_3, text)
+        loging(logger_level='INFO', user_id=f'{user_id}', do=f'Sent: {config.admin_id_3}')
+        loging(logger_level='INFO', user_id=f'{user_id}', do='Mailing is over')
+        bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=types.ReplyKeyboardRemove())
+    else:
+        sleep(2)
+
+# Command
+@bot.message_handler(commands=['schedule'])
+def schedule(message):
+    loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Received \'/schedule\'')
+    status_text(message)
+    bot.send_message(message.chat.id, '⚙️В разработке . . .')
+
+@bot.message_handler(commands=['call_schedule'])
+def call_schedule(message):
+    loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Received \'/call_schedule\'')
+    status_text(message)
+    bot.send_message(message.chat.id, TEXT_call_schedule)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -31,16 +74,15 @@ def start(message):
         status_text(message)
         loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Admin pressed \'/start\'')
         bot.send_message(message.chat.id, f'Для доступа к админ панели введите: \n/{config.commands_admin}')
-        bot.send_message(message.chat.id, text_start, reply_markup=markup_start)
+        bot.send_message(message.chat.id, TEXT_start, reply_markup=markup_start)
     elif db.db_table_bool_return(user_id=message.chat.id) == '(1,)':
         loging(logger_level='INFO', user_id=f'{message.chat.id}', do='User (authenticated) pressed \'/start\'')
         status_text(message)
-        bot.send_message(message.chat.id, text_start, reply_markup=markup_start)
+        bot.send_message(message.chat.id, TEXT_start, reply_markup=markup_start)
     else:
         loging(logger_level='INFO', user_id=f'{message.chat.id}', do='User (unauthenticated) pressed \'/start\'')
         status_text(message)
         bot.send_message(message.chat.id, 'Add the necessary data for the bot to work properly.\n⚙ Send your phone number to continue.', reply_markup=markup_send_nummer)
-
 
 @bot.message_handler(commands=['update_date_db'])
 def update_date_db(message):
@@ -48,6 +90,7 @@ def update_date_db(message):
     status_text(message)
     bot.send_message(message.chat.id, '⚙ Send your phone number to continue.', reply_markup=markup_send_nummer)
 
+# Other
 @bot.message_handler(content_types=['contact'])
 def contact(message):
     if message.contact is not None:
@@ -56,17 +99,38 @@ def contact(message):
         status_text(message)
         bot.send_message(message.chat.id, '✅ Data has been successfully added/updated in the database')
         status_text(message)
-        bot.send_message(message.chat.id, text_start, reply_markup=markup_start)
+        bot.send_message(message.chat.id, TEXT_start, reply_markup=markup_start)
 
+@bot.message_handler(content_types=['photo'])
+def photo(message):
+    if message.chat.id == config.admin_id_1 or message.chat.id == config.user_schedule1 or message.chat.id == config.user_schedule2:
+        loging(logger_level='WARN', user_id=f'{message.chat.id}', do='Received \'[photo]\'')
+        photo = message.photo[-1]
+        file_info = bot.get_file(photo.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        file_path = 'schedule.jpg'
+        loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Start uploading photos . . .')
+        with open(file_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        loging(logger_level='INFO', user_id=message.chat.id, do='Successfully !')
+        bot.reply_to(message.chat.id, '✅ Расписание сохранено!')
+        bot.send_message(message.chat.id, '⚠ Активирована система уведомлений . . .', reply_markup=types.ReplyKeyboardRemove())
+        loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
+        send_message(user_id=message.chat.id, text='⚠ Обновлено расписание.')
+
+# Text
 @bot.message_handler(content_types=['text'])
 def logic(message):
     if message.text == '':
+        loging(logger_level='INFO', user_id=f'{message.chat.id}', do=f'Received \'{message.text}\'')
         status_text(message)
         bot.send_message(message.chat.id, '')
     elif message.text == '':
+        loging(logger_level='INFO', user_id=f'{message.chat.id}', do=f'Received \'{message.text}\'')
         status_text(message)
         bot.send_message(message.chat.id, '')
     elif message.text == '':
+        loging(logger_level='INFO', user_id=f'{message.chat.id}', do=f'Received \'{message.text}\'')
         status_text(message)
         bot.send_message(message.chat.id, '')
         # Admin Panel
@@ -79,6 +143,29 @@ def logic(message):
             status_text(message)
             loging(logger_level='WARN', user_id=f'{message.chat.id}', do='❌ Error: You do not have access to this command ! ❌')
             bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
+    elif message.text == 'Рассылка✉️':
+        if message.chat.id == config.admin_id_1 or message.chat.id == config.admin_id_2 or message.chat.id == config.admin_id_3:
+            def enter_message(message):
+                msg = bot.send_message(message.chat.id, '⚠️ Введите сообщение', reply_markup=types.ReplyKeyboardRemove())
+                bot.register_next_step_handler(msg, start_mailing)
+
+            def start_mailing(message):
+                global input_text_mailing
+                input_text_mailing = message.text
+                status_text(message)
+                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+            enter_message(message)
+        else:
+            status_text(message)
+            loging(logger_level='WARN', user_id=f'{message.chat.id}', do='❌ Error: You do not have access to this command ! ❌')
+            bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
+    elif message.text == '✅ YES ✅':
+        loging(logger_level='INFO', user_id=message.chat.id, do='Received \'✅ YES ✅\'')
+        loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
+        send_message(user_id=message.chat.id, text=input_text_mailing)
+    elif message.text == '❌ NO ❌':
+        loging(logger_level='INFO', user_id=message.chat.id, do=f'Received \'❌ NO ❌\'')
+        bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
     elif message.text == 'Перезагрузка 🔄':
         if message.chat.id == config.admin_id_1 or message.chat.id == config.admin_id_2 or message.chat.id == config.admin_id_3:
             status_text(message)
@@ -110,8 +197,6 @@ def logic(message):
         if message.chat.id == config.admin_id_1 or message.chat.id == config.admin_id_2 or message.chat.id == config.admin_id_3:
             loging(logger_level='INFO', user_id=message.chat.id, do='Аdmin requested a server status report, generation . . .')
             status_text(message)
-            import platform
-            import psutil
             loging(logger_level='INFO', user_id=message.chat.id, do='Generating information about: SystemName')
             SystemName = str(platform.system())
             loging(logger_level='INFO', user_id=message.chat.id, do='Generating information about: SystemRelease')
@@ -160,8 +245,8 @@ Network: = {Network}'''
             loging(logger_level='WARN', user_id=f'{message.chat.id}', do='❌ Error: You do not have access to this command ! ❌')
             bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
     else:
-        status_text(message)
         loging(logger_level='INFO', user_id=f'{message.chat.id}', do=f'❌ The command was not found ! ❌ text:[\'{message.text}\']')
+        status_text(message)
         bot.send_message(message.chat.id, '❌ Error: The command was not found ! ❌')
 
 
