@@ -59,7 +59,7 @@ def send_message(user_id: int, text: str, i=0):
 def schedule(message):
     loging(logger_level='INFO', user_id=f'{message.chat.id}', do='Received \'/schedule\'')
     status_text(message)
-    bot.send_message(message.chat.id, '⚙️В разработке . . .')
+    bot.send_photo(message.chat.id, photo=open('schedule.jpg', 'rb'))
 
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message):
