@@ -312,9 +312,14 @@ def callback_handler(call):
                 status_text(user_id=call.message.chat.id)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
         elif call.data == 'back':
-            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
+            try:
+                status_text(user_id=call.message.chat.id)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
+            except telebot.apihelper.ApiException as Error:
+                if Error.result.status_code == 400:
+                    bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+                    status_text(user_id=call.message.chat.id)
+                    bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
         # Replace D/Z
         elif call.data == 'russian_lang_update':
             status_text(user_id=call.message.chat.id)
