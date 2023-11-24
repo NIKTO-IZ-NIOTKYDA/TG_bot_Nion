@@ -1,5 +1,5 @@
 BotToken = '6708933796:AAGMTGwn-wSgXLI24fWQe0Jow-xCvfvioCk'  # Токен бота
-commands_admin = 'AdminPanel_NjWGQAE47Nunvzrhj4xt68u7xu56t'  # Команда для доступа к админ панели
+commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
 name_database = 'db/db.db'
 reboot_command = 'Nope'
 admin_id_1 = 5731571131  # идентификатор администратора 1 [https://t.me/niktoizneotkyda_QQQ]
