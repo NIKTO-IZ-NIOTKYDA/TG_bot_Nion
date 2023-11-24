@@ -18,10 +18,20 @@ def db_connect():
 def replace_dz(user_id: int, lesson: str, dz: str):
     loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing D/Z \'{lesson}\'')
     cursor.execute('UPDATE dz SET {} = ? WHERE id = 1'.format(lesson), (dz,))
+    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    conn.commit()
 
-def replace_photo(user_id: int, path: str, dz: str):
+def replace_photo(user_id: int, path: str, lesson: str):
     loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing photo \'{path}\'')
-    cursor.execute('UPDATE dz SET {} = ? WHERE id = 2'.format(dz), (path,))
+    cursor.execute('UPDATE dz SET {} = ? WHERE id = 2'.format(lesson), (path,))
+    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    conn.commit()
+
+def replace_url(user_id: int, url: str, lesson: str):
+    loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing url \'{url}\'')
+    cursor.execute('UPDATE dz SET {} = ? WHERE id = 3'.format(lesson), (url,))
+    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    conn.commit()
 
 def return_dz(user_id: int, lesson: str):
     loging(logger_level='INFO', user_id=str(user_id), do='Returning D/Z . . .')
@@ -33,11 +43,16 @@ def return_photo(user_id: int, lesson: str):
     cursor.execute('SELECT ' + lesson + ' FROM dz WHERE id = 2')
     return [str(photo[0]) for photo in cursor.fetchall()]
 
+def return_url(user_id: int, lesson: str):
+    loging(logger_level='INFO', user_id=str(user_id), do='Search by db url . . .')
+    cursor.execute(f'SELECT {lesson} FROM dz WHERE id = 3')
+    return [str(url[0]) for url in cursor.fetchall()]
+
 def return_all_user_id():
     cursor.execute('SELECT user_id FROM users')
     return [str(user_id[0]) for user_id in cursor.fetchall()]
 
-def remove_user_id(user_id: int):
+def remove_user(user_id: int):
     loging(logger_level='WARN', user_id=str(user_id), do='Deleting an entry in db . . .')
     cursor.execute('DELETE FROM users WHERE user_id = ' + str(user_id))
     loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
@@ -50,7 +65,7 @@ def db_add_data(user_id: int, username: str, user_phone_number: str, user_name: 
     conn.commit()
 
 def update_latest_posts_time(user_id: int):
-    if user_id == config.admin_id_1 or user_id == config.admin_id_2 or user_id == config.admin_id_3:
+    if user_id == config.admin_id_1:
         pass
     else:
         loging(logger_level='INFO', user_id=str(user_id), do='Update `latest_posts_time` in db . . .')
@@ -59,7 +74,7 @@ def update_latest_posts_time(user_id: int):
         conn.commit()
 
 def return_user_authentication(user_id: int):
-    if user_id == config.admin_id_1 or user_id == config.admin_id_2 or user_id == config.admin_id_3:
+    if user_id == config.admin_id_1:
         return '0'
     else:
         loging(logger_level='INFO', user_id=str(user_id), do='Search by db user_id . . .')
