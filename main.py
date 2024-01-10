@@ -973,7 +973,7 @@ def logic(message):
                 SQLite3Version = str(sqlite_version)
                 # Загруженость
                 # CPU
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: CPU, CPU_stats')
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: CPUs, CPU_stats')
                 cpu = psutil.cpu_times()
                 cpu_stats = psutil.cpu_stats()
                 # Memory
@@ -989,9 +989,8 @@ def logic(message):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
 Python: {PythonVersion} Version
-SQLite3: {SQLite3Version} Version
-~~~~~~~~~~~~~~~~~
-Загруженость:
+SQLite3: {SQLite3Version} Version'''
+                info_d = f'''Загруженость:
 #~CPU~#
 CPU: {cpu}
 CPU Stats: {cpu_stats}
@@ -1004,8 +1003,10 @@ Disks: {Disks}
 Network: = {Network}'''
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Successfully !')
                 status_text(user_id=message.chat.id)
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Report Sent !')
                 bot.send_message(message.chat.id, info)
+                status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, info_d)
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Report Sent !')
             else:
                 status_text(user_id=message.chat.id)
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
