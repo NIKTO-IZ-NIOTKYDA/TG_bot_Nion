@@ -7,11 +7,9 @@ from loging import loging
 
 def db_connect():
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
-    sleep(1)
     global conn
     conn = sqlite3.connect(config.name_database, check_same_thread=False)
     loging(logger_level='INFO', user_id='none', do='Create a course . . .')
-    sleep(1)
     global cursor
     cursor = conn.cursor()
 

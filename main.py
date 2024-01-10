@@ -44,6 +44,7 @@ def send_message(user_id: int, text: str, i: int):
             bot.send_message(int(res[i]), str(text))
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
             i += 1
+            status_text(user_id=user_id)
             send_message(user_id=user_id, text=text, i=i)
         except telebot.apihelper.ApiException as Error:
             if Error.result.status_code == 403 or Error.result.status_code == 400:
@@ -93,7 +94,7 @@ def start(message):
 def dz(message):
     if check_user(user_id=message.chat.id) == '0':
         status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
+        bot.send_message(message.chat.id, '👇 Выберете предмет\nVersion: {version}', reply_markup=markup_dz)
 
 @bot.message_handler(commands=['schedule'])
 def schedule(message):
@@ -933,6 +934,7 @@ def logic(message):
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
         elif message.text == 'Перезагрузка 🔄':
             if message.chat.id == config.admin_id_1:
+                send_message(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
                 status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
                 db.db_stop(user_id=message.chat.id)

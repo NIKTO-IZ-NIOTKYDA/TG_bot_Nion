@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from config import admin_id_1, log
+from config import log, admin_id_1
 
 # Colors
 normal = '\x1b[0m'
