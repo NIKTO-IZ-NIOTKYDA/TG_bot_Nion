@@ -1,9 +1,13 @@
 BotToken = '6708933796:AAGMTGwn-wSgXLI24fWQe0Jow-xCvfvioCk'  # Токен бота
 commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
+ClearKonsole = 'clear'  # clear - on linux\unix systems and cls - on dos\windows
 name_database = 'db/db.db'
 reboot_command = 'Nope'
+log = True
 admin_id_1 = 5731571131  # идентификатор администратора 1 [https://t.me/niktoizneotkyda_QQQ]
-admin_id_2 = 2136186969  # идентификатор администратора 2 [https://t.me/powerranger200]
-admin_id_3 = 1670389988  # идентификатор администратора 3 [https://t.me/Jarik199]
-user_schedule1 = 0000000000  # идентификатор человека ответственного за расписания
-user_schedule2 = 0000000000  # идентификатор человека ответственного за расписания
+user_dz_1 = 0000000000  # идентификатор человека ответственного за Д/З
+user_dz_2 = 0000000000  # идентификатор человека ответственного за Д/З
+user_dz_3 = 0000000000  # идентификатор человека ответственного за Д/З
+user_dz_4 = 0000000000  # идентификатор человека ответственного за Д/З
+user_schedule_1 = 0000000000  # идентификатор человека ответственного за расписания
+user_schedule_2 = 0000000000  # идентификатор человека ответственного за расписания
