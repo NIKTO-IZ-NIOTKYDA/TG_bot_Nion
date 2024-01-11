@@ -44,6 +44,7 @@ def send_message(user_id: int, text: str, i: int):
             bot.send_message(int(res[i]), str(text))
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
             i += 1
+            status_text(user_id=user_id)
             send_message(user_id=user_id, text=text, i=i)
         except telebot.apihelper.ApiException as Error:
             if Error.result.status_code == 403 or Error.result.status_code == 400:
@@ -933,6 +934,7 @@ def logic(message):
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
         elif message.text == 'Перезагрузка 🔄':
             if message.chat.id == config.admin_id_1:
+                send_message(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
                 status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
                 db.db_stop(user_id=message.chat.id)
@@ -973,7 +975,7 @@ def logic(message):
                 SQLite3Version = str(sqlite_version)
                 # Загруженость
                 # CPU
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: CPU, CPU_stats')
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: CPUs, CPU_stats')
                 cpu = psutil.cpu_times()
                 cpu_stats = psutil.cpu_stats()
                 # Memory
@@ -989,9 +991,8 @@ def logic(message):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
 Python: {PythonVersion} Version
-SQLite3: {SQLite3Version} Version
-~~~~~~~~~~~~~~~~~
-Загруженость:
+SQLite3: {SQLite3Version} Version'''
+                info_d = f'''Загруженость:
 #~CPU~#
 CPU: {cpu}
 CPU Stats: {cpu_stats}
@@ -1004,8 +1005,10 @@ Disks: {Disks}
 Network: = {Network}'''
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Successfully !')
                 status_text(user_id=message.chat.id)
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Report Sent !')
                 bot.send_message(message.chat.id, info)
+                status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, info_d)
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Report Sent !')
             else:
                 status_text(user_id=message.chat.id)
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')

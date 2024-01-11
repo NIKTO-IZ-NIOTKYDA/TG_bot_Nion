@@ -1,4 +1,6 @@
-TEXT_start = 'Добро пожаловать !'
+from config import version
+
+TEXT_start = f'Добро пожаловать !\n\nVersion: {version}'
 TEXT_call_schedule = '''Урок 1: 8:00   -  8:45
 Урок 2: 8:55   -  9:40
 Урок 3: 10:00 - 10:45
