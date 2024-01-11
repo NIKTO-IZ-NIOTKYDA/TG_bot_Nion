@@ -94,7 +94,7 @@ def start(message):
 def dz(message):
     if check_user(user_id=message.chat.id) == '0':
         status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, f'👇 Выберете предмет', reply_markup=markup_dz)
+        bot.send_message(message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
 
 @bot.message_handler(commands=['schedule'])
 def schedule(message):
