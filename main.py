@@ -69,7 +69,7 @@ def check_user(user_id: int):
     elif db.return_user_authentication(user_id=user_id) == '1':
         loging(logger_level='INFO', user_id=str(user_id), do='User unauthenticated !')
         status_text(user_id=user_id)
-        bot.send_message(user_id, 'Ошибка аутентификации !\nДобавьте необходимые данные для корректной работы бота.', reply_markup=markup_send_nummer)
+        bot.send_message(user_id, f'Ошибка аутентификации !\nДобавьте необходимые данные для корректной работы бота.\n\nVersion: {config.version}', reply_markup=markup_send_nummer)
     else:
         loging(logger_level='ERROR', user_id='nope', do='Unknown authentication error !')
         status_text(user_id=user_id)
@@ -163,27 +163,26 @@ def callback_handler(call):
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'Call \'[{call.data}]\'')
         # Show D/Z
         if call.data == 'algebra' or call.data == 'english_lang_1' or call.data == 'english_lang_2' or call.data == 'biology' or call.data == 'geography' or call.data == 'geometry' or call.data == 'computer_science_1' or call.data == 'computer_science_2' or call.data == 'story' or call.data == 'literature' or call.data == 'music' or call.data == 'OBZH' or call.data == 'social_science' or call.data == 'native_literature' or call.data == 'russian_lang' or call.data == 'TBIS' or call.data == 'technology' or call.data == 'physics' or call.data == 'chemistry':
-            try:
-                markup_back = types.InlineKeyboardMarkup(row_width=1)
-                url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
-                if url != 'Nope':
-                    url = types.InlineKeyboardButton(text='ГДЗ', url=url)
-                    back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                    markup_back.add(url, back)
-                else:
-                    back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                    markup_back.add(back)
-
-                photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
-                if photo != 'Nope':
-                    bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
-                    bot.send_chat_action(call.message.chat.id, action='upload_photo')
-                    bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
-                else:
-                    status_text(user_id=call.message.chat.id)
-                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
-            except Exception as e:
-                print(e)
+            markup_back = types.InlineKeyboardMarkup(row_width=1)
+            url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
+            photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
+            # URL
+            if url != 'Nope':
+                url = types.InlineKeyboardButton(text='ГДЗ', url=url)
+                back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
+                markup_back.add(url, back)
+            else:
+                back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
+                markup_back.add(back)
+            # Photo
+            if photo != 'Nope':
+                bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+                bot.send_chat_action(call.message.chat.id, action='upload_photo')
+                bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+            # Default
+            else:
+                status_text(user_id=call.message.chat.id)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
         elif call.data == 'back':
             try:
                 status_text(user_id=call.message.chat.id)
@@ -937,8 +936,11 @@ def logic(message):
                 send_message(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
                 status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
+
                 db.db_stop(user_id=message.chat.id)
-                sleep(1)
+                send_message(user_id=message.chat.id, text='⚠ База данных отключена !', i=0)
+                status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, '⚠ База данных отключена !')
                 bot.stop_bot()
                 os.system(config.reboot_command)
             else:
@@ -1035,4 +1037,4 @@ loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins 
 bot.send_message(config.admin_id_1, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
 
 if __name__ == '__main__':
-    bot.infinity_polling(long_polling_timeout=60, logger_level=1, interval=0)  # Запуск бота
+    bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
