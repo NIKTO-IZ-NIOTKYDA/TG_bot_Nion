@@ -205,6 +205,14 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -218,6 +226,14 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -231,6 +247,14 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -244,6 +268,14 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -257,6 +289,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -270,6 +306,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -283,6 +323,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -296,6 +340,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -309,6 +357,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -322,6 +374,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -335,6 +391,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -348,6 +408,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -361,6 +425,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -374,6 +442,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -387,6 +459,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -400,6 +476,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -413,6 +493,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -426,6 +510,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
@@ -439,6 +527,10 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            try:
+                os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
+            except FileNotFoundError:
+                pass
             db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             status_text(user_id=call.message.chat.id)
