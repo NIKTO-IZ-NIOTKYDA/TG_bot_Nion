@@ -26,7 +26,7 @@ loging(logger_level='INFO', user_id='nope', do='The bot is running . . .')
 
 db.db_connect()
 
-
+# main fn
 def status_text(user_id: int):
     loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
     db.update_latest_posts_time(user_id=user_id)
@@ -35,8 +35,8 @@ def status_text(user_id: int):
 def send_message(user_id: int, text: str, i: int):
     res = db.return_all_user_id()
     if res == '[]':
-        bot.send_message(config.admin_id_1, text)
-        loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.admin_id_1}')
+        bot.send_message(config.main_admin_id, text)
+        loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     if i <= 29:
@@ -55,12 +55,19 @@ def send_message(user_id: int, text: str, i: int):
             else:
                 loging(logger_level='ERROR', user_id=str(res[i]), do=f'Undefined error !\tERROR: {Error}')
         except IndexError:
-            bot.send_message(config.admin_id_1, text)
-            loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.admin_id_1}')
+            bot.send_message(config.main_admin_id, text)
+            loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
         sleep(1)
+
+def check_admin(user_id: int):
+    for admin in config.admin_id:
+        if user_id == admin:
+            return True
+        else:
+            return False
 
 def check_user(user_id: int):
     if db.return_user_authentication(user_id=user_id) == '0':
@@ -80,7 +87,7 @@ def check_user(user_id: int):
 def start(message):
     if check_user(user_id=message.chat.id) == '0':
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/start\'')
-        if message.chat.id == config.admin_id_1:
+        if message.chat.id == config.main_admin_id:
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Admin pressed \'/start\'')
             status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, f'Для доступа к админ панели введите: \n/{config.commands_admin}')
@@ -107,11 +114,10 @@ def schedule(message):
         except FileNotFoundError:
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Schedule not found !')
             bot.send_message(message.chat.id, 'Ошибка: файл (расписание) не найден.', reply_markup=markup_start)
-            bot.send_message(config.admin_id_1, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
-            # bot.send_message(config.admin_id_2, 'Расписание не найден.\nПожалуйста добавьте расписание !')
-            # bot.send_message(config.admin_id_3, 'Расписание не найден.\nПожалуйста добавьте расписание !')
-            bot.send_message(config.user_schedule_1, 'Расписание не найден.\nПожалуйста добавьте расписание !')
-            # bot.send_message(config.user_schedule2, 'Расписание не найден.\nПожалуйста добавьте расписание !')
+            bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            bot.send_message(config.admin_id[0], 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            bot.send_message(config.admin_id[1], 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            bot.send_message(config.admin_id[2], 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
 
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message):
@@ -123,7 +129,7 @@ def call_schedule(message):
 @bot.message_handler(commands=['update_date_db'])
 def update_date_db(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/update_date_db\'')
-    if message.chat.id == config.admin_id_1:
+    if message.chat.id == config.main_admin_id:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Admin pressed \'/update_date_db\'')
         status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, ' Вы не можете зарегистрированы т. к. являетесь админом', reply_markup=markup_start)
@@ -146,7 +152,7 @@ def contact(message):
 @bot.message_handler(content_types=['photo'])
 def photo(message):
     if check_user(user_id=message.chat.id) == '0':
-        if message.chat.id == config.admin_id_1 or message.chat.id == config.user_dz_1 or message.chat.id == config.user_dz_2 or message.chat.id == config.user_dz_3 or message.chat.id == config.user_dz_4 or message.chat.id == config.user_schedule_1 or message.chat.id == config.user_schedule_2:
+        if check_admin(user_id=message.chat.id):
             status_text(user_id=message.chat.id)
             photo = message.photo[-1]
             file_info = bot.get_file(photo.file_id)
@@ -854,7 +860,7 @@ def logic(message):
             call_schedule(message)
         # Update photo
         elif message.text == 'Расписание':
-            if message.chat.id == config.admin_id_1 or message.chat.id == config.user_schedule_1 or message.chat.id == config.user_schedule_2:
+            if check_admin(user_id=message.chat.id):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Start uploading photos . . .')
                 rename(file_name_in='photo.jpg', file_name_out='schedule.jpg')
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Successfully !')
@@ -870,7 +876,7 @@ def logic(message):
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Д/З':
-            if message.chat.id == config.admin_id_1 or message.chat.id == config.user_dz_1 or message.chat.id == config.user_dz_2 or message.chat.id == config.user_dz_3 or message.chat.id == config.user_dz_4:
+            if check_admin(user_id=message.chat.id):
                 def enter_dz(message):
                     msg = bot.send_message(message.chat.id, 'Введите Д/З', reply_markup=types.ReplyKeyboardRemove())
                     bot.register_next_step_handler(msg, enter_lessons)
@@ -899,7 +905,7 @@ def logic(message):
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
         # Admin Panel
         elif message.text == f'/{config.commands_admin}':
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 status_text(user_id=message.chat.id)
                 loging(logger_level='WARN', user_id=message.chat.id, do='Admin logged into the panel . . .')
                 bot.send_message(message.chat.id, '''🛠Вы в админ-панели!\nБудте осторожны‼️''', reply_markup=markup_admin_panel)
@@ -908,7 +914,7 @@ def logic(message):
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Рассылка✉️':
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 def enter_message(message):
                     msg = bot.send_message(message.chat.id, '⚠️ Введите сообщение', reply_markup=types.ReplyKeyboardRemove())
                     bot.register_next_step_handler(msg, start_mailing)
@@ -932,7 +938,7 @@ def logic(message):
             status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
         elif message.text == 'Перезагрузка 🔄':
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 send_message(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
                 status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
@@ -948,7 +954,7 @@ def logic(message):
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Бэкап базы данных 📑':
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 db.db_backup()
                 status_text(user_id=message.chat.id)
                 loging(logger_level='WARN', user_id=message.chat.id, do='Admin performs db backup . . .')
@@ -964,7 +970,7 @@ def logic(message):
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Статус сервера 🛠️':
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Аdmin requested a server status report, generation . . .')
                 status_text(user_id=message.chat.id)
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: SystemName')
@@ -1016,12 +1022,12 @@ Network: = {Network}'''
                 loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         else:
-            if message.chat.id == config.admin_id_1:
+            if message.chat.id == config.main_admin_id:
                 bot.send_message(message.chat.id, 'Где нужно поставить этот текст ?', reply_markup=markup_update_dz_or_gdz)
                 status_text(user_id=message.chat.id)
                 global input_text
                 input_text = message.text
-            elif message.chat.id == config.user_dz_1 or message.chat.id == config.user_dz_2 or message.chat.id == config.user_dz_3 or message.chat.id == config.user_dz_4:
+            elif check_admin(user_id=message.chat.id):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='User replase D/Z')
                 status_text(user_id=message.chat.id)
                 input_text = message.text
@@ -1034,7 +1040,7 @@ Network: = {Network}'''
 
 loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
 
-bot.send_message(config.admin_id_1, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
 
 if __name__ == '__main__':
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
