@@ -145,6 +145,8 @@ def contact(message):
         db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_phone_number=message.contact.phone_number, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, '✅ Данные успешно добавлены/обновлены в базе данных')
+        status_text(user_id=config.main_admin_id)
+        bot.send_message(config.main_admin_id, f'New User !\n\nUserID: {message.chat.id}\nUserName: {message.from_user.username}\nFirst_Name: {message.from_user.first_name}')
         status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, TEXT_start, reply_markup=markup_start)
 
