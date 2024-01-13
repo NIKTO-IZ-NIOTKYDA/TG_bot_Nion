@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from config import log, admin_id_1
+from config import log, main_admin_id
 
 # Colors
 normal = '\x1b[0m'
@@ -13,7 +13,7 @@ purple = '\x1b[35m'
 
 def loging(logger_level: str, user_id: str, do: str):
     if log:
-        if user_id == str(admin_id_1):
+        if user_id == str(main_admin_id):
             pass
         else:
             current_time = datetime.now().strftime('%H:%M:%S')
