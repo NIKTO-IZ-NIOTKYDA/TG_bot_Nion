@@ -1,10 +1,9 @@
-BotToken = '6708933796:AAGMTGwn-wSgXLI24fWQe0Jow-xCvfvioCk'  # Токен бота
+BotToken = '6552240356:AAESbgaN3QzMkQauRMe0v3cYSUH7arkMm-A'  # Токен бота
 commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
-ClearKonsole = 'clear'  # clear - on linux\unix systems and cls - on dos\windows
+ClearKonsole = 'clear'
 name_database = 'db/db.db'
 reboot_command = 'reboot -f'
-version = '1.1.0 [stable]'  # X.X.X [stable\beta\dev] {ChatID}
+version = '1.1.0 [beta]'  # X.X.X [stable\beta\dev]
 log = True
 main_admin_id = 5731571131
-admin_id = [5731571131, 5731571131, 5731571131]
-#admin_id = [5287168197, 1670389988, 2136186969]
+admin_id = [5287168197, 1670389988, 2136186969]
