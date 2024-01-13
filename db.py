@@ -1,5 +1,4 @@
 import sqlite3
-from time import sleep
 from datetime import datetime
 
 import config
@@ -63,7 +62,7 @@ def db_add_data(user_id: int, username: str, user_phone_number: str, user_name: 
     conn.commit()
 
 def update_latest_posts_time(user_id: int):
-    if user_id == config.admin_id_1:
+    if user_id == config.main_admin_id:
         pass
     else:
         loging(logger_level='INFO', user_id=str(user_id), do='Update `latest_posts_time` in db . . .')
@@ -72,7 +71,7 @@ def update_latest_posts_time(user_id: int):
         conn.commit()
 
 def return_user_authentication(user_id: int):
-    if user_id == config.admin_id_1:
+    if user_id == config.main_admin_id:
         return '0'
     else:
         loging(logger_level='INFO', user_id=str(user_id), do='Search by db user_id . . .')
