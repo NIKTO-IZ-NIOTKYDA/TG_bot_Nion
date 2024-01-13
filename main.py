@@ -63,11 +63,10 @@ def send_message(user_id: int, text: str, i: int):
         sleep(1)
 
 def check_admin(user_id: int):
-    for admin in config.admin_id:
-        if user_id == admin:
-            return True
-        else:
-            return False
+    if user_id == config.main_admin_id or user_id == config.admin_id[0] or user_id == config.admin_id[1] or user_id == config.admin_id[3]:
+        return True
+    else:
+        return False
 
 def check_user(user_id: int):
     if db.return_user_authentication(user_id=user_id) == '0':
