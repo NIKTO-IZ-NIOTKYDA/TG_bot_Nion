@@ -7,11 +7,6 @@ schedule = types.KeyboardButton('Расписание 📑')
 call_schedule = types.KeyboardButton('Расписание звонков 🕝')
 markup_start.add(DZ, schedule, call_schedule)
 
-# send nummer
-markup_send_nummer = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-nummer = types.KeyboardButton(text='Отправить номер телефона', request_contact=True)
-markup_send_nummer.add(nummer)
-
 # DZ
 markup_dz = types.InlineKeyboardMarkup()
 algebra = types.InlineKeyboardButton(text='Алгебра', callback_data='algebra')
@@ -105,14 +100,19 @@ chemistry_url = types.InlineKeyboardButton(text='Химия (u)', callback_data=
 markup_url.add(algebra_url, english_lang_1_url, english_lang_2_url, biology_url, geography_url, geometry_url, computer_science_1_url, computer_science_2_url, story_url, literature_url, music_url, OBZH_url, social_science_url, native_literature_url, russian_lang_url, TBIS_url, technology_url, physics_url, chemistry_url)
 
 
-# -=-=-=-=-=-=-=-=-=- Admin Panel -=-=-=-=-=-=-=-=-=- #
+# -=-=-=-=-=-=-=-=-=- Main Admin Panel -=-=-=-=-=-=-=-=-=- #
 
 markup_admin_panel = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 mailing = types.KeyboardButton('Рассылка✉️')
 reboot = types.KeyboardButton('Перезагрузка 🔄')
+shutdown = types.KeyboardButton('Выключение сервера ‼️')
 backup_db = types.KeyboardButton('Бэкап базы данных 📑')
 info = types.KeyboardButton('Статус сервера 🛠️')
-markup_admin_panel.add(mailing, reboot, backup_db, info)
+markup_admin_panel.add(mailing, reboot, shutdown, backup_db, info)
+
+# -=-=-=-=-=-=-=-=-=- End Main Admin Panel -=-=-=-=-=-=-=-=-=- #
+
+# -=-=-=-=-=-=-=-=-=- Admin Panel -=-=-=-=-=-=-=-=-=- #
 
 markup_chack_mailing = types.ReplyKeyboardMarkup(resize_keyboard=True)
 yes = types.KeyboardButton('✅ YES ✅')
