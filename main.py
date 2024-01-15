@@ -148,11 +148,8 @@ def schedule(message):
             for admin_id in config.admin_id:
                 try:
                     bot.send_message(admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
-                except telebot.apihelper.ApiException as Error:
-                    if Error.result.status_code == 403 or Error.result.status_code == 400:
-                        loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
-                    else:
-                        loging(logger_level='ERROR', user_id=admin_id, do=f'Undefined error !\tERROR: {Error}')
+                except telebot.apihelper.ApiException:
+                    loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
 
 
 @bot.message_handler(commands=['call_schedule'])
