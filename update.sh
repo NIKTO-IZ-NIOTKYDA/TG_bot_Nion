@@ -14,7 +14,7 @@ cp ~/TG_bot_Nion/db/db.db /tmp/
 
 rm -rf ~/TG_bot_Nion/*
 
-git clone https://github.com/NIKTO-IZ-NEOTKYDA/TG_bot_Nion/
+git clone git@github.com:NIKTO-IZ-NEOTKYDA/TG_bot_Nion.git
 
 rm -rf ~/TG_bot_Nion/TG_bot_Nion/photo
 if [ -e ~/TG_bot_Nion/schedule.jpg ]
