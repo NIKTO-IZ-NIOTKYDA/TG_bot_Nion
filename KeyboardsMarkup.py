@@ -104,11 +104,12 @@ markup_url.add(algebra_url, english_lang_1_url, english_lang_2_url, biology_url,
 
 markup_admin_panel = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 mailing = types.KeyboardButton('Рассылка✉️')
+update = types.KeyboardButton('Обновление сервера ⚠️')
 reboot = types.KeyboardButton('Перезагрузка 🔄')
 shutdown = types.KeyboardButton('Выключение сервера ‼️')
 backup_db = types.KeyboardButton('Бэкап базы данных 📑')
 info = types.KeyboardButton('Статус сервера 🛠️')
-markup_admin_panel.add(mailing, reboot, shutdown, backup_db, info)
+markup_admin_panel.add(mailing, update, reboot, shutdown, backup_db, info)
 
 # -=-=-=-=-=-=-=-=-=- End Main Admin Panel -=-=-=-=-=-=-=-=-=- #
 

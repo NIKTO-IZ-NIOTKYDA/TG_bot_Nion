@@ -339,6 +339,14 @@ def logic(message):
         elif message.text == '❌ NO ❌':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
+        elif message.text == 'Обновление сервера ⚠️':
+            if message.chat.id == config.main_admin_id:
+                loging(logger_level='WARN', user_id=message.chat.id, do='Automatic update has started . . .')
+                send_status_text(message.chat.id)
+                bot.send_message(message.chat.id, 'Запущено автоматическое обновление . . .')
+                newsletter(user_id=message.chat.id, text='Запущено автоматическое обновление . . .', i=0)
+
+                os.system(config.update_command)
         elif message.text == 'Перезагрузка 🔄':
             if message.chat.id == config.main_admin_id:
                 loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')

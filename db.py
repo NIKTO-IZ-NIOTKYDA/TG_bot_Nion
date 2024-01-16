@@ -1,7 +1,7 @@
 import sqlite3
 
 import config
-from loging import loging
+from loging import loging, debug
 
 def db_connect():
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
@@ -65,15 +65,12 @@ def return_user_authentication(user_id: int):
     if user_id == config.main_admin_id:
         return 0
     else:
-        loging(logger_level='INFO', user_id=str(user_id), do='Search by db user_id . . .')
+        if debug:
+            loging(logger_level='INFO', user_id=str(user_id), do='Search by db user_id . . .')
         cursor.execute('SELECT user_id FROM users WHERE user_id = ' + str(user_id))
         if str(cursor.fetchone()) != 'None':
-            loging(logger_level='INFO', user_id=str(user_id), do='Successfully !')
-            loging(logger_level='INFO', user_id=str(user_id), do='Return 0')
             return 0
         else:
-            loging(logger_level='WARN', user_id=str(user_id), do='Unsuccessfully !')
-            loging(logger_level='INFO', user_id=str(user_id), do='Return 1')
             return 1
 
 def db_stop(user_id: int):
