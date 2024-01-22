@@ -214,6 +214,10 @@ def callback_handler(call):
                     bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                     send_status_text(user_id=call.message.chat.id)
                     bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
+        # § (Paragraph)
+        elif call.data == 'paragraph':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '§')
         # Replace D/Z
         elif call.data == 'algebra_update' or call.data == 'english_lang_1_update' or call.data == 'english_lang_2_update' or call.data == 'biology_update' or call.data == 'geography_update' or call.data == 'geometry_update' or call.data == 'computer_science_1_update' or call.data == 'computer_science_2_update' or call.data == 'story_update' or call.data == 'literature_update' or call.data == 'music_update' or call.data == 'OBZH_update' or call.data == 'social_science_update' or call.data == 'native_literature_update' or call.data == 'russian_lang_update' or call.data == 'TBIS_update' or call.data == 'technology_update' or call.data == 'physics_update' or call.data == 'chemistry_update':
             send_status_text(user_id=call.message.chat.id)

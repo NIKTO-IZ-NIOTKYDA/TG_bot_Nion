@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/TG_bot_Nion/
+cd ~
 systemctl stop TG_bot_Nion.service
 
 cp -r ~/TG_bot_Nion/photo /tmp/
@@ -12,21 +12,19 @@ echo "pass" >> /dev/null
 fi
 cp ~/TG_bot_Nion/db/db.db /tmp/
 
-rm -rf ~/TG_bot_Nion/*
+rm -rf ~/TG_bot_Nion/
 
 git clone git@github.com:NIKTO-IZ-NEOTKYDA/TG_bot_Nion.git
 
-rm -rf ~/TG_bot_Nion/TG_bot_Nion/photo
+rm -rf ~/TG_bot_Nion/photo
 if [ -e ~/TG_bot_Nion/schedule.jpg ]
 then
-rm ~/TG_bot_Nion/TG_bot_Nion/schedule.jpg
+rm ~/TG_bot_Nion/schedule.jpg
 else
 echo "pass" >> /dev/null
 fi
-rm ~/TG_bot_Nion/TG_bot_Nion/db/db.db
+rm ~/TG_bot_Nion/db/db.db
 
-mv ~/TG_bot_Nion/TG_bot_Nion/* ~/TG_bot_Nion/
-rm -rf ~/TG_bot_Nion/TG_bot_Nion
 
 mv /tmp/photo ~/TG_bot_Nion/
 if [ -e /tmp/schedule.jpg ]

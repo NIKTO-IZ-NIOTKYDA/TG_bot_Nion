@@ -30,6 +30,8 @@ physics = types.InlineKeyboardButton(text='Физика', callback_data='physics
 chemistry = types.InlineKeyboardButton(text='Химия', callback_data='chemistry')
 markup_dz.add(algebra, english_lang_1, english_lang_2, biology, geography, geometry, computer_science_1, computer_science_2, story, literature, music, OBZH, social_science, native_literature, russian_lang, TBIS, technology, physics, chemistry)
 
+paragraph = types.InlineKeyboardButton(text='§', callback_data='paragraph')
+
 # DZ replace
 markup_dz_update = types.InlineKeyboardMarkup()
 algebra_update = types.InlineKeyboardButton(text='Алгебра (r)', callback_data='algebra_update')
@@ -51,7 +53,7 @@ TBIS_update = types.InlineKeyboardButton(text='Теория вероятност
 technology_update = types.InlineKeyboardButton(text='Технология (r)', callback_data='technology_update')
 physics_update = types.InlineKeyboardButton(text='Физика (r)', callback_data='physics_update')
 chemistry_update = types.InlineKeyboardButton(text='Химия (r)', callback_data='chemistry_update')
-markup_dz_update.add(algebra_update, english_lang_1_update, english_lang_2_update, biology_update, geography_update, geometry_update, computer_science_1_update, computer_science_2_update, story_update, literature_update, music_update, OBZH_update, social_science_update, native_literature_update, russian_lang_update, TBIS_update, technology_update, physics_update, chemistry_update)
+markup_dz_update.add(algebra_update, english_lang_1_update, english_lang_2_update, biology_update, geography_update, geometry_update, computer_science_1_update, computer_science_2_update, story_update, literature_update, music_update, OBZH_update, social_science_update, native_literature_update, russian_lang_update, TBIS_update, technology_update, physics_update, chemistry_update, paragraph)
 
 # DZ and photo update
 markup_dz_update_p = types.InlineKeyboardMarkup()
@@ -74,7 +76,7 @@ TBIS_update_p = types.InlineKeyboardButton(text='Теория вероятнос
 technology_update_p = types.InlineKeyboardButton(text='Технология (rp)', callback_data='technology_update_p')
 physics_update_p = types.InlineKeyboardButton(text='Физика (rp)', callback_data='physics_update_p')
 chemistry_update_p = types.InlineKeyboardButton(text='Химия (rp)', callback_data='chemistry_update_p')
-markup_dz_update_p.add(algebra_update_p, english_lang_1_update_p, english_lang_2_update_p, biology_update_p, geography_update_p, geometry_update_p, computer_science_1_update_p, computer_science_2_update_p, story_update_p, literature_update_p, music_update_p, OBZH_update_p, social_science_update_p, native_literature_update_p, russian_lang_update_p, TBIS_update_p, technology_update_p, physics_update_p, chemistry_update_p)
+markup_dz_update_p.add(algebra_update_p, english_lang_1_update_p, english_lang_2_update_p, biology_update_p, geography_update_p, geometry_update_p, computer_science_1_update_p, computer_science_2_update_p, story_update_p, literature_update_p, music_update_p, OBZH_update_p, social_science_update_p, native_literature_update_p, russian_lang_update_p, TBIS_update_p, technology_update_p, physics_update_p, chemistry_update_p, paragraph)
 
 # URL
 markup_url = types.InlineKeyboardMarkup()
