@@ -110,6 +110,7 @@ def check_for_admin(user_id: int):
 def check_user_in_db(message):
     if db.return_user_authentication(user_id=message.chat.id) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User authenticated !')
+        db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         return 0
     elif db.return_user_authentication(user_id=message.chat.id) == 1:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
