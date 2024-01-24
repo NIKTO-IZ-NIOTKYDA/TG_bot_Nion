@@ -4,6 +4,7 @@ from sqlite3 import sqlite_version
 
 import psutil
 import telebot
+import datetime
 import platform
 
 import db
@@ -99,8 +100,12 @@ def send_update_dz(user_id: int, lesson: str):
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0)
 
 def check_for_admin(user_id: int):
-    if user_id == config.main_admin_id or user_id == config.admin_id[0] or user_id == config.admin_id[1] or user_id == config.admin_id[2]:
+    if user_id == config.main_admin_id:
         return True
+
+    for admin_id in config.admin_id:
+        if user_id == admin_id:
+            return True
 
 def check_user_in_db(message):
     if db.return_user_authentication(user_id=message.chat.id) == 0:
@@ -110,7 +115,7 @@ def check_user_in_db(message):
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
         db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         send_status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, f'[!] Ошибка аутентификации !\n[*] Данные добавлены !\n\nVersion: {config.version}')
+        bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
 
 # Command
 @bot.message_handler(commands=['start'])
@@ -144,7 +149,10 @@ def schedule(message):
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Schedule not found !')
             bot.send_message(message.chat.id, 'Ошибка: файл (расписание) не найден.', reply_markup=markup_start)
 
-            bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            try:
+                bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            except telebot.apihelper.ApiException:
+                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             for admin_id in config.admin_id:
                 try:
                     bot.send_message(admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
@@ -157,14 +165,63 @@ def call_schedule(message):
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
         send_status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, '''Урок 1: 8:00   -  8:45
+
+        call_schedule = '''Урок 1: 8:00   -  8:45
 Урок 2: 8:55   -  9:40
 Урок 3: 10:00 - 10:45
 Урок 4: 11:05 - 11:50
 Урок 5: 12:00 - 12:45
 Урок 6: 12:55 - 13:40
 Урок 7: 13:45 - 14:30
-Урок 8: 14:35 - 15:20''')
+Урок 8: 14:35 - 15:20'''
+        lessons = [
+            {"name": "Урок 1", "start_time": "8:00", "end_time": "8:45"},
+            {"name": "Урок 2", "start_time": "8:55", "end_time": "9:40"},
+            {"name": "Урок 3", "start_time": "10:00", "end_time": "10:45"},
+            {"name": "Урок 4", "start_time": "11:05", "end_time": "11:50"},
+            {"name": "Урок 5", "start_time": "12:00", "end_time": "12:45"},
+            {"name": "Урок 6", "start_time": "12:55", "end_time": "13:40"},
+            {"name": "Урок 7", "start_time": "13:45", "end_time": "14:30"},
+            {"name": "Урок 8", "start_time": "14:35", "end_time": "15:20"}
+        ]
+
+        current_time = datetime.datetime.now().time()
+        result = 0
+        if result == -2_147_483_648:
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+            return 0
+
+        loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
+        for lesson in lessons:
+            start = datetime.datetime.strptime(lesson["start_time"], "%H:%M").time()
+            end = datetime.datetime.strptime(lesson["end_time"], "%H:%M").time()
+
+            if start <= current_time <= end:
+                time_left = datetime.datetime.combine(datetime.date.today(), end) - datetime.datetime.combine(datetime.date.today(), current_time)
+                minutes_left = divmod(time_left.seconds, 60)[0]
+                hours_left = divmod(minutes_left, 60)[0]
+
+                if hours_left > 0:
+                    result = 1
+                else:
+                    result = 2
+                break
+            else:
+                result = 3
+        if result == 1:
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца {lesson["name"]} осталось {hours_left} часов и {minutes_left} минут')
+        elif result == 2:
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца {lesson["name"]} осталось {minutes_left} минут')
+        elif result == 3:
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки или перемены уже закончились для сегодняшнего дня.')
+        else:
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -343,14 +400,6 @@ def logic(message):
         elif message.text == '❌ NO ❌':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
-        elif message.text == 'Обновление сервера ⚠️':
-            if message.chat.id == config.main_admin_id:
-                loging(logger_level='WARN', user_id=message.chat.id, do='Automatic update has started . . .')
-                send_status_text(message.chat.id)
-                bot.send_message(message.chat.id, 'Запущено автоматическое обновление . . .')
-                newsletter(user_id=message.chat.id, text='Запущено автоматическое обновление . . .', i=0)
-
-                os.system(config.update_command)
         elif message.text == 'Перезагрузка 🔄':
             if message.chat.id == config.main_admin_id:
                 loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')
@@ -466,8 +515,11 @@ Network: = {Network}'''
                 bot.send_message(message.chat.id, '❌ Error: The command was not found ! ❌')
 
 
-loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
-bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+try:
+    loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
+    bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+except telebot.apihelper.ApiException:
+    loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
 
 if __name__ == '__main__':
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
