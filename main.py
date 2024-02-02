@@ -2,9 +2,9 @@
 from time import sleep
 from sqlite3 import sqlite_version
 
+import time
 import psutil
 import telebot
-import datetime
 import platform
 
 import db
@@ -165,9 +165,10 @@ def schedule(message):
 def call_schedule(message):
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
-        send_status_text(user_id=message.chat.id)
 
-        call_schedule = '''Урок 1: 8:00   -  8:45
+        call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+
+Урок 1: 8:00   -  8:45
 Урок 2: 8:55   -  9:40
 Урок 3: 10:00 - 10:45
 Урок 4: 11:05 - 11:50
@@ -176,53 +177,42 @@ def call_schedule(message):
 Урок 7: 13:45 - 14:30
 Урок 8: 14:35 - 15:20'''
         lessons = [
-            {"name": "Урок 1", "start_time": "8:00", "end_time": "8:45"},
-            {"name": "Урок 2", "start_time": "8:55", "end_time": "9:40"},
-            {"name": "Урок 3", "start_time": "10:00", "end_time": "10:45"},
-            {"name": "Урок 4", "start_time": "11:05", "end_time": "11:50"},
-            {"name": "Урок 5", "start_time": "12:00", "end_time": "12:45"},
-            {"name": "Урок 6", "start_time": "12:55", "end_time": "13:40"},
-            {"name": "Урок 7", "start_time": "13:45", "end_time": "14:30"},
-            {"name": "Урок 8", "start_time": "14:35", "end_time": "15:20"}
+            {"start_time": 8_00, "end_time": 8_45},
+            {"start_time": 8_55, "end_time": 9_40},
+            {"start_time": 10_00, "end_time": 10_45},
+            {"start_time": 11_05, "end_time": 11_50},
+            {"start_time": 12_00, "end_time": 12_45},
+            {"start_time": 12_55, "end_time": 13_40},
+            {"start_time": 13_45, "end_time": 14_30},
+            {"start_time": 14_35, "end_time": 15_20}
         ]
 
-        current_time = datetime.datetime.now().time()
+        current_time = int(time.strftime("%H%M", time.localtime()))
+
         result = 0
         if result == -2_147_483_648:
+            loging(logger_level='WARN', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
             return 0
 
         loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
         for lesson in lessons:
-            start = datetime.datetime.strptime(lesson["start_time"], "%H:%M").time()
-            end = datetime.datetime.strptime(lesson["end_time"], "%H:%M").time()
+            start_time = lesson["start_time"]
+            end_time = lesson["end_time"]
 
-            if start <= current_time <= end:
-                time_left = datetime.datetime.combine(datetime.date.today(), end) - datetime.datetime.combine(datetime.date.today(), current_time)
-                minutes_left = divmod(time_left.seconds, 60)[0]
-                hours_left = divmod(minutes_left, 60)[0]
-
-                if hours_left > 0:
-                    result = 1
-                else:
-                    result = 2
+            if start_time <= current_time <= end_time:
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца урока осталось: {divmod(end_time - current_time, 60)[0]} часов и {(end_time - current_time) - (divmod(end_time - current_time, 60)[0] * 60)} минут.')
                 break
-            else:
-                result = 3
-        if result == 1:
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца {lesson["name"]} осталось {hours_left} часов и {minutes_left} минут')
-        elif result == 2:
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца {lesson["name"]} осталось {minutes_left} минут')
-        elif result == 3:
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки или перемены уже закончились для сегодняшнего дня.')
         else:
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+            time_diff = [int(lesson["start_time"]) - int(current_time) for lesson in lessons]
+            available_lessons = sorted([time for time in time_diff if time >= 0])
 
+            if available_lessons:
+                next_lesson = available_lessons[0]
+                bot.send_message(message.chat.id, f'Следующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
+            else:
+                bot.send_message(message.chat.id, 'Уроки закончились на сегодня!')
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -363,7 +353,7 @@ def logic(message):
         # Update dz or url
         elif message.text == 'Д/3':
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
+            bot.send_message(message.cat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
         elif message.text == 'ГДЗ':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
@@ -396,7 +386,7 @@ def logic(message):
         elif message.text == '✅ YES ✅':
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.hat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
         elif message.text == '❌ NO ❌':
             send_status_text(user_id=message.chat.id)
@@ -433,7 +423,7 @@ def logic(message):
                 os.system(config.shutdown_command)
             else:
                 send_status_text(user_id=message.chat.id)
-                loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
+                loging(logger_level='WARN', user_id=str(message.chat.d), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Бэкап базы данных 📑':
             if message.chat.id == config.main_admin_id:
@@ -469,10 +459,10 @@ def logic(message):
                 Memory_Virtual = psutil.virtual_memory()
                 Memory_Swap = psutil.swap_memory()
                 # Disks
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Disks')
+                loging(logger_level='INFO', user_id=str(message.cat.id), do='Generating information about: Disks')
                 Disks = psutil.disk_io_counters()
                 # Network
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Network')
+                loging(logger_level='INFO', user_id=str(message.hat.id), do='Generating information about: Network')
                 Network = psutil.net_if_addrs()
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
