@@ -1,8 +1,13 @@
-# Release 1.1.2 \[fix v1\]
-- Added pagargafa button.
-- Fixed update system
+# Release 1.2.0 [stable]
+- Added a system for calculating the end of a break or lesson.
+- Added checking for emergency situations.
+- automatic update system removed.
 
-# Release 1.1.2
+# Release 1.1.2 [beta] \[fix v1\]
+- Added pagargafa button.
+- Fixed update system.
+
+# Release 1.1.2 [beta]
 - Removed update_date_db command.
 - Removed authentication by phone number.
 - The status_text function has been renamed to send_status_text.

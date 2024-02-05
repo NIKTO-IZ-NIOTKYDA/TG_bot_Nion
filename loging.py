@@ -18,7 +18,7 @@ log_file.write('[FORMAN]   [ID]             [TIME]    [DO]\n')
 
 def loging(logger_level: str, user_id: str, do: str):
     if log:
-        if user_id == str(main_admin_id):
+        if user_id == str(main_admin_id+1):
             pass
         else:
             current_time = datetime.now().strftime('%H:%M:%S')

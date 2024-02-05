@@ -2,6 +2,7 @@
 from time import sleep
 from sqlite3 import sqlite_version
 
+import time
 import psutil
 import telebot
 import platform
@@ -99,18 +100,23 @@ def send_update_dz(user_id: int, lesson: str):
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0)
 
 def check_for_admin(user_id: int):
-    if user_id == config.main_admin_id or user_id == config.admin_id[0] or user_id == config.admin_id[1] or user_id == config.admin_id[2]:
+    if user_id == config.main_admin_id:
         return True
+
+    for admin_id in config.admin_id:
+        if user_id == admin_id:
+            return True
 
 def check_user_in_db(message):
     if db.return_user_authentication(user_id=message.chat.id) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User authenticated !')
+        db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         return 0
     elif db.return_user_authentication(user_id=message.chat.id) == 1:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
         db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         send_status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, f'[!] Ошибка аутентификации !\n[*] Данные добавлены !\n\nVersion: {config.version}')
+        bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
 
 # Command
 @bot.message_handler(commands=['start'])
@@ -144,7 +150,10 @@ def schedule(message):
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Schedule not found !')
             bot.send_message(message.chat.id, 'Ошибка: файл (расписание) не найден.', reply_markup=markup_start)
 
-            bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            try:
+                bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
+            except telebot.apihelper.ApiException:
+                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             for admin_id in config.admin_id:
                 try:
                     bot.send_message(admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
@@ -156,15 +165,54 @@ def schedule(message):
 def call_schedule(message):
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
-        send_status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, '''Урок 1: 8:00   -  8:45
+
+        call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+
+Урок 1: 8:00   -  8:45
 Урок 2: 8:55   -  9:40
 Урок 3: 10:00 - 10:45
 Урок 4: 11:05 - 11:50
 Урок 5: 12:00 - 12:45
 Урок 6: 12:55 - 13:40
 Урок 7: 13:45 - 14:30
-Урок 8: 14:35 - 15:20''')
+Урок 8: 14:35 - 15:20'''
+        lessons = [
+            {"start_time": 8_00, "end_time": 8_45},
+            {"start_time": 8_55, "end_time": 9_40},
+            {"start_time": 10_00, "end_time": 10_45},
+            {"start_time": 11_05, "end_time": 11_50},
+            {"start_time": 12_00, "end_time": 12_45},
+            {"start_time": 12_55, "end_time": 13_40},
+            {"start_time": 13_45, "end_time": 14_30},
+            {"start_time": 14_35, "end_time": 15_20}
+        ]
+
+        current_time = int(time.strftime("%H%M", time.localtime()))
+
+        result = 0
+        if result == -2_147_483_648:
+            loging(logger_level='WARN', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
+            send_status_text(user_id=message.chat.id)
+            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+            return 0
+
+        loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
+        for lesson in lessons:
+            start_time = lesson["start_time"]
+            end_time = lesson["end_time"]
+
+            if start_time <= current_time <= end_time:
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца урока осталось: {divmod(end_time - current_time, 60)[0]} часов и {(end_time - current_time) - (divmod(end_time - current_time, 60)[0] * 60)} минут.')
+                break
+        else:
+            time_diff = [int(lesson["start_time"]) - int(current_time) for lesson in lessons]
+            available_lessons = sorted([time for time in time_diff if time >= 0])
+
+            if available_lessons:
+                next_lesson = available_lessons[0]
+                bot.send_message(message.chat.id, f'Следующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
+            else:
+                bot.send_message(message.chat.id, 'Уроки закончились на сегодня!')
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -305,7 +353,7 @@ def logic(message):
         # Update dz or url
         elif message.text == 'Д/3':
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
+            bot.send_message(message.cat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
         elif message.text == 'ГДЗ':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
@@ -338,19 +386,11 @@ def logic(message):
         elif message.text == '✅ YES ✅':
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.hat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
         elif message.text == '❌ NO ❌':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_start)
-        elif message.text == 'Обновление сервера ⚠️':
-            if message.chat.id == config.main_admin_id:
-                loging(logger_level='WARN', user_id=message.chat.id, do='Automatic update has started . . .')
-                send_status_text(message.chat.id)
-                bot.send_message(message.chat.id, 'Запущено автоматическое обновление . . .')
-                newsletter(user_id=message.chat.id, text='Запущено автоматическое обновление . . .', i=0)
-
-                os.system(config.update_command)
         elif message.text == 'Перезагрузка 🔄':
             if message.chat.id == config.main_admin_id:
                 loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')
@@ -383,7 +423,7 @@ def logic(message):
                 os.system(config.shutdown_command)
             else:
                 send_status_text(user_id=message.chat.id)
-                loging(logger_level='WARN', user_id=str(message.chat.id), do='❌ Error: You do not have access to this command ! ❌')
+                loging(logger_level='WARN', user_id=str(message.chat.d), do='❌ Error: You do not have access to this command ! ❌')
                 bot.send_message(message.chat.id, '❌ Error: You do not have access to this command ! ❌')
         elif message.text == 'Бэкап базы данных 📑':
             if message.chat.id == config.main_admin_id:
@@ -419,10 +459,10 @@ def logic(message):
                 Memory_Virtual = psutil.virtual_memory()
                 Memory_Swap = psutil.swap_memory()
                 # Disks
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Disks')
+                loging(logger_level='INFO', user_id=str(message.cat.id), do='Generating information about: Disks')
                 Disks = psutil.disk_io_counters()
                 # Network
-                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Network')
+                loging(logger_level='INFO', user_id=str(message.hat.id), do='Generating information about: Network')
                 Network = psutil.net_if_addrs()
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
@@ -466,8 +506,11 @@ Network: = {Network}'''
                 bot.send_message(message.chat.id, '❌ Error: The command was not found ! ❌')
 
 
-loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
-bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+try:
+    loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
+    bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+except telebot.apihelper.ApiException:
+    loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
 
 if __name__ == '__main__':
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
