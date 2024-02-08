@@ -1,7 +1,12 @@
 # Release 1.2.0 [stable]
+- Added welcome_ani in loging.py
+- Bugs fixed
+- There was a transition to 'none'
+
+# Release 1.2.0 [beta]
 - Added a system for calculating the end of a break or lesson.
 - Added checking for emergency situations.
-- automatic update system removed.
+- Automatic update system removed.
 
 # Release 1.1.2 [beta] \[fix v1\]
 - Added pagargafa button.

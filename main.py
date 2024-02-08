@@ -1,11 +1,10 @@
 ﻿import os
-from time import sleep
 from sqlite3 import sqlite_version
+from time import sleep, strftime, localtime
+from platform import system, release, python_version
 
-import time
 import psutil
 import telebot
-import platform
 
 import db
 import config
@@ -17,7 +16,7 @@ bot = telebot.TeleBot(config.BotToken)
 
 if config.log:
     from loging import loging
-    loging(logger_level='INFO', user_id='nope', do='The bot is running . . .')
+    loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
 
 db.db_connect()
 
@@ -36,7 +35,7 @@ def newsletter(user_id: int, text: str, i: int):
         loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
-    if i <= 29:
+    if i <= 29 and res != '[]':
         try:
             bot.send_message(int(res[i]), str(text))
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
@@ -110,7 +109,8 @@ def check_for_admin(user_id: int):
 def check_user_in_db(message):
     if db.return_user_authentication(user_id=message.chat.id) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User authenticated !')
-        db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
+        if message.chat.id != config.main_admin_id:
+            db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         return 0
     elif db.return_user_authentication(user_id=message.chat.id) == 1:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
@@ -166,34 +166,54 @@ def call_schedule(message):
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
-        call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+# default
+#         call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+#
+# Урок 1: 8:00   -  8:45
+# Урок 2: 8:55   -  9:40
+# Урок 3: 10:00 - 10:45
+# Урок 4: 11:05 - 11:50
+# Урок 5: 12:00 - 12:45
+# Урок 6: 12:55 - 13:40
+# Урок 7: 13:45 - 14:30
+# Урок 8: 14:35 - 15:20'''
+# 
+#         lessons = [
+#             {"start_time": 8_00, "end_time": 8_45},
+#             {"start_time": 8_55, "end_time": 9_40},
+#             {"start_time": 10_00, "end_time": 10_45},
+#             {"start_time": 11_05, "end_time": 11_50},
+#             {"start_time": 12_00, "end_time": 12_45},
+#             {"start_time": 12_55, "end_time": 13_40},
+#             {"start_time": 13_45, "end_time": 14_30},
+#             {"start_time": 14_35, "end_time": 15_20}
+#                 ]
 
-Урок 1: 8:00   -  8:45
-Урок 2: 8:55   -  9:40
-Урок 3: 10:00 - 10:45
-Урок 4: 11:05 - 11:50
-Урок 5: 12:00 - 12:45
-Урок 6: 12:55 - 13:40
-Урок 7: 13:45 - 14:30
-Урок 8: 14:35 - 15:20'''
+        # quarantine
+        call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+Урок 1: 9:00   -  9:30
+Урок 2: 9:40  - 10:10
+Урок 3: 10:20 - 10:50
+Урок 4: 11:00 - 11:30
+Урок 5: 11:50 - 12:20
+Урок 6: 12:30 - 13:00
+Урок 7: 13:10 - 13:40'''
         lessons = [
-            {"start_time": 8_00, "end_time": 8_45},
-            {"start_time": 8_55, "end_time": 9_40},
-            {"start_time": 10_00, "end_time": 10_45},
-            {"start_time": 11_05, "end_time": 11_50},
-            {"start_time": 12_00, "end_time": 12_45},
-            {"start_time": 12_55, "end_time": 13_40},
-            {"start_time": 13_45, "end_time": 14_30},
-            {"start_time": 14_35, "end_time": 15_20}
+            {"start_time": 9_00, "end_time": 9_30},
+            {"start_time": 9_40, "end_time": 10_10},
+            {"start_time": 10_20, "end_time": 10_50},
+            {"start_time": 11_00, "end_time": 11_30},
+            {"start_time": 11_50, "end_time": 12_20},
+            {"start_time": 12_30, "end_time": 13_00},
+            {"start_time": 13_10, "end_time": 13_40}
         ]
 
-        current_time = int(time.strftime("%H%M", time.localtime()))
+        current_time = int(strftime("%H%M", localtime()))
 
-        result = 0
-        if result == -2_147_483_648:
+        if config.Error:
             loging(logger_level='WARN', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = {result}\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = -2147483648\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
             return 0
 
         loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
@@ -210,9 +230,9 @@ def call_schedule(message):
 
             if available_lessons:
                 next_lesson = available_lessons[0]
-                bot.send_message(message.chat.id, f'Следующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
             else:
-                bot.send_message(message.chat.id, 'Уроки закончились на сегодня!')
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -239,7 +259,7 @@ def callback_handler(call):
             url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
             photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
             # URL
-            if url != 'Nope':
+            if url != 'None':
                 url = types.InlineKeyboardButton(text='ГДЗ', url=url)
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
                 markup_back.add(url, back)
@@ -247,7 +267,7 @@ def callback_handler(call):
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
                 markup_back.add(back)
             # Photo
-            if photo != 'Nope':
+            if photo != 'None':
                 bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
                 bot.send_chat_action(call.message.chat.id, action='upload_photo')
                 bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
@@ -271,12 +291,12 @@ def callback_handler(call):
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
-            db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='Nope')
+            db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='None')
             try:
                 os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
             except FileNotFoundError:
                 pass
-            db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update", ""))
+            db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_update", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
@@ -290,7 +310,7 @@ def callback_handler(call):
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), dz=input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), path='photo/' + call.data.replace("_update_p", "") + '.jpg')
             rename(file_name_in='photo.jpg', file_name_out='photo/' + call.data.replace("_update_p", "") + '.jpg')
-            db.replace_url(user_id=call.message.chat.id, url='Nope', lesson=call.data.replace("_update_p", ""))
+            db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_update_p", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
@@ -346,14 +366,14 @@ def logic(message):
                 enter_dz(message)
         elif message.text == '⬅️ Назад':
             try:
-                os.system('rm photo.jpg')
+                os.remove('photo.jpg')
             except Exception:
                 pass
             bot.send_message(message.chat.id, 'Вы вернулись назад', reply_markup=markup_start)
         # Update dz or url
         elif message.text == 'Д/3':
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.cat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
+            bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
         elif message.text == 'ГДЗ':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
@@ -442,11 +462,11 @@ def logic(message):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Аdmin requested a server status report, generation . . .')
                 send_status_text(user_id=message.chat.id)
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: SystemName')
-                SystemName = str(platform.system())
+                SystemName = str(system())
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: SystemRelease')
-                SystemRelease = str(platform.release())
+                SystemRelease = str(release())
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: PythonVersion')
-                PythonVersion = str(platform.python_version())
+                PythonVersion = str(python_version())
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: SQLite3Version')
                 SQLite3Version = str(sqlite_version)
                 # Загруженость
@@ -459,7 +479,7 @@ def logic(message):
                 Memory_Virtual = psutil.virtual_memory()
                 Memory_Swap = psutil.swap_memory()
                 # Disks
-                loging(logger_level='INFO', user_id=str(message.cat.id), do='Generating information about: Disks')
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Disks')
                 Disks = psutil.disk_io_counters()
                 # Network
                 loging(logger_level='INFO', user_id=str(message.hat.id), do='Generating information about: Network')
@@ -507,7 +527,7 @@ Network: = {Network}'''
 
 
 try:
-    loging(logger_level='INFO', user_id='nope', do='Sending notifications to admins . . .')
+    loging(logger_level='INFO', user_id='none', do='Sending notifications to admins . . .')
     bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
 except telebot.apihelper.ApiException:
     loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
