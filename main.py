@@ -16,7 +16,6 @@ os.system(config.clear_konsole)
 bot = telebot.TeleBot(config.BotToken)
 
 if config.log:
-    from loging import loging
     loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
 
 db.db_connect()
