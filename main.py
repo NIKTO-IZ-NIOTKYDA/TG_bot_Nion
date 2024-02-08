@@ -8,6 +8,7 @@ import telebot
 
 import db
 import config
+from loging import loging
 from KeyboardsMarkup import *
 
 os.system(config.clear_konsole)
