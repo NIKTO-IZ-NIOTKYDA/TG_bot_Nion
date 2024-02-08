@@ -8,6 +8,7 @@ import telebot
 
 import db
 import config
+from loging import loging
 from KeyboardsMarkup import *
 
 os.system(config.clear_konsole)
@@ -15,7 +16,6 @@ os.system(config.clear_konsole)
 bot = telebot.TeleBot(config.BotToken)
 
 if config.log:
-    from loging import loging
     loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
 
 db.db_connect()
