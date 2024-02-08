@@ -10,7 +10,7 @@ import db
 import config
 from KeyboardsMarkup import *
 
-os.system(config.ClearKonsole)
+os.system(config.clear_konsole)
 
 bot = telebot.TeleBot(config.BotToken)
 
@@ -25,14 +25,19 @@ def rename(file_name_in: str, file_name_out: str):
     os.system(f'mv {file_name_in} {file_name_out}')
 
 def send_status_text(user_id: int):
-    loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
+    if config.debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
     bot.send_chat_action(user_id, action='typing')
 
 def newsletter(user_id: int, text: str, i: int):
     res = db.return_all_user_id(user_id)
     if res == '[]':
-        bot.send_message(config.main_admin_id, text)
-        loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
+        try:
+            bot.send_message(config.main_admin_id, text)
+            loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
+        except telebot.apihelper.ApiException:
+            loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     if i <= 29 and res != '[]':
@@ -210,7 +215,7 @@ def call_schedule(message):
 
         current_time = int(strftime("%H%M", localtime()))
 
-        if config.Error:
+        if config.error:
             loging(logger_level='WARN', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = -2147483648\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
@@ -406,7 +411,7 @@ def logic(message):
         elif message.text == '✅ YES ✅':
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
-            bot.send_message(message.hat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
         elif message.text == '❌ NO ❌':
             send_status_text(user_id=message.chat.id)
