@@ -14,19 +14,22 @@ def db_connect():
 def replace_dz(user_id: int, lesson: str, dz: str):
     loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing D/Z \'{lesson}\'')
     cursor.execute('UPDATE dz SET {} = ? WHERE id = 1'.format(lesson), (dz,))
-    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
 
 def replace_photo(user_id: int, path: str, lesson: str):
     loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing photo \'{path}\'')
     cursor.execute('UPDATE dz SET {} = ? WHERE id = 2'.format(lesson), (path,))
-    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
 
 def replace_url(user_id: int, url: str, lesson: str):
     loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing url \'{url}\'')
     cursor.execute('UPDATE dz SET {} = ? WHERE id = 3'.format(lesson), (url,))
-    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
 
 def return_dz(user_id: int, lesson: str):
@@ -56,9 +59,11 @@ def remove_user(user_id: int):
     conn.commit()
 
 def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, user_lang: str):
-    loging(logger_level='INFO', user_id=str(user_id), do='Adding data to db . . .')
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Adding data to db . . .')
     cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang) VALUES (?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang))
-    loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
 
 def return_user_authentication(user_id: int):
