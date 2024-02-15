@@ -172,46 +172,27 @@ def call_schedule(message):
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
 # default
-#         call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
-#
-# Урок 1: 8:00   -  8:45
-# Урок 2: 8:55   -  9:40
-# Урок 3: 10:00 - 10:45
-# Урок 4: 11:05 - 11:50
-# Урок 5: 12:00 - 12:45
-# Урок 6: 12:55 - 13:40
-# Урок 7: 13:45 - 14:30
-# Урок 8: 14:35 - 15:20'''
-# 
-#         lessons = [
-#             {"start_time": 8_00, "end_time": 8_45},
-#             {"start_time": 8_55, "end_time": 9_40},
-#             {"start_time": 10_00, "end_time": 10_45},
-#             {"start_time": 11_05, "end_time": 11_50},
-#             {"start_time": 12_00, "end_time": 12_45},
-#             {"start_time": 12_55, "end_time": 13_40},
-#             {"start_time": 13_45, "end_time": 14_30},
-#             {"start_time": 14_35, "end_time": 15_20}
-#                 ]
-
-        # quarantine
         call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
-Урок 1: 9:00   -  9:30
-Урок 2: 9:40  - 10:10
-Урок 3: 10:20 - 10:50
-Урок 4: 11:00 - 11:30
-Урок 5: 11:50 - 12:20
-Урок 6: 12:30 - 13:00
-Урок 7: 13:10 - 13:40'''
+
+Урок 1: 8:00   -  8:45
+Урок 2: 8:55   -  9:40
+Урок 3: 10:00 - 10:45
+Урок 4: 11:05 - 11:50
+Урок 5: 12:00 - 12:45
+Урок 6: 12:55 - 13:40
+Урок 7: 13:45 - 14:30
+Урок 8: 14:35 - 15:20'''
+
         lessons = [
-            {"start_time": 9_00, "end_time": 9_30},
-            {"start_time": 9_40, "end_time": 10_10},
-            {"start_time": 10_20, "end_time": 10_50},
-            {"start_time": 11_00, "end_time": 11_30},
-            {"start_time": 11_50, "end_time": 12_20},
-            {"start_time": 12_30, "end_time": 13_00},
-            {"start_time": 13_10, "end_time": 13_40}
-        ]
+            {"start_time": 8_00, "end_time": 8_45},
+            {"start_time": 8_55, "end_time": 9_40},
+            {"start_time": 10_00, "end_time": 10_45},
+            {"start_time": 11_05, "end_time": 11_50},
+            {"start_time": 12_00, "end_time": 12_45},
+            {"start_time": 12_55, "end_time": 13_40},
+            {"start_time": 13_45, "end_time": 14_30},
+            {"start_time": 14_35, "end_time": 15_20}
+                ]
 
         current_time = int(strftime("%H%M", localtime()))
 
