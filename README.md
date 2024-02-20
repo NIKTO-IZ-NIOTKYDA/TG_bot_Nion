@@ -1,3 +1,7 @@
+# Release 1.2.1 [stable]
+- The system for calculating time before the start of the lesson has been fixed.
+- Bugs fixed
+
 # Release 1.2.0 [stable]
 - Added welcome_ani in loging.py
 - Bugs fixed
