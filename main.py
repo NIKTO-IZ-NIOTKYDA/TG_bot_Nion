@@ -216,7 +216,7 @@ def call_schedule(message):
 
             if available_lessons:
                 next_lesson = available_lessons[0]
-                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {next_lesson // 60} часов {next_lesson % 60} минут')
             else:
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
 
