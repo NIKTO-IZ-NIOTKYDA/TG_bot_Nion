@@ -168,58 +168,56 @@ def schedule(message):
 
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message):
-    if check_user_in_db(message) == 0:
-        loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
+    try:
+        if check_user_in_db(message) == 0:
+            loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
-# default
-        call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+    # default
+            call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
+    
+    Урок 1: 8:00   -  8:45
+    Урок 2: 8:55   -  9:40
+    Урок 3: 10:00 - 10:45
+    Урок 4: 11:05 - 11:50
+    Урок 5: 12:00 - 12:45
+    Урок 6: 12:55 - 13:40
+    Урок 7: 13:45 - 14:30
+    Урок 8: 14:35 - 15:20'''
 
-Урок 1: 8:00   -  8:45
-Урок 2: 8:55   -  9:40
-Урок 3: 10:00 - 10:45
-Урок 4: 11:05 - 11:50
-Урок 5: 12:00 - 12:45
-Урок 6: 12:55 - 13:40
-Урок 7: 13:45 - 14:30
-Урок 8: 14:35 - 15:20'''
+            lessons = [
+                {"start_time": 8_00, "end_time": 8_45},
+                {"start_time": 8_55, "end_time": 9_40},
+                {"start_time": 10_00, "end_time": 10_45},
+                {"start_time": 11_05, "end_time": 11_50},
+                {"start_time": 12_00, "end_time": 12_45},
+                {"start_time": 12_55, "end_time": 13_40},
+                {"start_time": 13_45, "end_time": 14_30},
+                {"start_time": 14_35, "end_time": 15_20}
+                    ]
 
-        lessons = [
-            {"start_time": 8_00, "end_time": 8_45},
-            {"start_time": 8_55, "end_time": 9_40},
-            {"start_time": 10_00, "end_time": 10_45},
-            {"start_time": 11_05, "end_time": 11_50},
-            {"start_time": 12_00, "end_time": 12_45},
-            {"start_time": 12_55, "end_time": 13_40},
-            {"start_time": 13_45, "end_time": 14_30},
-            {"start_time": 14_35, "end_time": 15_20}
-                ]
+            current_time = int(strftime("%H%M", localtime()))
 
-        current_time = int(strftime("%H%M", localtime()))
+            if config.error:
+                loging(logger_level='INFO', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
+                send_status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = -2147483648\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
+                return 0
 
-        if config.error:
-            loging(logger_level='WARN', user_id=str(message.chat.id), do=f'result = -2_147_483_648')
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, f'❗️ Критичиская ошибка проверки условия !\n\n⚙️ current_time = {current_time}\n⚙️ result = -2147483648\n⚙️ lessons = {lessons}\n\n⚠️ Пожалуста обратитесь к @niktoizneotkyda_QQQ.')
-            return 0
+            loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
+            for lesson in lessons:
+                start_time = lesson["start_time"]
+                end_time = lesson["end_time"]
 
-        loging(logger_level='INFO', user_id=str(message.chat.id), do='The enumeration of all lessons and variables has begun')
-        for lesson in lessons:
-            start_time = lesson["start_time"]
-            end_time = lesson["end_time"]
+                if start_time <= current_time <= end_time:
+                    bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца урока осталось: {divmod(end_time - current_time, 60)[0]} часов и {(end_time - current_time) - (divmod(end_time - current_time, 60)[0] * 60)} минут.')
+                    return 0
 
-            if start_time <= current_time <= end_time:
-                bot.send_message(message.chat.id, f'{call_schedule}\n\nДо конца урока осталось: {divmod(end_time - current_time, 60)[0]} часов и {(end_time - current_time) - (divmod(end_time - current_time, 60)[0] * 60)} минут.')
-                break
-        else:
-            time_diff = [int(lesson["start_time"]) - int(current_time) for lesson in lessons]
-            available_lessons = sorted([time for time in time_diff if time >= 0])
-
-            if available_lessons:
-                next_lesson = available_lessons[0]
-                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {next_lesson // 100} часов {next_lesson % 100} минут')
+            if (min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) >= 0:
+                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0]} часов {(min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) - (divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0] * 60)} минут')
             else:
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
-
+    except Exception as E:
+        print(E)
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message):
