@@ -91,7 +91,7 @@ def send_update_dz(user_id: int, lesson: str):
     elif lesson == 'social_science':
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Обществознание].', i=0)
     elif lesson == 'native_literature':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родноя литература].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родная литература].', i=0)
     elif lesson == 'russian_lang':
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Русский язык].', i=0)
     elif lesson == 'TBIS':
