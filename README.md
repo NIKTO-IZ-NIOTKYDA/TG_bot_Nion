@@ -1,3 +1,6 @@
+# Release 1.2.2 [stable]
+- Bugs fixed \[call_schedule\]
+
 # Release 1.2.1 [stable]
 - The system for calculating time before the start of the lesson has been fixed.
 - Bugs fixed
