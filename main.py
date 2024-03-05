@@ -173,26 +173,21 @@ def call_schedule(message):
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
     # default
-            call_schedule = '''⚙️ В разработке функция может работать не стабильно ⚠️
-    
-    Урок 1: 8:00   -  8:45
-    Урок 2: 8:55   -  9:40
-    Урок 3: 10:00 - 10:45
-    Урок 4: 11:05 - 11:50
-    Урок 5: 12:00 - 12:45
-    Урок 6: 12:55 - 13:40
-    Урок 7: 13:45 - 14:30
-    Урок 8: 14:35 - 15:20'''
+            call_schedule = '''
+Урок 1: 8:00  -  8:45
+Урок 2: 8:55  -  9:35
+Урок 3: 9:55  - 10:35
+Урок 4: 10:55 - 11:35
+Урок 5: 11:45 - 12:20
+Урок 6: 12:30 - 13:10'''
 
             lessons = [
                 {"start_time": 8_00, "end_time": 8_45},
-                {"start_time": 8_55, "end_time": 9_40},
-                {"start_time": 10_00, "end_time": 10_45},
-                {"start_time": 11_05, "end_time": 11_50},
-                {"start_time": 12_00, "end_time": 12_45},
-                {"start_time": 12_55, "end_time": 13_40},
-                {"start_time": 13_45, "end_time": 14_30},
-                {"start_time": 14_35, "end_time": 15_20}
+                {"start_time": 8_55, "end_time": 9_35},
+                {"start_time": 9_55, "end_time": 10_35},
+                {"start_time": 10_55, "end_time": 11_35},
+                {"start_time": 11_45, "end_time": 12_20},
+                {"start_time": 12_30, "end_time": 13_10}
                     ]
 
             current_time = int(strftime("%H%M", localtime()))
