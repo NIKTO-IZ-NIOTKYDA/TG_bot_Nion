@@ -123,6 +123,7 @@ def check_user_in_db(message):
         send_status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
 
+
 # Command
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -164,7 +165,6 @@ def schedule(message):
                     bot.send_message(admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
                 except telebot.apihelper.ApiException:
                     loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
-
 
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message):
@@ -218,6 +218,15 @@ def call_schedule(message):
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
     except Exception as E:
         print(E)
+
+# Посхало
+@bot.message_handler(commands=['command'])
+def command(message):
+    # Шаблон
+    bot.send_message(message.chat.id, '1488')  # Отправить пользователю сообщение с текстом 1488
+    bot.send_photo(message.chat.id, photo=open('photo/dick.png', 'rb'), caption='хуй')  # Отправить пользователю фото (photo/dick.png) с подписью "хуй"
+
+
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message):
@@ -231,6 +240,7 @@ def photo(message):
             with open(file_path, 'wb') as new_file:
                 new_file.write(downloaded_file)
             bot.send_message(message.chat.id, 'Где нужно поставить это фото ?', reply_markup=markup_photo)
+
 
 # Inline-button
 @bot.callback_query_handler(func=lambda call: True)
@@ -313,6 +323,8 @@ def callback_handler(call):
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do='User unauthenticated ! (in callback_handler)')
         send_status_text(user_id=call.message.chat.id)
         bot.send_message(call.message.chat.id, '[!] Критическая ошибка аутентификации !\nПожалуйста введите команду /start')
+
+
 # Text
 @bot.message_handler(content_types=['text'])
 def logic(message):
