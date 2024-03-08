@@ -483,7 +483,7 @@ def logic(message):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Disks')
                 Disks = psutil.disk_io_counters()
                 # Network
-                loging(logger_level='INFO', user_id=str(message.hat.id), do='Generating information about: Network')
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Network')
                 Network = psutil.net_if_addrs()
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
