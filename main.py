@@ -219,19 +219,6 @@ def call_schedule(message):
     except Exception as E:
         print(E)
 
-# Посхало
-@bot.message_handler(commands=['command'])
-def command(message):
-    # Шаблон
-    # Для отправки сообщения
-    send_status_text(user_id=message.chat.id)  # Надо
-    bot.send_message(message.chat.id, '1488')  # Отправить пользователю сообщение с текстом 1488
-
-    # Для отправки фото
-    bot.send_chat_action(message.chat.id, action='upload_photo')  # Надо
-    bot.send_photo(message.chat.id, photo=open('photo/dick.png', 'rb'), caption='хуй')  # Отправить пользователю фото (photo/dick.png) с подписью "хуй"
-
-
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message):
@@ -363,7 +350,7 @@ def logic(message):
                 def enter_lessons(message):
                     global input_text
                     input_text = message.text
-                    bot.send_message(message.chat.id, 'Выберете урок:', reply_markup=markup_dz_update_p)
+                    bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update_p)
                 enter_dz(message)
         elif message.text == '⬅️ Назад':
             try:
