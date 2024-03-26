@@ -1,3 +1,7 @@
+# Release 1.3.0 [stable]
+- Added a system for notifying administrators in case of incorrect D/Z.
+- Added D/Z removal system
+
 # Release 1.2.1 [stable]
 - The system for calculating time before the start of the lesson has been fixed.
 - Bugs fixed

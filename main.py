@@ -243,15 +243,23 @@ def callback_handler(call):
         if call.data == 'algebra' or call.data == 'english_lang_1' or call.data == 'english_lang_2' or call.data == 'biology' or call.data == 'geography' or call.data == 'geometry' or call.data == 'computer_science_1' or call.data == 'computer_science_2' or call.data == 'story' or call.data == 'literature' or call.data == 'music' or call.data == 'OBZH' or call.data == 'social_science' or call.data == 'native_literature' or call.data == 'russian_lang' or call.data == 'TBIS' or call.data == 'technology' or call.data == 'physics' or call.data == 'chemistry':
             markup_back = types.InlineKeyboardMarkup(row_width=1)
             url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
+            notification_admin = types.InlineKeyboardButton(text='⚠️ Задание не верное или устаревшее ⚠️', callback_data=f'{call.data}_notification_admin')
+            del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz')
             photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
             # URL
             if url != 'None':
                 url = types.InlineKeyboardButton(text='ГДЗ', url=url)
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                markup_back.add(url, back)
+                if check_for_admin(user_id=call.message.chat.id):
+                    markup_back.add(url, del_dz, back)
+                else:
+                    markup_back.add(url, notification_admin, back)
             else:
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                markup_back.add(back)
+                if check_for_admin(user_id=call.message.chat.id):
+                    markup_back.add(del_dz, back)
+                else:
+                    markup_back.add(notification_admin, back)
             # Photo
             if photo != 'None':
                 bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
@@ -260,6 +268,38 @@ def callback_handler(call):
             # Default
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+        elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz", ""), dz='Не добавлено домашнее задание =(')
+            db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz", ""), path='None')
+            try:
+                os.remove('photo/' + call.data.replace("_del_dz", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_del_dz", ""))
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace("_del_dz", "")}\'')
+            bot.send_message(call.message.chat.id, '✅ Успешно !')
+        elif call.data == 'algebra_notification_admin' or call.data == 'english_lang_1_notification_admin' or call.data == 'english_lang_2_notification_admin' or call.data == 'biology_notification_admin' or call.data == 'geography_notification_admin' or call.data == 'geometry_notification_admin' or call.data == 'computer_science_1_notification_admin' or call.data == 'computer_science_2_notification_admin' or call.data == 'story_notification_admin' or call.data == 'literature_notification_admin' or call.data == 'music_notification_admin' or call.data == 'OBZH_notification_admin' or call.data == 'social_science_notification_admin' or call.data == 'native_literature_notification_admin' or call.data == 'russian_lang_notification_admin' or call.data == 'TBIS_notification_admin' or call.data == 'technology_notification_admin' or call.data == 'physics_notification_admin' or call.data == 'chemistry_notification_admin':
+            loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'User: {call.message.chat.id} requested a D/Z update')
+            less = call.data.replace("_notification_admin", "")
+
+            def enter_message(call):
+                msg = bot.send_message(call.message.chat.id, '⚠️ Введите комментарий к запросу в нём можно указать на ошибку или предложить правильное Д/З', reply_markup=types.ReplyKeyboardRemove())
+                bot.register_next_step_handler(msg, start_mailing_admin)
+
+            def start_mailing_admin(call):
+                try:
+                    bot.send_message(5731571131, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                except telebot.apihelper.ApiException:
+                    loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                for admin_id in config.admin_id:
+                    try:
+                        bot.send_message(admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                    except telebot.apihelper.ApiException:
+                        loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+                bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
+            enter_message(call)
         elif call.data == 'back':
             try:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
