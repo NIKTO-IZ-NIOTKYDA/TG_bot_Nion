@@ -290,7 +290,7 @@ def callback_handler(call):
 
             def start_mailing_admin(call):
                 try:
-                    bot.send_message(5731571131, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                    bot.send_message(config.main_admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
                 except telebot.apihelper.ApiException:
                     loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
                 for admin_id in config.admin_id:
