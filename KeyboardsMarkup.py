@@ -7,6 +7,11 @@ schedule = types.KeyboardButton('Расписание 📑')
 call_schedule = types.KeyboardButton('Расписание звонков 🕝')
 markup_start.add(DZ, schedule, call_schedule)
 
+# Del schedule
+del_schedule = types.InlineKeyboardMarkup()
+del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='del_schedule')
+del_schedule.add(del_schedule_button)
+
 # DZ
 markup_dz = types.InlineKeyboardMarkup()
 algebra = types.InlineKeyboardButton(text='Алгебра', callback_data='algebra')

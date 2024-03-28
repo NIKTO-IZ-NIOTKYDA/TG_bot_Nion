@@ -151,7 +151,10 @@ def schedule(message):
         try:
             photo = open('schedule.jpg', 'rb')
             bot.send_chat_action(message.chat.id, action='upload_photo')
-            bot.send_photo(message.chat.id, photo=photo)
+            if check_for_admin(user_id=message.chat.id):
+                bot.send_photo(message.chat.id, photo=photo, reply_markup=del_schedule)
+            else:
+                bot.send_photo(message.chat.id, photo=photo)
         except FileNotFoundError:
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Schedule not found !')
             bot.send_message(message.chat.id, 'Ошибка: файл (расписание) не найден.', reply_markup=markup_start)
@@ -268,6 +271,7 @@ def callback_handler(call):
             # Default
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+        # Del D/Z
         elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
@@ -280,6 +284,7 @@ def callback_handler(call):
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_del_dz", ""))
             loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace("_del_dz", "")}\'')
             bot.send_message(call.message.chat.id, '✅ Успешно !')
+        # Notification admin
         elif call.data == 'algebra_notification_admin' or call.data == 'english_lang_1_notification_admin' or call.data == 'english_lang_2_notification_admin' or call.data == 'biology_notification_admin' or call.data == 'geography_notification_admin' or call.data == 'geometry_notification_admin' or call.data == 'computer_science_1_notification_admin' or call.data == 'computer_science_2_notification_admin' or call.data == 'story_notification_admin' or call.data == 'literature_notification_admin' or call.data == 'music_notification_admin' or call.data == 'OBZH_notification_admin' or call.data == 'social_science_notification_admin' or call.data == 'native_literature_notification_admin' or call.data == 'russian_lang_notification_admin' or call.data == 'TBIS_notification_admin' or call.data == 'technology_notification_admin' or call.data == 'physics_notification_admin' or call.data == 'chemistry_notification_admin':
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'User: {call.message.chat.id} requested a D/Z update')
             less = call.data.replace("_notification_admin", "")
@@ -300,6 +305,7 @@ def callback_handler(call):
                         loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
                 bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
             enter_message(call)
+        # Back
         elif call.data == 'back':
             try:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
@@ -308,6 +314,16 @@ def callback_handler(call):
                     bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                     send_status_text(user_id=call.message.chat.id)
                     bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
+        # Del schedule
+        elif call.data == 'del_schedule':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            try:
+                os.remove('schedule.jpg')
+            except FileNotFoundError:
+                pass
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
+            bot.send_message(call.message.chat.id, '✅ Успешно !')
         # § (Paragraph)
         elif call.data == 'paragraph':
             send_status_text(user_id=call.message.chat.id)
