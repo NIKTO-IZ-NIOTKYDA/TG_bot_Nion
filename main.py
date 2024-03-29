@@ -219,6 +219,99 @@ def call_schedule(message):
     except Exception as E:
         print(E)
 
+<<<<<<< HEAD
+# Посхалки
+@bot.message_handler(commands=['1488'])
+def c_1488(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_video')
+    bot.send_video(message.chat.id, video=open('res/gif/1488.gif', 'rb'), caption='ОСУЖДАЮ НАЦИЗМ')
+
+@bot.message_handler(commands=['FaH'])
+def FaH(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/FaH.jpg', 'rb'), caption='Марина😏😏😏😏')
+
+@bot.message_handler(commands=['deadp47'])
+def deadp47(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/deadp47.jpg', 'rb'), caption='эй скууууф')
+
+@bot.message_handler(commands=['isaac'])
+def isaac(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_video')
+    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='тут должен был быть коко дамбо но я незнаю как его вставить')
+
+@bot.message_handler(commands=['sigma'])
+def sigma(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/sigma.jpg', 'rb'), caption='σ')
+
+@bot.message_handler(commands=['genshin'])
+def genshin(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/genshin.jpg', 'rb'), caption='out for you live,NOW!')
+
+@bot.message_handler(commands=['ambulance'])
+def ambulance(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.jpg', 'rb'), caption='ambulance')
+
+@bot.message_handler(commands=['Carl_Marks'])
+def Carl_Marks(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/Carl_Marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
+
+@bot.message_handler(commands=['NiK'])
+def NiK(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/NiK.jpg', 'rb'), caption='[данные_удалены]')
+
+@bot.message_handler(commands=['murzik'])
+def murzik(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/murzik.jpg', 'rb'), caption='oh,hello there!')
+
+@bot.message_handler(commands=['spooky'])
+def spooky(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/spooky.jpg', 'rb'), caption='you scared?')
+
+@bot.message_handler(commands=['10hours'])
+def tenhours(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/10hours.jpg', 'rb'), caption='я ненавижу рпг макер')
+
+@bot.message_handler(commands=['ded'])
+def ded(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/ded.jpg', 'rb'), caption='мой дедушка прошел афган.....')
+
+@bot.message_handler(commands=['usa'])
+def usa(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/usa.jpg', 'rb'), caption='USAAAAAAAAAAAAAAAAAAAAA')
+
+@bot.message_handler(commands=['z'])
+def z(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='ZZZZZZZZZZZZZZZZZ')
+=======
+>>>>>>> develop
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -419,6 +512,10 @@ def logic(message):
         elif message.text == 'ГДЗ':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
+        # оля=свинья famili guy скример
+        elif message.text == 'Оля' or message.text == 'оля':
+            bot.send_chat_action(message.chat.id, action='upload_photo')
+            bot.send_photo(message.chat.id, photo=open('res/photo/ola.jpg', 'rb'), caption='ниф ниф или нуф нуф?')
         # Main Admin Panel
         elif message.text == f'/{config.commands_admin}':
             if message.chat.id == config.main_admin_id:
@@ -576,3 +673,4 @@ except telebot.apihelper.ApiException:
 
 if __name__ == '__main__':
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
+
