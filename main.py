@@ -473,7 +473,7 @@ def logic(message):
         elif message.text == 'Рассылка✉️':
             if message.chat.id == config.main_admin_id:
                 def enter_message(message):
-                    msg = bot.send_message(message.chat.id, '⚠️ Введите сообщение нахуй', reply_markup=types.ReplyKeyboardRemove())
+                    msg = bot.send_message(message.chat.id, '⚠️ Введите сообщение', reply_markup=types.ReplyKeyboardRemove())
                     bot.register_next_step_handler(msg, start_mailing)
 
                 def start_mailing(message):
