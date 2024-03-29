@@ -175,7 +175,6 @@ def call_schedule(message):
         if check_user_in_db(message) == 0:
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
-    # default
             call_schedule = '''Урок 1: 8:00   -  8:45
 Урок 2: 8:55   -  9:40
 Урок 3: 10:00 - 10:45
@@ -219,6 +218,7 @@ def call_schedule(message):
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
     except Exception as E:
         print(E)
+
 
 # Other
 @bot.message_handler(content_types=['photo'])
