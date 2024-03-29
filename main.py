@@ -219,7 +219,7 @@ def call_schedule(message):
     except Exception as E:
         print(E)
 
-<<<<<<< HEAD
+
 # Посхалки
 @bot.message_handler(commands=['1488'])
 def c_1488(message):
@@ -310,8 +310,7 @@ def z(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='ZZZZZZZZZZZZZZZZZ')
-=======
->>>>>>> develop
+    
 
 # Other
 @bot.message_handler(content_types=['photo'])
