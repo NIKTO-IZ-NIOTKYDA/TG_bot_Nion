@@ -219,20 +219,9 @@ def call_schedule(message):
     except Exception as E:
         print(E)
 
-# Посхало
-@bot.message_handler(commands=['command'])
-def command(message):
-    # Шаблон
-    # Для отправки сообщения
-    send_status_text(user_id=message.chat.id)  # Надо
-    bot.send_message(message.chat.id, 'members')  # Отправить пользователю сообщение с текстом members
-
-    # Для отправки фото
-    bot.send_chat_action(message.chat.id, action='upload_photo')  # Надо
-    bot.send_photo(message.chat.id, photo=open('photo/dick.png', 'rb'), caption='хуй')  # Отправить пользователю фото (photo/dick.png) с подписью "хуй"
-
+# Посхалки
 @bot.message_handler(commands=['1488'])
-def command(message):
+def c_1488(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
     bot.send_video(message.chat.id, video=open('res/gif/1488.gif', 'rb'), caption='ОСУЖДАЮ НАЦИЗМ')
@@ -247,13 +236,13 @@ def FaH(message):
 def deadp47(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/deadp.jpg', 'rb'), caption='эй скууууф')
+    bot.send_photo(message.chat.id, photo=open('res/photo/deadp47.jpg', 'rb'), caption='эй скууууф')
 
 @bot.message_handler(commands=['isaac'])
 def isaac(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
-    bot.send_video(message.chat.id, video=open('res/gif/the-binding-of-isaac.gif', 'rb'), caption='тут должен был быть коко дамбо но я незнаю как его вставить')
+    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='тут должен был быть коко дамбо но я незнаю как его вставить')
 
 @bot.message_handler(commands=['sigma'])
 def sigma(message):
@@ -271,26 +260,26 @@ def genshin(message):
 def ambulance(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.png', 'rb'), caption='ambulance')
-
+    bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.jpg', 'rb'), caption='ambulance')
 
 @bot.message_handler(commands=['Carl_Marks'])
 def Carl_Marks(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/soviet.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
+    bot.send_photo(message.chat.id, photo=open('res/photo/Carl_Marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
 
-@bot.message_handler(commands=['Nik'])
-def Nik(message):
+@bot.message_handler(commands=['NiK'])
+def NiK(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/logotip-anonymous.png', 'rb'), caption='[данные_удалены]')
+    bot.send_photo(message.chat.id, photo=open('res/photo/NiK.jpg', 'rb'), caption='[данные_удалены]')
 
-@bot.message_handler(commands=['Murzik'])
+@bot.message_handler(commands=['murzik'])
 def murzik(message):
-     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
-     bot.send_chat_action(message.chat.id, action='upload_photo')
-     bot.send_photo(message.chat.id, photo=open('res/photo/pocet.jpg', 'rb'), caption='oh,hello there!')
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/murzik.jpg', 'rb'), caption='oh,hello there!')
+
 @bot.message_handler(commands=['spooky'])
 def spooky(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
@@ -301,24 +290,25 @@ def spooky(message):
 def tenhours(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/8hours.jpg', 'rb'), caption='я ненавижу рпг макер')
+    bot.send_photo(message.chat.id, photo=open('res/photo/10hours.jpg', 'rb'), caption='я ненавижу рпг макер')
+
 @bot.message_handler(commands=['ded'])
 def ded(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/1543831018_osama-bin-laden_ls.jpg', 'rb'), caption='мой дедушка прошел афган.....')
+    bot.send_photo(message.chat.id, photo=open('res/photo/ded.jpg', 'rb'), caption='мой дедушка прошел афган.....')
 
 @bot.message_handler(commands=['usa'])
 def usa(message):
-        loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
-        bot.send_chat_action(message.chat.id, action='upload_photo')
-        bot.send_photo(message.chat.id, photo=open('res/photo/maxresdefault (1).jpg', 'rb'), caption='USAAAAAAAAAAAAAAAAAAAAA')
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/usa.jpg', 'rb'), caption='USAAAAAAAAAAAAAAAAAAAAA')
 
 @bot.message_handler(commands=['z'])
 def z(message):
-        loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
-        bot.send_chat_action(message.chat.id, action='upload_photo')
-        bot.send_photo(message.chat.id, photo=open('res/photo/Заставка_в_конце_ролика_от_МО_РФ.png', 'rb'), caption='ZZZZZZZZZZZZZZZZZ' )
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='ZZZZZZZZZZZZZZZZZ')
 
 # Other
 @bot.message_handler(content_types=['photo'])
