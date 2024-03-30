@@ -315,16 +315,15 @@ def z(message):
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message):
-    if check_user_in_db(message) == 0:
-        if check_for_admin(user_id=message.chat.id):
-            send_status_text(user_id=message.chat.id)
-            photo = message.photo[-1]
-            file_info = bot.get_file(photo.file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            file_path = 'photo.jpg'
-            with open(file_path, 'wb') as new_file:
-                new_file.write(downloaded_file)
-            bot.send_message(message.chat.id, 'Где нужно поставить это фото ?', reply_markup=markup_photo)
+    if check_user_in_db(message) == 0 and check_for_admin(user_id=message.chat.id):
+        send_status_text(user_id=message.chat.id)
+        photo = message.photo[-1]
+        file_info = bot.get_file(photo.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        file_path = 'photo.jpg'
+        with open(file_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        bot.send_message(message.chat.id, 'Где нужно поставить это фото ?', reply_markup=markup_photo)
 
 
 # Inline-button
