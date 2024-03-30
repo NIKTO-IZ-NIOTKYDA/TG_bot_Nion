@@ -1,3 +1,8 @@
+# Release 1.3.0 [stable]
+- Added a system for notifying administrators in case of incorrect D/Z.
+- Added secrets
+- Added D/Z and schedule removal system
+
 # Release 1.2.2 [stable]
 - Bugs fixed \[call_schedule\]
 

@@ -123,6 +123,7 @@ def check_user_in_db(message):
         send_status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
 
+
 # Command
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -150,7 +151,10 @@ def schedule(message):
         try:
             photo = open('schedule.jpg', 'rb')
             bot.send_chat_action(message.chat.id, action='upload_photo')
-            bot.send_photo(message.chat.id, photo=photo)
+            if check_for_admin(user_id=message.chat.id):
+                bot.send_photo(message.chat.id, photo=photo, reply_markup=del_schedule)
+            else:
+                bot.send_photo(message.chat.id, photo=photo)
         except FileNotFoundError:
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Schedule not found !')
             bot.send_message(message.chat.id, 'Ошибка: файл (расписание) не найден.', reply_markup=markup_start)
@@ -165,29 +169,30 @@ def schedule(message):
                 except telebot.apihelper.ApiException:
                     loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
 
-
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message):
     try:
         if check_user_in_db(message) == 0:
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
-    # default
-            call_schedule = '''
-Урок 1: 8:00  -  8:45
-Урок 2: 8:55  -  9:35
-Урок 3: 9:55  - 10:35
-Урок 4: 10:55 - 11:35
-Урок 5: 11:45 - 12:20
-Урок 6: 12:30 - 13:10'''
+            call_schedule = '''Урок 1: 8:00   -  8:45
+Урок 2: 8:55   -  9:40
+Урок 3: 10:00 - 10:45
+Урок 4: 11:05 - 11:50
+Урок 5: 12:00 - 12:45
+Урок 6: 12:55 - 13:40
+Урок 7: 13:45 - 14:30
+Урок 8: 14:35 - 15:20'''
 
             lessons = [
                 {"start_time": 8_00, "end_time": 8_45},
-                {"start_time": 8_55, "end_time": 9_35},
-                {"start_time": 9_55, "end_time": 10_35},
-                {"start_time": 10_55, "end_time": 11_35},
-                {"start_time": 11_45, "end_time": 12_20},
-                {"start_time": 12_30, "end_time": 13_10}
+                {"start_time": 8_55, "end_time": 9_40},
+                {"start_time": 10_00, "end_time": 10_45},
+                {"start_time": 11_05, "end_time": 11_50},
+                {"start_time": 12_00, "end_time": 12_45},
+                {"start_time": 12_55, "end_time": 13_40},
+                {"start_time": 13_45, "end_time": 14_30},
+                {"start_time": 14_35, "end_time": 15_20}
                     ]
 
             current_time = int(strftime("%H%M", localtime()))
@@ -213,19 +218,113 @@ def call_schedule(message):
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
     except Exception as E:
         print(E)
+
+
+# Посхалки
+@bot.message_handler(commands=['1488'])
+def c_1488(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_video')
+    bot.send_video(message.chat.id, video=open('res/gif/1488.gif', 'rb'), caption='ОСУЖДАЮ НАЦИЗМ')
+
+@bot.message_handler(commands=['FaH'])
+def FaH(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/FaH.jpg', 'rb'), caption='Марина😏😏😏😏')
+
+@bot.message_handler(commands=['deadp47'])
+def deadp47(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/deadp47.jpg', 'rb'), caption='эй скууууф')
+
+@bot.message_handler(commands=['isaac'])
+def isaac(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_video')
+    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='тут должен был быть коко дамбо но я незнаю как его вставить')
+
+@bot.message_handler(commands=['sigma'])
+def sigma(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/sigma.jpg', 'rb'), caption='σ')
+
+@bot.message_handler(commands=['genshin'])
+def genshin(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/genshin.jpg', 'rb'), caption='out for you live,NOW!')
+
+@bot.message_handler(commands=['ambulance'])
+def ambulance(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.jpg', 'rb'), caption='ambulance')
+
+@bot.message_handler(commands=['Carl_Marks'])
+def Carl_Marks(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/Carl_Marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
+
+@bot.message_handler(commands=['NiK'])
+def NiK(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/NiK.jpg', 'rb'), caption='[данные_удалены]')
+
+@bot.message_handler(commands=['murzik'])
+def murzik(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/murzik.jpg', 'rb'), caption='oh,hello there!')
+
+@bot.message_handler(commands=['spooky'])
+def spooky(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/spooky.jpg', 'rb'), caption='you scared?')
+
+@bot.message_handler(commands=['10hours'])
+def tenhours(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/10hours.jpg', 'rb'), caption='я ненавижу рпг макер')
+
+@bot.message_handler(commands=['ded'])
+def ded(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/ded.jpg', 'rb'), caption='мой дедушка прошел афган.....')
+
+@bot.message_handler(commands=['usa'])
+def usa(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/usa.jpg', 'rb'), caption='USAAAAAAAAAAAAAAAAAAAAA')
+
+@bot.message_handler(commands=['z'])
+def z(message):
+    loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
+    bot.send_chat_action(message.chat.id, action='upload_photo')
+    bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='ZZZZZZZZZZZZZZZZZ')
+    
+
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message):
-    if check_user_in_db(message) == 0:
-        if check_for_admin(user_id=message.chat.id):
-            send_status_text(user_id=message.chat.id)
-            photo = message.photo[-1]
-            file_info = bot.get_file(photo.file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            file_path = 'photo.jpg'
-            with open(file_path, 'wb') as new_file:
-                new_file.write(downloaded_file)
-            bot.send_message(message.chat.id, 'Где нужно поставить это фото ?', reply_markup=markup_photo)
+    if check_user_in_db(message) == 0 and check_for_admin(user_id=message.chat.id):
+        send_status_text(user_id=message.chat.id)
+        photo = message.photo[-1]
+        file_info = bot.get_file(photo.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        file_path = 'photo.jpg'
+        with open(file_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
+        bot.send_message(message.chat.id, 'Где нужно поставить это фото ?', reply_markup=markup_photo)
+
 
 # Inline-button
 @bot.callback_query_handler(func=lambda call: True)
@@ -236,15 +335,23 @@ def callback_handler(call):
         if call.data == 'algebra' or call.data == 'english_lang_1' or call.data == 'english_lang_2' or call.data == 'biology' or call.data == 'geography' or call.data == 'geometry' or call.data == 'computer_science_1' or call.data == 'computer_science_2' or call.data == 'story' or call.data == 'literature' or call.data == 'music' or call.data == 'OBZH' or call.data == 'social_science' or call.data == 'native_literature' or call.data == 'russian_lang' or call.data == 'TBIS' or call.data == 'technology' or call.data == 'physics' or call.data == 'chemistry':
             markup_back = types.InlineKeyboardMarkup(row_width=1)
             url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
+            notification_admin = types.InlineKeyboardButton(text='⚠️ Задание не верное или устаревшее ⚠️', callback_data=f'{call.data}_notification_admin')
+            del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz')
             photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
             # URL
             if url != 'None':
                 url = types.InlineKeyboardButton(text='ГДЗ', url=url)
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                markup_back.add(url, back)
+                if check_for_admin(user_id=call.message.chat.id):
+                    markup_back.add(url, del_dz, back)
+                else:
+                    markup_back.add(url, notification_admin, back)
             else:
                 back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                markup_back.add(back)
+                if check_for_admin(user_id=call.message.chat.id):
+                    markup_back.add(del_dz, back)
+                else:
+                    markup_back.add(notification_admin, back)
             # Photo
             if photo != 'None':
                 bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
@@ -253,6 +360,41 @@ def callback_handler(call):
             # Default
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+        # Del D/Z
+        elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz", ""), dz='Не добавлено домашнее задание =(')
+            db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz", ""), path='None')
+            try:
+                os.remove('photo/' + call.data.replace("_del_dz", "") + '.jpg')
+            except FileNotFoundError:
+                pass
+            db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_del_dz", ""))
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace("_del_dz", "")}\'')
+            bot.send_message(call.message.chat.id, '✅ Успешно !')
+        # Notification admin
+        elif call.data == 'algebra_notification_admin' or call.data == 'english_lang_1_notification_admin' or call.data == 'english_lang_2_notification_admin' or call.data == 'biology_notification_admin' or call.data == 'geography_notification_admin' or call.data == 'geometry_notification_admin' or call.data == 'computer_science_1_notification_admin' or call.data == 'computer_science_2_notification_admin' or call.data == 'story_notification_admin' or call.data == 'literature_notification_admin' or call.data == 'music_notification_admin' or call.data == 'OBZH_notification_admin' or call.data == 'social_science_notification_admin' or call.data == 'native_literature_notification_admin' or call.data == 'russian_lang_notification_admin' or call.data == 'TBIS_notification_admin' or call.data == 'technology_notification_admin' or call.data == 'physics_notification_admin' or call.data == 'chemistry_notification_admin':
+            loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'User: {call.message.chat.id} requested a D/Z update')
+            less = call.data.replace("_notification_admin", "")
+
+            def enter_message(call):
+                msg = bot.send_message(call.message.chat.id, '⚠️ Введите комментарий к запросу в нём можно указать на ошибку или предложить правильное Д/З', reply_markup=types.ReplyKeyboardRemove())
+                bot.register_next_step_handler(msg, start_mailing_admin)
+
+            def start_mailing_admin(call):
+                try:
+                    bot.send_message(config.main_admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                except telebot.apihelper.ApiException:
+                    loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                for admin_id in config.admin_id:
+                    try:
+                        bot.send_message(admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                    except telebot.apihelper.ApiException:
+                        loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+                bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
+            enter_message(call)
+        # Back
         elif call.data == 'back':
             try:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
@@ -261,6 +403,16 @@ def callback_handler(call):
                     bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                     send_status_text(user_id=call.message.chat.id)
                     bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
+        # Del schedule
+        elif call.data == 'del_schedule':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            try:
+                os.remove('schedule.jpg')
+            except FileNotFoundError:
+                pass
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
+            bot.send_message(call.message.chat.id, '✅ Успешно !')
         # § (Paragraph)
         elif call.data == 'paragraph':
             send_status_text(user_id=call.message.chat.id)
@@ -308,6 +460,8 @@ def callback_handler(call):
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do='User unauthenticated ! (in callback_handler)')
         send_status_text(user_id=call.message.chat.id)
         bot.send_message(call.message.chat.id, '[!] Критическая ошибка аутентификации !\nПожалуйста введите команду /start')
+
+
 # Text
 @bot.message_handler(content_types=['text'])
 def logic(message):
@@ -341,7 +495,7 @@ def logic(message):
                 def enter_lessons(message):
                     global input_text
                     input_text = message.text
-                    bot.send_message(message.chat.id, 'Выберете урок:', reply_markup=markup_dz_update_p)
+                    bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update_p)
                 enter_dz(message)
         elif message.text == '⬅️ Назад':
             try:
@@ -356,6 +510,10 @@ def logic(message):
         elif message.text == 'ГДЗ':
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить ГДЗ', reply_markup=markup_url)
+        # оля=свинья famili guy скример
+        elif message.text == 'Оля' or message.text == 'оля':
+            bot.send_chat_action(message.chat.id, action='upload_photo')
+            bot.send_photo(message.chat.id, photo=open('res/photo/ola.jpg', 'rb'), caption='ниф ниф или нуф нуф?')
         # Main Admin Panel
         elif message.text == f'/{config.commands_admin}':
             if message.chat.id == config.main_admin_id:
@@ -461,7 +619,7 @@ def logic(message):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Disks')
                 Disks = psutil.disk_io_counters()
                 # Network
-                loging(logger_level='INFO', user_id=str(message.hat.id), do='Generating information about: Network')
+                loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating information about: Network')
                 Network = psutil.net_if_addrs()
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='Generating a report based on the data received . . .')
                 info = f'''OS: {SystemName} {SystemRelease}
@@ -513,3 +671,4 @@ except telebot.apihelper.ApiException:
 
 if __name__ == '__main__':
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
+
