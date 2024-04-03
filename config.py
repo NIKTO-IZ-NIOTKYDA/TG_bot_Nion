@@ -10,5 +10,5 @@ debug = True
 error = False
 welcome_animation = False
 name_log_file = 'log.log'
-main_admin_id = 57315711310
+main_admin_id = 5731571131
 admin_id = [5287168197, 1670389988]
