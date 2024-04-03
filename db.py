@@ -1,12 +1,12 @@
 import sqlite3
 
-import config
-from loging import loging, debug
+from config import name_database, debug, main_admin_id
+from loging import loging
 
 def db_connect():
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
     global conn
-    conn = sqlite3.connect(config.name_database, check_same_thread=False)
+    conn = sqlite3.connect(name_database, check_same_thread=False)
     loging(logger_level='INFO', user_id='none', do='Create a course . . .')
     global cursor
     cursor = conn.cursor()
@@ -67,7 +67,7 @@ def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, 
     conn.commit()
 
 def return_user_authentication(user_id: int):
-    if user_id == config.main_admin_id:
+    if user_id == main_admin_id:
         return 0
     else:
         if debug:

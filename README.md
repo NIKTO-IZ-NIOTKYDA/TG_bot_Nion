@@ -1,3 +1,9 @@
+# Release 1.3.0 [stable] [patch 1]
+- Added check for D/Z deletion
+- Added system for recognizing false messages about D/Z infidelity
+- Fix issues #27
+- Bugs fixed
+
 # Release 1.3.0 [stable]
 - Added a system for notifying administrators in case of incorrect D/Z.
 - Added secrets

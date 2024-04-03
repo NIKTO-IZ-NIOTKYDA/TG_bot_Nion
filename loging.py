@@ -1,9 +1,9 @@
-from os import system
+from os import remove, system
 from sys import stdout
 from time import sleep
 from datetime import datetime
 
-from config import clear_konsole, log, debug, welcome_animation, name_log_file
+from config import clear_konsole, log, welcome_animation, name_log_file
 
 
 # Colors
@@ -14,6 +14,10 @@ yellow = '\x1b[33m'
 blue = '\x1b[34m'
 purple = '\x1b[35m'
 
+try:
+    remove(str(name_log_file))
+except FileNotFoundError:
+    pass
 log_file = open(str(name_log_file), 'w+')
 
 def welcome_ani():
@@ -48,13 +52,13 @@ def welcome_ani():
 
 if welcome_animation:
     welcome_ani()
-if debug:
-    print('\n[FORMAN]   [ID]             [TIME]    [DO]')
-log_file.write('[FORMAN]   [ID]             [TIME]    [DO]\n')
+
+print('[FORMAN]   [ID]            [TIME]              [DO]')
+log_file.write('[FORMAN]   [ID]            [TIME]              [DO]\n')
 
 def loging(logger_level: str, user_id: str, do: str):
     if log:
-        current_time = datetime.now().strftime('%H:%M:%S')
+        current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         if logger_level == 'INFO':
             print('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
             log_file.write('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
