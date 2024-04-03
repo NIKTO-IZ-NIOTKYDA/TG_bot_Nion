@@ -223,16 +223,16 @@ def call_schedule(message):
 
 # Посхалки
 @bot.message_handler(commands=['1488'])
-def c_1488(message):
+def _1488(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
     bot.send_video(message.chat.id, video=open('res/gif/1488.gif', 'rb'), caption='ОСУЖДАЮ НАЦИЗМ')
 
-@bot.message_handler(commands=['FaH'])
-def FaH(message):
+@bot.message_handler(commands=['fah'])
+def fah(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/FaH.jpg', 'rb'), caption='Марина😏😏😏😏')
+    bot.send_photo(message.chat.id, photo=open('res/photo/fah.jpg', 'rb'), caption='Марина😏😏😏😏')
 
 @bot.message_handler(commands=['deadp47'])
 def deadp47(message):
@@ -264,17 +264,17 @@ def ambulance(message):
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.jpg', 'rb'), caption='ambulance')
 
-@bot.message_handler(commands=['Carl_Marks'])
-def Carl_Marks(message):
+@bot.message_handler(commands=['carl_marks'])
+def carl_marks(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/Carl_Marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
+    bot.send_photo(message.chat.id, photo=open('res/photo/carl_marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
 
-@bot.message_handler(commands=['NiK'])
-def NiK(message):
+@bot.message_handler(commands=['nik'])
+def nik(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
-    bot.send_photo(message.chat.id, photo=open('res/photo/NiK.jpg', 'rb'), caption='[данные_удалены]')
+    bot.send_photo(message.chat.id, photo=open('res/photo/nik.jpg', 'rb'), caption='[данные_удалены]')
 
 @bot.message_handler(commands=['murzik'])
 def murzik(message):
@@ -337,7 +337,7 @@ def callback_handler(call):
             markup_back = types.InlineKeyboardMarkup(row_width=1)
             url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
             notification_admin = types.InlineKeyboardButton(text='⚠️ Задание не верное или устаревшее ⚠️', callback_data=f'{call.data}_notification_admin')
-            del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz')
+            del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz_warn')
             photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
             # URL
             if url != 'None':
@@ -361,6 +361,14 @@ def callback_handler(call):
             # Default
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+        # WARN Del D/Z
+        elif call.data == 'algebra_del_dz_warn' or call.data == 'english_lang_1_del_dz_warn' or call.data == 'english_lang_2_del_dz_warn' or call.data == 'biology_del_dz_warn' or call.data == 'geography_del_dz_warn' or call.data == 'geometry_del_dz_warn' or call.data == 'computer_science_1_del_dz_warn' or call.data == 'computer_science_2_del_dz_warn' or call.data == 'story_del_dz_warn' or call.data == 'literature_del_dz_warn' or call.data == 'music_del_dz_warn' or call.data == 'OBZH_del_dz_warn' or call.data == 'social_science_del_dz_warn' or call.data == 'native_literature_del_dz_warn' or call.data == 'russian_lang_del_dz_warn' or call.data == 'TBIS_del_dz_warn' or call.data == 'technology_del_dz_warn' or call.data == 'physics_del_dz_warn' or call.data == 'chemistry_del_dz_warn':
+            markup_del_dz_warn = types.InlineKeyboardMarkup(row_width=1)
+            yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=f'{call.data.replace("_warn", "")}')
+            no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='no_del_dz')
+            markup_del_dz_warn.add(yes, no)
+            send_status_text(user_id=call.message.chat.id)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]}', reply_markup=markup_del_dz_warn)
         # Del D/Z
         elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
             send_status_text(user_id=call.message.chat.id)
@@ -384,16 +392,19 @@ def callback_handler(call):
                 bot.register_next_step_handler(msg, start_mailing_admin)
 
             def start_mailing_admin(call):
-                try:
-                    bot.send_message(config.main_admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
-                except telebot.apihelper.ApiException:
-                    loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
-                for admin_id in config.admin_id:
+                if call.text[0] == '/' or call.text == 'Домашнее задание 📚' or call.text == 'Расписание 📑' or call.text == 'Расписание звонков 🕝':
+                    bot.send_message(call.chat.id, '⚠️ Отправка прервана вы перенаправлены в главное меню.', reply_markup=markup_start)
+                else:
                     try:
-                        bot.send_message(admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                        bot.send_message(config.main_admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
                     except telebot.apihelper.ApiException:
-                        loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
-                bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
+                        loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                    for admin_id in config.admin_id:
+                        try:
+                            bot.send_message(admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
+                        except telebot.apihelper.ApiException:
+                            loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+                    bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
             enter_message(call)
         # Back
         elif call.data == 'back':
@@ -418,8 +429,13 @@ def callback_handler(call):
         elif call.data == 'paragraph':
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '§')
+        # No del D/Z
+        elif call.data == 'no_del_dz':
+            send_status_text(user_id=call.message.chat.id)
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
         # Replace D/Z
         elif call.data == 'algebra_update' or call.data == 'english_lang_1_update' or call.data == 'english_lang_2_update' or call.data == 'biology_update' or call.data == 'geography_update' or call.data == 'geometry_update' or call.data == 'computer_science_1_update' or call.data == 'computer_science_2_update' or call.data == 'story_update' or call.data == 'literature_update' or call.data == 'music_update' or call.data == 'OBZH_update' or call.data == 'social_science_update' or call.data == 'native_literature_update' or call.data == 'russian_lang_update' or call.data == 'TBIS_update' or call.data == 'technology_update' or call.data == 'physics_update' or call.data == 'chemistry_update':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
@@ -437,6 +453,7 @@ def callback_handler(call):
             send_update_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""))
         # Replace D/Z + photo
         elif call.data == 'algebra_update_p' or call.data == 'english_lang_1_update_p' or call.data == 'english_lang_2_update_p' or call.data == 'biology_update_p' or call.data == 'geography_update_p' or call.data == 'geometry_update_p' or call.data == 'computer_science_1_update_p' or call.data == 'computer_science_2_update_p' or call.data == 'story_update_p' or call.data == 'literature_update_p' or call.data == 'music_update_p' or call.data == 'OBZH_update_p' or call.data == 'social_science_update_p' or call.data == 'native_literature_update_p' or call.data == 'russian_lang_update_p' or call.data == 'TBIS_update_p' or call.data == 'technology_update_p' or call.data == 'physics_update_p' or call.data == 'chemistry_update_p':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), dz=input_text)
@@ -451,6 +468,7 @@ def callback_handler(call):
             send_update_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""))
         # Replace URL
         elif call.data == 'algebra_url' or call.data == 'english_lang_1_url' or call.data == 'english_lang_2_url' or call.data == 'biology_url' or call.data == 'geography_url' or call.data == 'geometry_url' or call.data == 'computer_science_1_url' or call.data == 'computer_science_2_url' or call.data == 'story_url' or call.data == 'literature_url' or call.data == 'music_url' or call.data == 'OBZH_url' or call.data == 'social_science_url' or call.data == 'native_literature_url' or call.data == 'russian_lang_url' or call.data == 'TBIS_url' or call.data == 'technology_url' or call.data == 'physics_url' or call.data == 'chemistry_url':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
             db.replace_url(user_id=call.message.chat.id, url=input_text, lesson=call.data.replace("_url", ""))
@@ -555,7 +573,6 @@ def logic(message):
                 newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
-
                 db.db_stop(user_id=message.chat.id)
                 newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0)
                 send_status_text(user_id=message.chat.id)
@@ -671,5 +688,4 @@ except telebot.apihelper.ApiException:
     loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
 
 if __name__ == '__main__':
-    print(db.return_all_user_id(5731571131))
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
