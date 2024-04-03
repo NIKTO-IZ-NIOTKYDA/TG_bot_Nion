@@ -62,6 +62,7 @@ def newsletter(user_id: int, text: str, i: int):
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
         sleep(1)
+        newsletter(user_id=user_id, text=text, i=i)
 
 def send_update_dz(user_id: int, lesson: str):
     if lesson == 'algebra':
@@ -670,5 +671,5 @@ except telebot.apihelper.ApiException:
     loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
 
 if __name__ == '__main__':
+    print(db.return_all_user_id(5731571131))
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
-
