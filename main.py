@@ -63,8 +63,8 @@ def newsletter(user_id: int, text: str, i: int):
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
-        i = 0
         sleep(1)
+        i = 0
         newsletter(user_id=user_id, text=text, i=i)
 
 def send_update_dz(user_id: int, lesson: str):
@@ -133,12 +133,10 @@ def check_user_in_db(message):
 def start_bot_notification_admin():
     try:
         loging(logger_level='INFO', user_id='none', do='Sending notifications to admins . . .')
-        send_status_text(user_id=config.commands_admin)
-        bot.send_message(config.main_admin_id,
-                         f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+        send_status_text(user_id=config.main_admin_id)
+        bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
     except telebot.apihelper.ApiException:
-        loging(logger_level='WARN', user_id=config.main_admin_id,
-               do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+        loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
     for admin_id in config.admin_id:
         try:
             bot.send_message(admin_id, f'⚠Бот запущен!⚠')
@@ -587,6 +585,7 @@ def logic(message):
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
+            print(input_text_mailing)
             newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
             input_text_mailing = ""
