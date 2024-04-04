@@ -53,22 +53,22 @@ def welcome_ani():
 if welcome_animation:
     welcome_ani()
 
-print('[FORMAN]   [ID]            [TIME]              [DO]')
-log_file.write('[FORMAN]   [ID]            [TIME]              [DO]\n')
+print('[FORMAN]   [ID]                           [TIME]              [DO]')
+log_file.write('[FORMAN]   [ID]                           [TIME]              [DO]\n')
 
 def loging(logger_level: str, user_id: str, do: str):
     if log:
         current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         if logger_level == 'INFO':
-            print('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+            print('%-15s %-35s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
+            log_file.write('%-15s %-35s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
             log_file.flush()
         elif logger_level == 'WARN':
-            print('%-15s %-20s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+            print('%-15s %-35s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
+            log_file.write('%-15s %-35s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
             log_file.flush()
         elif logger_level == 'ERROR':
-            print('%-15s %-20s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+            print('%-15s %-35s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
+            log_file.write('%-15s %-35s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
             log_file.flush()
             exit(1)
