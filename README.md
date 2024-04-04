@@ -1,3 +1,7 @@
+# Release 1.3.0 [stable] [patch 2]
+- Fix issues #27-1
+- Bugs fixed
+
 # Release 1.3.0 [stable] [patch 1]
 - Added check for D/Z deletion
 - Added system for recognizing false messages about D/Z infidelity
