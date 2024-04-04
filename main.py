@@ -15,6 +15,7 @@ os.system(config.clear_konsole)
 
 bot = telebot.TeleBot(config.BotToken)
 
+
 if config.log:
     loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
 
@@ -63,8 +64,8 @@ def newsletter(user_id: int, text: str, i: int):
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
-        i = 0
         sleep(1)
+        i = 0
         newsletter(user_id=user_id, text=text, i=i)
 
 def send_update_dz(user_id: int, lesson: str):
@@ -133,12 +134,10 @@ def check_user_in_db(message):
 def start_bot_notification_admin():
     try:
         loging(logger_level='INFO', user_id='none', do='Sending notifications to admins . . .')
-        send_status_text(user_id=config.commands_admin)
-        bot.send_message(config.main_admin_id,
-                         f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
+        send_status_text(user_id=config.main_admin_id)
+        bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
     except telebot.apihelper.ApiException:
-        loging(logger_level='WARN', user_id=config.main_admin_id,
-               do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+        loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
     for admin_id in config.admin_id:
         try:
             bot.send_message(admin_id, f'⚠Бот запущен!⚠')
@@ -577,19 +576,21 @@ def logic(message):
                 bot.register_next_step_handler(msg, start_mailing)
 
             def start_mailing(message):
-                global input_text_mailing
-                input_text_mailing = message.text
+                config.input_text_mailing = message.text
                 send_status_text(user_id=message.chat.id)
-                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
 
             enter_message(message)
         elif message.text == '✅ YES ✅' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
-            newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
+            try:
+                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0)
+            except Exception as E:
+                loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
-            input_text_mailing = ""
+            config.input_text_mailing = [None]
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
         elif message.text == 'Перезагрузка 🔄' and message.chat.id == config.main_admin_id:
