@@ -1,4 +1,4 @@
-BotToken = '6708933796:AAGES8iTUwSv1rmU1SiFGRfiy9abVvra8XM'  # Токен бота
+BotToken = '6552240356:AAErvt535Fdf2aNnCMC8iz87F7NmdCuUEEw'  # Токен бота
 commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
 clear_konsole = 'clear'
 name_database = 'db/db.db'
