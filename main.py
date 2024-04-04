@@ -15,6 +15,7 @@ os.system(config.clear_konsole)
 
 bot = telebot.TeleBot(config.BotToken)
 
+
 if config.log:
     loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
 
@@ -575,20 +576,21 @@ def logic(message):
                 bot.register_next_step_handler(msg, start_mailing)
 
             def start_mailing(message):
-                global input_text_mailing
-                input_text_mailing = message.text
+                config.input_text_mailing = message.text
                 send_status_text(user_id=message.chat.id)
-                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
 
             enter_message(message)
         elif message.text == '✅ YES ✅' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
-            print(input_text_mailing)
-            newsletter(user_id=message.chat.id, text=input_text_mailing, i=0)
+            try:
+                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0)
+            except Exception as E:
+                loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
-            input_text_mailing = ""
+            config.input_text_mailing = [None]
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
         elif message.text == 'Перезагрузка 🔄' and message.chat.id == config.main_admin_id:
