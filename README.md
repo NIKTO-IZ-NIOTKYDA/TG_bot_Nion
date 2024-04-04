@@ -1,3 +1,6 @@
+# Release 1.3.0 [stable] [patch 4]
+- Fix issues #27-3
+ 
 # Release 1.3.0 [stable] [patch 3]
 - Fix issues #27-2
 

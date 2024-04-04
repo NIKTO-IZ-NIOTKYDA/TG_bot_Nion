@@ -30,7 +30,7 @@ def send_status_text(user_id: int):
         loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
     bot.send_chat_action(user_id, action='typing')
 
-def newsletter(user_id: int, text: str, i: int):
+def newsletter(user_id: int, text: str, i: int, timer: int):
     res = db.return_all_user_id(user_id)
     if res == '[]':
         try:
@@ -41,72 +41,74 @@ def newsletter(user_id: int, text: str, i: int):
 
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
-    if i <= 29 and res != '[]':
+    if timer <= 29 and res != '[]':
         try:
             bot.send_message(int(res[i]), str(text))
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
             i += 1
-            send_status_text(user_id=user_id)
-            newsletter(user_id=user_id, text=text, i=i)
+            timer += 1
+            newsletter(user_id=user_id, text=text, i=i, timer=timer)
         except telebot.apihelper.ApiException as Error:
             if Error.result.status_code == 403 or Error.result.status_code == 400:
                 loging(logger_level='WARN', user_id=str(res[i]), do=f'User {res[i]} has blocked the bot!')
                 # db.remove_user(user_id=str(user_id))
                 i += 1
-                newsletter(user_id=user_id, text=text, i=i)
+                timer += 1
+                newsletter(user_id=user_id, text=text, i=i, timer=timer)
             else:
                 loging(logger_level='ERROR', user_id=str(res[i]), do=f'Undefined error !\tERROR: {Error}')
                 i += 1
-                newsletter(user_id=user_id, text=text, i=i)
+                timer += 1
+                newsletter(user_id=user_id, text=text, i=i, timer=timer)
         except IndexError:
             bot.send_message(config.main_admin_id, text)
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
-        sleep(1)
-        i = 0
-        newsletter(user_id=user_id, text=text, i=i)
+        sleep(5)
+        timer = 0
+        newsletter(user_id=user_id, text=text, i=i, timer=timer)
 
 def send_update_dz(user_id: int, lesson: str):
     if lesson == 'algebra':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Алгебра].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Алгебра].', i=0, timer=0)
     elif lesson == 'english_lang_1':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (1 группа)].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (1 группа)].', i=0, timer=0)
     elif lesson == 'english_lang_2':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (2 группа)].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (2 группа)].', i=0, timer=0)
     elif lesson == 'biology':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Биология].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Биология].', i=0, timer=0)
     elif lesson == 'geography':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [География].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [География].', i=0, timer=0)
     elif lesson == 'geometry':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Геометрия].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Геометрия].', i=0, timer=0)
     elif lesson == 'computer_science_1':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (1 группа)].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (1 группа)].', i=0, timer=0)
     elif lesson == 'computer_science_2':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (2 группа)].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (2 группа)].', i=0, timer=0)
     elif lesson == 'story':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [История].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [История].', i=0, timer=0)
     elif lesson == 'literature':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Литература].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Литература].', i=0, timer=0)
     elif lesson == 'music':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Музыка].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Музыка].', i=0, timer=0)
     elif lesson == 'OBZH':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [ОБЖ].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [ОБЖ].', i=0, timer=0)
     elif lesson == 'social_science':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Обществознание].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Обществознание].', i=0, timer=0)
     elif lesson == 'native_literature':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родная литература].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родная литература].', i=0, timer=0)
     elif lesson == 'russian_lang':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Русский язык].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Русский язык].', i=0, timer=0)
     elif lesson == 'TBIS':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Теория вероятностей и статистика].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Теория вероятностей и статистика].', i=0, timer=0)
     elif lesson == 'technology':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Технология].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Технология].', i=0, timer=0)
     elif lesson == 'physics':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Физика].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Физика].', i=0, timer=0)
     elif lesson == 'chemistry':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0, timer=0)
 
 def check_for_admin(user_id: int):
     if user_id == config.main_admin_id:
@@ -538,7 +540,7 @@ def logic(message):
             bot.send_message(message.chat.id, '⚠ Активирована система уведомлений . . .', reply_markup=types.ReplyKeyboardRemove())
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Start of the mailing list')
             send_status_text(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0)
+            newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0, timer=0)
         elif message.text == 'Д/З' and check_for_admin(user_id=message.chat.id):
             def enter_dz(message):
                 send_status_text(user_id=message.chat.id)
@@ -586,7 +588,7 @@ def logic(message):
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             try:
-                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0)
+                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0, timer=0)
             except Exception as E:
                 loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
@@ -595,18 +597,18 @@ def logic(message):
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
         elif message.text == 'Перезагрузка 🔄' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0)
+            newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0, timer=0)
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
             db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0)
+            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0)
             bot.stop_bot()
             os.system(config.reboot_command)
         elif message.text == 'Выключение сервера ‼️' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Shutdown . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Выключение сервера . . .', i=0)
+            newsletter(user_id=message.chat.id, text='⚠️ Выключение сервера . . .', i=0, timer=0)
             db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0)
+            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0)
             bot.stop_bot()
             os.system(config.shutdown_command)
         elif message.text == 'Бэкап базы данных 📑' and message.chat.id == config.main_admin_id:
