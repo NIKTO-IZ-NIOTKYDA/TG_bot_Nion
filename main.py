@@ -397,7 +397,12 @@ def callback_handler(call):
             no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='no_del_dz')
             markup_del_dz_warn.add(yes, no)
             send_status_text(user_id=call.message.chat.id)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]}', reply_markup=markup_del_dz_warn)
+            try:
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]}', reply_markup=markup_del_dz_warn)
+            except Exception as Error:
+                loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Error in edit_message_text')
+                bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+                bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]}', reply_markup=markup_del_dz_warn)
         # Del D/Z
         elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
             send_status_text(user_id=call.message.chat.id)
