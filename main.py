@@ -1,4 +1,5 @@
 ﻿import os
+import datetime
 from sqlite3 import sqlite_version
 from time import sleep, strftime, localtime
 from platform import system, release, python_version
@@ -196,25 +197,43 @@ def call_schedule(message):
         if check_user_in_db(message) == 0:
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
-            call_schedule = '''Урок 1: 8:00   -  8:45
-Урок 2: 8:55   -  9:40
-Урок 3: 10:00 - 10:45
-Урок 4: 11:05 - 11:50
-Урок 5: 12:00 - 12:45
-Урок 6: 12:55 - 13:40
-Урок 7: 13:45 - 14:30
-Урок 8: 14:35 - 15:20'''
+            if datetime.datetime.isoweekday(datetime.datetime.now()) < 5 or datetime.datetime.isoweekday(datetime.datetime.now()) > 5:
+                call_schedule = '''Урок 1: 8:00   -  8:45
+    Урок 2: 8:55   -  9:40
+    Урок 3: 10:00 - 10:45
+    Урок 4: 11:05 - 11:50
+    Урок 5: 12:00 - 12:45
+    Урок 6: 12:55 - 13:40
+    Урок 7: 13:45 - 14:30
+    Урок 8: 14:35 - 15:20'''
 
-            lessons = [
-                {"start_time": 8_00, "end_time": 8_45},
-                {"start_time": 8_55, "end_time": 9_40},
-                {"start_time": 10_00, "end_time": 10_45},
-                {"start_time": 11_05, "end_time": 11_50},
-                {"start_time": 12_00, "end_time": 12_45},
-                {"start_time": 12_55, "end_time": 13_40},
-                {"start_time": 13_45, "end_time": 14_30},
-                {"start_time": 14_35, "end_time": 15_20}
-                    ]
+                lessons = [
+                    {"start_time": 8_00, "end_time": 8_45},
+                    {"start_time": 8_55, "end_time": 9_40},
+                    {"start_time": 10_00, "end_time": 10_45},
+                    {"start_time": 11_05, "end_time": 11_50},
+                    {"start_time": 12_00, "end_time": 12_45},
+                    {"start_time": 12_55, "end_time": 13_40},
+                    {"start_time": 13_45, "end_time": 14_30},
+                    {"start_time": 14_35, "end_time": 15_20}
+                        ]
+            elif datetime.datetime.isoweekday(datetime.datetime.now()) == 5:
+                call_schedule = '''⚠️ Расписание на пятницу\n
+Урок 1: 8:00   -  8:45
+Урок 2: 8:55   -  9:35
+Урок 3: 9:55   - 10:35
+Урок 4: 10:55 - 11:35
+Урок 5: 11:45 - 12:20
+Урок 6: 12:30 - 13:10'''
+
+                lessons = [
+                    {"start_time": 8_00, "end_time": 8_45},
+                    {"start_time": 8_55, "end_time": 9_35},
+                    {"start_time": 9_55, "end_time": 10_35},
+                    {"start_time": 10_55, "end_time": 11_35},
+                    {"start_time": 11_45, "end_time": 12_20},
+                    {"start_time": 12_30, "end_time": 13_10}
+                ]
 
             current_time = int(strftime("%H%M", localtime()))
 
@@ -231,9 +250,6 @@ def call_schedule(message):
             if (min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) >= 0:
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0]} часов {(min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) - (divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0] * 60)} минут')
-            elif (min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) < 0 and config.allow_negative_values_in_call_schedule:
-                send_status_text(user_id=message.chat.id)
-                bot.send_message(message.chat.id, f'{call_schedule}\n\nСледующий урок через {((divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0])*-1)+8} часов {(min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100) - (divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] // 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0] * 60)} минут')
             else:
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, f'{call_schedule}\n\nУроки закончились на сегодня!')
