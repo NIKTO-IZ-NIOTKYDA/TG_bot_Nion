@@ -1,4 +1,8 @@
-Release 1.3.1 [stable]
+# Release 1.3.2 [beta]
+- Added system for checking schedule deletion
+- Bugs fixed
+
+# Release 1.3.1 [stable]
 - Bugs fixed
 
 # Release 1.3.0 [stable] [patch 4]

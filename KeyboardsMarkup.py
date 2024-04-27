@@ -9,8 +9,14 @@ markup_start.add(DZ, schedule, call_schedule)
 
 # Del schedule
 del_schedule = types.InlineKeyboardMarkup()
-del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='del_schedule')
+del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='schedule_del_warn')
 del_schedule.add(del_schedule_button)
+
+# Warn del schedule
+del_schedule_warn = types.InlineKeyboardMarkup()
+yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data='schedule_del')
+no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='schedule_del_no')
+del_schedule_warn.add(yes, no)
 
 # DZ
 markup_dz = types.InlineKeyboardMarkup()

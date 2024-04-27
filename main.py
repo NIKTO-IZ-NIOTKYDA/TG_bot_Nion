@@ -35,7 +35,7 @@ def newsletter(user_id: int, text: str, i: int, timer: int):
     res = db.return_all_user_id(user_id)
     if res == '[]':
         try:
-            bot.send_message(config.main_admin_id, text)
+            bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
         except telebot.apihelper.ApiException:
             loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
@@ -62,7 +62,10 @@ def newsletter(user_id: int, text: str, i: int, timer: int):
                 timer += 1
                 newsletter(user_id=user_id, text=text, i=i, timer=timer)
         except IndexError:
-            bot.send_message(config.main_admin_id, text)
+            try:
+                bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
+            except telebot.apihelper.ApiException:
+                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
@@ -266,6 +269,11 @@ def AdminPanel_4qB7cY9jZ2gP(message):
 
 
 # Посхалки
+@bot.message_handler(commands=['help_p'])
+def help_p(message):
+    send_status_text(user_id=message.chat.id)
+    bot.send_message(message.chat.id, '''/1488\n/fah\n/deadp47\n/isaac\n/sigma\n/genshin\n/ambulance\n/carl_marks\n/nik\n/murzik\n/spooky\n/10hours\n/ded\n/usa\n/z''', reply_markup=markup_start)
+
 @bot.message_handler(commands=['1488'])
 def _1488(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
@@ -288,7 +296,7 @@ def deadp47(message):
 def isaac(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
-    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='Тут должен был быть коко дамбо но я незнаю как его вставить')
+    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='Тут должен был быть коко дамбо но я незнаю как его вставить | Ярик©️')
 
 @bot.message_handler(commands=['sigma'])
 def sigma(message):
@@ -355,7 +363,6 @@ def z(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺 ZZZZZZZZZZZZZZZZZ 🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺')
-    
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -404,7 +411,6 @@ def callback_handler(call):
                 bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
             # Default
             else:
-                send_status_text(user_id=call.message.chat.id)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
         # WARN Del D/Z
         elif call.data == 'algebra_del_dz_warn' or call.data == 'english_lang_1_del_dz_warn' or call.data == 'english_lang_2_del_dz_warn' or call.data == 'biology_del_dz_warn' or call.data == 'geography_del_dz_warn' or call.data == 'geometry_del_dz_warn' or call.data == 'computer_science_1_del_dz_warn' or call.data == 'computer_science_2_del_dz_warn' or call.data == 'story_del_dz_warn' or call.data == 'literature_del_dz_warn' or call.data == 'music_del_dz_warn' or call.data == 'OBZH_del_dz_warn' or call.data == 'social_science_del_dz_warn' or call.data == 'native_literature_del_dz_warn' or call.data == 'russian_lang_del_dz_warn' or call.data == 'TBIS_del_dz_warn' or call.data == 'technology_del_dz_warn' or call.data == 'physics_del_dz_warn' or call.data == 'chemistry_del_dz_warn':
@@ -431,6 +437,20 @@ def callback_handler(call):
                 pass
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_del_dz", ""))
             loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace("_del_dz", "")}\'')
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        # WARN Del schedule
+        elif call.data == 'schedule_del_warn':
+            bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nSchedule', reply_markup=del_schedule_warn)
+        # Del schedule
+        elif call.data == 'schedule_del':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            try:
+                os.remove('schedule.jpg')
+            except FileNotFoundError:
+                pass
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
         # Notification admin
@@ -463,32 +483,27 @@ def callback_handler(call):
         # Back
         elif call.data == 'back':
             try:
-                send_status_text(user_id=call.message.chat.id)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
             except telebot.apihelper.ApiException as Error:
                 if Error.result.status_code == 400:
                     bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                     send_status_text(user_id=call.message.chat.id)
                     bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
-        # Del schedule
-        elif call.data == 'del_schedule':
-            send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
-            try:
-                os.remove('schedule.jpg')
-            except FileNotFoundError:
-                pass
-            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
-            send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '✅ Успешно !')
         # § (Paragraph)
         elif call.data == 'paragraph':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '§')
         # No del D/Z
         elif call.data == 'no_del_dz':
-            send_status_text(user_id=call.message.chat.id)
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        # No del schedule
+        elif call.data == 'schedule_del_no':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
         # Replace D/Z
         elif call.data == 'algebra_update' or call.data == 'english_lang_1_update' or call.data == 'english_lang_2_update' or call.data == 'biology_update' or call.data == 'geography_update' or call.data == 'geometry_update' or call.data == 'computer_science_1_update' or call.data == 'computer_science_2_update' or call.data == 'story_update' or call.data == 'literature_update' or call.data == 'music_update' or call.data == 'OBZH_update' or call.data == 'social_science_update' or call.data == 'native_literature_update' or call.data == 'russian_lang_update' or call.data == 'TBIS_update' or call.data == 'technology_update' or call.data == 'physics_update' or call.data == 'chemistry_update':
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
@@ -532,7 +547,7 @@ def callback_handler(call):
             db.replace_url(user_id=call.message.chat.id, url=input_text, lesson=call.data.replace("_url", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '✅ Успешно !')
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
     else:
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do='User unauthenticated ! (in callback_handler)')
         send_status_text(user_id=call.message.chat.id)
@@ -560,11 +575,9 @@ def logic(message):
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '⚠ Активирована система уведомлений . . .', reply_markup=types.ReplyKeyboardRemove())
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Start of the mailing list')
-            send_status_text(user_id=message.chat.id)
             newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0, timer=0)
         elif message.text == 'Д/З' and check_for_admin(user_id=message.chat.id):
             def enter_dz(message):
-                send_status_text(user_id=message.chat.id)
                 msg = bot.send_message(message.chat.id, 'Введите Д/З', reply_markup=types.ReplyKeyboardRemove())
                 bot.register_next_step_handler(msg, enter_lessons)
 
