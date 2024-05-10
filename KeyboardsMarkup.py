@@ -5,12 +5,25 @@ markup_start = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 DZ = types.KeyboardButton('Домашнее задание 📚')
 schedule = types.KeyboardButton('Расписание 📑')
 call_schedule = types.KeyboardButton('Расписание звонков 🕝')
-markup_start.add(DZ, schedule, call_schedule)
+profile = types.KeyboardButton('Профиль 👤')
+markup_start.add(DZ, schedule, call_schedule, profile)
+
+# Warn off notifications
+markup_off_notifications_warn = types.InlineKeyboardMarkup(row_width=1)
+off_notifications_warn = types.InlineKeyboardButton(text='Да, я хочу отключить уведомления', callback_data='off_notifications')
+no_off_notifications_warn = types.InlineKeyboardButton(text='Нет, я хочу оставить уведомления', callback_data='no_off_notifications')
+markup_off_notifications_warn.add(off_notifications_warn, no_off_notifications_warn)
 
 # Del schedule
-del_schedule = types.InlineKeyboardMarkup()
-del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='del_schedule')
-del_schedule.add(del_schedule_button)
+markup_del_schedule = types.InlineKeyboardMarkup()
+del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='schedule_del_warn')
+markup_del_schedule.add(del_schedule_button)
+
+# Warn del schedule
+markup_del_schedule_warn = types.InlineKeyboardMarkup()
+yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data='schedule_del')
+no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='schedule_del_no')
+markup_del_schedule_warn.add(yes, no)
 
 # DZ
 markup_dz = types.InlineKeyboardMarkup()

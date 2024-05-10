@@ -12,15 +12,7 @@ import config
 from loging import loging
 from KeyboardsMarkup import *
 
-os.system(config.clear_konsole)
-
 bot = telebot.TeleBot(config.BotToken)
-
-
-if config.log:
-    loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
-
-db.db_connect()
 
 # main fn
 def rename(file_name_in: str, file_name_out: str):
@@ -31,11 +23,11 @@ def send_status_text(user_id: int):
         loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
     bot.send_chat_action(user_id, action='typing')
 
-def newsletter(user_id: int, text: str, i: int, timer: int):
-    res = db.return_all_user_id(user_id)
+def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool):
+    res = db.return_all_user_id(user_id, auto=auto)
     if res == '[]':
         try:
-            bot.send_message(config.main_admin_id, text)
+            bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
         except telebot.apihelper.ApiException:
             loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
@@ -48,68 +40,71 @@ def newsletter(user_id: int, text: str, i: int, timer: int):
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
             i += 1
             timer += 1
-            newsletter(user_id=user_id, text=text, i=i, timer=timer)
+            newsletter(user_id=user_id, text=text, i=i, timer=timer, auto=auto)
         except telebot.apihelper.ApiException as Error:
             if Error.result.status_code == 403 or Error.result.status_code == 400:
                 loging(logger_level='WARN', user_id=str(res[i]), do=f'User {res[i]} has blocked the bot!')
                 # db.remove_user(user_id=str(user_id))
                 i += 1
                 timer += 1
-                newsletter(user_id=user_id, text=text, i=i, timer=timer)
+                newsletter(user_id=user_id, text=text, i=i, timer=timer, auto=auto)
             else:
                 loging(logger_level='ERROR', user_id=str(res[i]), do=f'Undefined error !\tERROR: {Error}')
                 i += 1
                 timer += 1
-                newsletter(user_id=user_id, text=text, i=i, timer=timer)
+                newsletter(user_id=user_id, text=text, i=i, timer=timer, auto=auto)
         except IndexError:
-            bot.send_message(config.main_admin_id, text)
+            try:
+                bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
+            except telebot.apihelper.ApiException:
+                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
     else:
         sleep(5)
         timer = 0
-        newsletter(user_id=user_id, text=text, i=i, timer=timer)
+        newsletter(user_id=user_id, text=text, i=i, timer=timer, auto=auto)
 
 def send_update_dz(user_id: int, lesson: str):
     if lesson == 'algebra':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Алгебра].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Алгебра].', i=0, timer=0, auto=True)
     elif lesson == 'english_lang_1':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (1 группа)].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (1 группа)].', i=0, timer=0, auto=True)
     elif lesson == 'english_lang_2':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (2 группа)].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Английский язык (2 группа)].', i=0, timer=0, auto=True)
     elif lesson == 'biology':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Биология].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Биология].', i=0, timer=0, auto=True)
     elif lesson == 'geography':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [География].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [География].', i=0, timer=0, auto=True)
     elif lesson == 'geometry':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Геометрия].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Геометрия].', i=0, timer=0, auto=True)
     elif lesson == 'computer_science_1':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (1 группа)].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (1 группа)].', i=0, timer=0, auto=True)
     elif lesson == 'computer_science_2':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (2 группа)].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Информатика (2 группа)].', i=0, timer=0, auto=True)
     elif lesson == 'story':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [История].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [История].', i=0, timer=0, auto=True)
     elif lesson == 'literature':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Литература].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Литература].', i=0, timer=0, auto=True)
     elif lesson == 'music':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Музыка].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Музыка].', i=0, timer=0, auto=True)
     elif lesson == 'OBZH':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [ОБЖ].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [ОБЖ].', i=0, timer=0, auto=True)
     elif lesson == 'social_science':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Обществознание].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Обществознание].', i=0, timer=0, auto=True)
     elif lesson == 'native_literature':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родная литература].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Родная литература].', i=0, timer=0, auto=True)
     elif lesson == 'russian_lang':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Русский язык].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Русский язык].', i=0, timer=0, auto=True)
     elif lesson == 'TBIS':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Теория вероятностей и статистика].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Теория вероятностей и статистика].', i=0, timer=0, auto=True)
     elif lesson == 'technology':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Технология].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Технология].', i=0, timer=0, auto=True)
     elif lesson == 'physics':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Физика].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Физика].', i=0, timer=0, auto=True)
     elif lesson == 'chemistry':
-        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0, timer=0)
+        newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0, timer=0, auto=True)
 
 def check_for_admin(user_id: int):
     if user_id == config.main_admin_id:
@@ -175,7 +170,7 @@ def schedule(message):
             photo = open('schedule.jpg', 'rb')
             bot.send_chat_action(message.chat.id, action='upload_photo')
             if check_for_admin(user_id=message.chat.id):
-                bot.send_photo(message.chat.id, photo=photo, reply_markup=del_schedule)
+                bot.send_photo(message.chat.id, photo=photo, reply_markup=markup_del_schedule)
             else:
                 bot.send_photo(message.chat.id, photo=photo)
         except FileNotFoundError:
@@ -266,6 +261,11 @@ def AdminPanel_4qB7cY9jZ2gP(message):
 
 
 # Посхалки
+@bot.message_handler(commands=['help_p'])
+def help_p(message):
+    send_status_text(user_id=message.chat.id)
+    bot.send_message(message.chat.id, '''/1488\n/fah\n/deadp47\n/isaac\n/sigma\n/genshin\n/ambulance\n/carl_marks\n/nik\n/murzik\n/spooky\n/10hours\n/ded\n/usa\n/z''', reply_markup=markup_start)
+
 @bot.message_handler(commands=['1488'])
 def _1488(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
@@ -288,7 +288,7 @@ def deadp47(message):
 def isaac(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
-    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='Тут должен был быть коко дамбо но я незнаю как его вставить')
+    bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='Тут должен был быть коко дамбо но я незнаю как его вставить | Ярик©️')
 
 @bot.message_handler(commands=['sigma'])
 def sigma(message):
@@ -355,7 +355,6 @@ def z(message):
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺 ZZZZZZZZZZZZZZZZZ 🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺')
-    
 
 # Other
 @bot.message_handler(content_types=['photo'])
@@ -404,7 +403,6 @@ def callback_handler(call):
                 bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
             # Default
             else:
-                send_status_text(user_id=call.message.chat.id)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
         # WARN Del D/Z
         elif call.data == 'algebra_del_dz_warn' or call.data == 'english_lang_1_del_dz_warn' or call.data == 'english_lang_2_del_dz_warn' or call.data == 'biology_del_dz_warn' or call.data == 'geography_del_dz_warn' or call.data == 'geometry_del_dz_warn' or call.data == 'computer_science_1_del_dz_warn' or call.data == 'computer_science_2_del_dz_warn' or call.data == 'story_del_dz_warn' or call.data == 'literature_del_dz_warn' or call.data == 'music_del_dz_warn' or call.data == 'OBZH_del_dz_warn' or call.data == 'social_science_del_dz_warn' or call.data == 'native_literature_del_dz_warn' or call.data == 'russian_lang_del_dz_warn' or call.data == 'TBIS_del_dz_warn' or call.data == 'technology_del_dz_warn' or call.data == 'physics_del_dz_warn' or call.data == 'chemistry_del_dz_warn':
@@ -431,6 +429,20 @@ def callback_handler(call):
                 pass
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_del_dz", ""))
             loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace("_del_dz", "")}\'')
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        # WARN Del schedule
+        elif call.data == 'schedule_del_warn':
+            bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nSchedule', reply_markup=markup_del_schedule_warn)
+        # Del schedule
+        elif call.data == 'schedule_del':
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
+            try:
+                os.remove('schedule.jpg')
+            except FileNotFoundError:
+                pass
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
         # Notification admin
@@ -463,32 +475,27 @@ def callback_handler(call):
         # Back
         elif call.data == 'back':
             try:
-                send_status_text(user_id=call.message.chat.id)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='👇 Выберете предмет', reply_markup=markup_dz)
             except telebot.apihelper.ApiException as Error:
                 if Error.result.status_code == 400:
                     bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                     send_status_text(user_id=call.message.chat.id)
                     bot.send_message(call.message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
-        # Del schedule
-        elif call.data == 'del_schedule':
-            send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
-            try:
-                os.remove('schedule.jpg')
-            except FileNotFoundError:
-                pass
-            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
-            send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '✅ Успешно !')
         # § (Paragraph)
         elif call.data == 'paragraph':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '§')
         # No del D/Z
         elif call.data == 'no_del_dz':
-            send_status_text(user_id=call.message.chat.id)
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        # No del schedule
+        elif call.data == 'schedule_del_no':
+            bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+            send_status_text(user_id=call.message.chat.id)
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
         # Replace D/Z
         elif call.data == 'algebra_update' or call.data == 'english_lang_1_update' or call.data == 'english_lang_2_update' or call.data == 'biology_update' or call.data == 'geography_update' or call.data == 'geometry_update' or call.data == 'computer_science_1_update' or call.data == 'computer_science_2_update' or call.data == 'story_update' or call.data == 'literature_update' or call.data == 'music_update' or call.data == 'OBZH_update' or call.data == 'social_science_update' or call.data == 'native_literature_update' or call.data == 'russian_lang_update' or call.data == 'TBIS_update' or call.data == 'technology_update' or call.data == 'physics_update' or call.data == 'chemistry_update':
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
@@ -532,7 +539,29 @@ def callback_handler(call):
             db.replace_url(user_id=call.message.chat.id, url=input_text, lesson=call.data.replace("_url", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             send_status_text(user_id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, '✅ Успешно !')
+            bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        elif call.data == 'off_notifications_warn':
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Вы уверены ?\n\n*Если вы отключите уведомления вы не будете получать сообщения об обновлении домашнего задания и расписания. Сюда НЕ входит рассылка от администраторов бота.', reply_markup=markup_off_notifications_warn)
+        elif call.data == 'off_notifications':
+            try:
+                if config.err:
+                    loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'Error-f: incomplete input')
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: incomplete input')
+                else:
+                    db.replace_send_notifications(user_id=call.message.chat.id, send_notifications=False)
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы больше не будете получать уведомления.')
+            except Exception as Error:
+                loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Error: {Error}')
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}')
+        elif call.data == 'no_off_notifications':
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+        elif call.data == 'on_notifications':
+            try:
+                db.replace_send_notifications(user_id=call.message.chat.id, send_notifications=True)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы будете получать уведомления.')
+            except Exception as Error:
+                loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Error: {Error}')
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}')
     else:
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do='User unauthenticated ! (in callback_handler)')
         send_status_text(user_id=call.message.chat.id)
@@ -550,6 +579,25 @@ def logic(message):
             schedule(message)
         elif message.text == 'Расписание звонков 🕝':
             call_schedule(message)
+        elif message.text == 'Профиль 👤':
+            if message.chat.id != config.main_admin_id:
+                markup_notifications = types.InlineKeyboardMarkup()
+                rsn = db.return_send_notifications(user_id=message.chat.id)
+                notifications_status = ''
+                if rsn:
+                    notifications_status = '✅'
+                    off_notifications = types.InlineKeyboardButton(text='Выключить уведомления', callback_data='off_notifications_warn')
+                    markup_notifications.add(off_notifications)
+                else:
+                    notifications_status = '❌'
+                    on_notifications = types.InlineKeyboardButton(text='Включить уведомления', callback_data='on_notifications')
+                    markup_notifications.add(on_notifications)
+                data = db.return_user_id(user_id=message.chat.id)
+                send_status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, f'ID-TELEGRAM: {message.chat.id}\nВаше имя: @{data[2]}\nВаш никнейм: {data[3]}\nУведомления: {notifications_status}', reply_markup=markup_notifications)
+            else:
+                send_status_text(user_id=message.chat.id)
+                bot.send_message(message.chat.id, 'Error: message.chat.id == config.main_admin_id')
         # Update photo
         elif message.text == 'Расписание' and check_for_admin(user_id=message.chat.id):
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Start uploading photos . . .')
@@ -560,11 +608,9 @@ def logic(message):
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '⚠ Активирована система уведомлений . . .', reply_markup=types.ReplyKeyboardRemove())
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Start of the mailing list')
-            send_status_text(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0, timer=0)
+            newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0, timer=0, auto=True)
         elif message.text == 'Д/З' and check_for_admin(user_id=message.chat.id):
             def enter_dz(message):
-                send_status_text(user_id=message.chat.id)
                 msg = bot.send_message(message.chat.id, 'Введите Д/З', reply_markup=types.ReplyKeyboardRemove())
                 bot.register_next_step_handler(msg, enter_lessons)
 
@@ -609,7 +655,7 @@ def logic(message):
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             try:
-                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0, timer=0)
+                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0, timer=0, auto=False)
             except Exception as E:
                 loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
@@ -618,18 +664,18 @@ def logic(message):
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
         elif message.text == 'Перезагрузка 🔄' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0, timer=0)
+            newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0, timer=0, auto=False)
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
             db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0)
+            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0, auto=False)
             bot.stop_bot()
             os.system(config.reboot_command)
         elif message.text == 'Выключение сервера ‼️' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Shutdown . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Выключение сервера . . .', i=0, timer=0)
+            newsletter(user_id=message.chat.id, text='⚠️ Выключение сервера . . .', i=0, timer=0, auto=False)
             db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0)
+            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0, auto=False)
             bot.stop_bot()
             os.system(config.shutdown_command)
         elif message.text == 'Бэкап базы данных 📑' and message.chat.id == config.main_admin_id:
@@ -703,5 +749,12 @@ Network: = {Network}'''
 
 
 if __name__ == '__main__':
+    os.system(config.clear_konsole)
+
+    if config.log:
+        loging(logger_level='INFO', user_id='none', do='The bot is running . . .')
+
+    db.db_connect()
     start_bot_notification_admin()
+
     bot.infinity_polling(long_polling_timeout=60, logger_level=0, interval=0)  # Запуск бота
