@@ -32,6 +32,13 @@ def replace_url(user_id: int, url: str, lesson: str):
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
 
+def replace_send_notifications(user_id: int, send_notifications: bool):
+    loging(logger_level='INFO', user_id=str(user_id), do=f'Replaceing send_notifications \'{send_notifications}\'')
+    cursor.execute('UPDATE users SET send_notifications = ? WHERE user_id = ?', (send_notifications, user_id))
+    if debug:
+        loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
+    conn.commit()
+
 def return_dz(user_id: int, lesson: str):
     loging(logger_level='INFO', user_id=str(user_id), do='Returning D/Z . . .')
     cursor.execute('SELECT ' + lesson + ' FROM dz WHERE id = 1')
@@ -47,9 +54,22 @@ def return_url(user_id: int, lesson: str):
     cursor.execute(f'SELECT {lesson} FROM dz WHERE id = 3')
     return [str(url[0]) for url in cursor.fetchall()]
 
-def return_all_user_id(user_id: int):
+def return_send_notifications(user_id: int):
+    loging(logger_level='INFO', user_id=str(user_id), do='Search by db send_notifications . . .')
+    cursor.execute(f'SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
+    return bool(cursor.fetchone()[0])
+
+def return_user_id(user_id: int):
+    loging(logger_level='INFO', user_id=str(user_id), do='Returning users . . .')
+    cursor.execute(f'SELECT * FROM users WHERE user_id = {user_id}')
+    return cursor.fetchone()
+
+def return_all_user_id(user_id: int, auto: bool):
     loging(logger_level='INFO', user_id=str(user_id), do='Returning all users . . .')
-    cursor.execute('SELECT user_id FROM users')
+    if auto:
+        cursor.execute('SELECT user_id FROM users WHERE send_notifications = 1')
+    else:
+        cursor.execute('SELECT user_id FROM users')
     return [str(user_id[0]) for user_id in cursor.fetchall()]
 
 def remove_user(user_id: int):
@@ -61,7 +81,10 @@ def remove_user(user_id: int):
 def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, user_lang: str):
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Adding data to db . . .')
-    cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang) VALUES (?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang))
+    try:
+        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, return_send_notifications(user_id=user_id)))
+    except Exception:
+        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, True))
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
