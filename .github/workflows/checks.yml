@@ -30,6 +30,7 @@ jobs:
                   flake8 --extend-ignore E501,F405
 
     Tests:
+        needs: Lint
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -52,3 +53,4 @@ jobs:
                 python-version: ${{ matrix.python-version }}
             - run: |
                   mypy .
+    
