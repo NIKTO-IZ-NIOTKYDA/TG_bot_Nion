@@ -68,14 +68,29 @@ jobs:
       #needs: Tests
       runs-on: ubuntu-latest
       steps:
-        - name: Connect and pull
+        - name: Connect and pull 0
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
           run: |
             mkdir -p $GITHUB_WORKSPACE/.ssh
+        - name: Connect and pull 1
+          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+          run: |
             touch $GITHUB_WORKSPACE/.ssh/id_rsa
+        - name: Connect and pull 2
+          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+          run: |
             chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
+        - name: Connect and pull 3
+          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+          run: |
             echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
+        - name: Connect and pull 4
+          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+          run: |
             ssh-keyscan -H ${{ secrets.SSH_HOST }} >> $GITHUB_WORKSPACE/.ssh/known_hosts
+        - name: Connect and pull 5
+          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+          run: |
             ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit 0"
 
         - name: Cleanup
