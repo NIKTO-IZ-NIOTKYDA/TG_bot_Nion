@@ -1,9 +1,7 @@
-BotToken = '6552240356:AAECmVNEODXs5C8TtHeonOr4CTCFOAHOtbw'  # Токен бота
+BotToken = '6552240356:AAHmdQHQ9Y0p84G-zFNo_Ho1D6TPdoOMtJQ'  # Токен бота
 commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
 clear_konsole = 'clear'
 name_database = 'db/db.db'
-reboot_command = 'reboot -f'
-shutdown_command = 'systemctl disable TG_bot_Nion.service && shutdown now'
 version = 'Release 1.3.2 [beta]'  # X.X.X [stable\beta\dev]
 log = True
 debug = True
