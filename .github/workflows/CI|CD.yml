@@ -75,6 +75,7 @@ jobs:
             touch $GITHUB_WORKSPACE/.ssh/id_rsa
             chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
             echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
+            echo "${{ secrets.SSH_KH }}" >> $GITHUB_WORKSPACE/.ssh/known_hosts
             ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit 0"
 
         - name: Cleanup
