@@ -85,7 +85,7 @@ jobs:
         - name: Connect and pull
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
           run: |
-            ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit 0"
+            ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit 0"
 
         - name: Cleanup
           run: rm -rf $GITHUB_WORKSPACE/.ssh && exit 0
