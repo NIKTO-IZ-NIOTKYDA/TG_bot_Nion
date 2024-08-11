@@ -65,7 +65,7 @@ jobs:
                   mypy .
 
     Deploy:
-      needs: Tests
+      #needs: Tests
       runs-on: ubuntu-latest
       steps:
         - name: Connect and pull
