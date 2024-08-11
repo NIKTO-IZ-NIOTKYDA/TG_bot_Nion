@@ -13,6 +13,3 @@ main_admin_id = 5731571131
 main_admin_url = 'niktoizneotkyda_QQQ'
 input_text_mailing = [None]
 admin_id = [5287168197, 1670389988]
-
-# TEMP
-err = False

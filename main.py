@@ -544,12 +544,8 @@ def callback_handler(call):
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Вы уверены ?\n\n*Если вы отключите уведомления вы не будете получать сообщения об обновлении домашнего задания и расписания. Сюда НЕ входит рассылка от администраторов бота.', reply_markup=markup_off_notifications_warn)
         elif call.data == 'off_notifications':
             try:
-                if config.err:
-                    loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'Error-f: incomplete input')
-                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: incomplete input')
-                else:
-                    db.replace_send_notifications(user_id=call.message.chat.id, send_notifications=False)
-                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы больше не будете получать уведомления.')
+                db.replace_send_notifications(user_id=call.message.chat.id, send_notifications=False)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы больше не будете получать уведомления.')
             except Exception as Error:
                 loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Error: {Error}')
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}')
