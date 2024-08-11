@@ -74,7 +74,7 @@ jobs:
             mkdir -p $GITHUB_WORKSPACE/.ssh
 
             echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
-            cat /etc/hostname
+            echo "fv" >> /etc/hostname
 
         - name: Connect and pull
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
