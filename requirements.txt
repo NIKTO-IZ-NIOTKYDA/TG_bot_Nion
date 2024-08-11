@@ -1,3 +1,2 @@
-telebot
 psutil
-mypy
+telebot

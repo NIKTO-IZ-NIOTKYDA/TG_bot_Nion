@@ -1,0 +1,60 @@
+name: CI
+
+on:
+    push:
+        branches: [ develop ]
+          
+jobs:
+    Lint:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: [ 3.12, 3.10.12 ]
+        steps:
+            - name: Download repo
+              uses: actions/setup-python@v2
+
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Upgrade pip
+              run: |
+                  python3 -m pip install --upgrade pip
+
+            - name: Install dependencies
+              run: |
+                  pip3 install types-psutil flake8
+                  pip3 install -r requirements.txt
+
+            - name: Flake8
+              run: |
+                  flake8 --extend-ignore E501,F405
+
+    Tests:
+        needs: Lint
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: [ 3.12, 3.10.12 ]
+        steps:
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Download repo
+              uses: actions/setup-python@v2
+
+            - name: Install dependencies
+              run: |
+                pip3 install -r requirements.txt
+                pip3 install mypy types-psutil
+
+            - name: MyPy
+              uses: actions/checkout@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+            - run: |
+                  mypy .

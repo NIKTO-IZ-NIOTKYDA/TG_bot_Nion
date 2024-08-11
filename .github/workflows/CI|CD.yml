@@ -1,11 +1,13 @@
-name: Code Checks
+name: CI|CD
 
 on:
-    push:
-        branches: [ master, develop ]
-    pull_request:
-        branches: [ master ]
-          
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - develop
+
 jobs:
     Lint:
         runs-on: ubuntu-latest
@@ -13,17 +15,22 @@ jobs:
             matrix:
                 python-version: [ 3.12, 3.10.12 ]
         steps:
-            - name: Linter
-              uses: actions/checkout@v2
+            - name: Download repo
+              uses: actions/setup-python@v2
+
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
               with:
                 python-version: ${{ matrix.python-version }}
 
-            - name: Install dependencies
+            - name: Upgrade pip
               run: |
                   python3 -m pip install --upgrade pip
-                  python3 -m pip install types-psutil
+
+            - name: Install dependencies
+              run: |
+                  pip3 install types-psutil flake8
                   pip3 install -r requirements.txt
-                  python3 -m pip install flake8
 
             - name: Flake8
               run: |
@@ -36,16 +43,18 @@ jobs:
             matrix:
                 python-version: [ 3.12, 3.10.12 ]
         steps:
-            - name: Set up Python ${{ matrix.python-version }}
+            - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
                 python-version: ${{ matrix.python-version }}
 
+            - name: Download repo
+              uses: actions/setup-python@v2
+
             - name: Install dependencies
               run: |
-                python3 -m pip install --upgrade pip
-                python3 -m pip install types-psutil
                 pip3 install -r requirements.txt
+                pip3 install mypy types-psutil
 
             - name: MyPy
               uses: actions/checkout@v2
@@ -53,4 +62,13 @@ jobs:
                 python-version: ${{ matrix.python-version }}
             - run: |
                   mypy .
-    
+    Deployment:
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              python-version: [ 3.12, 3.10.12 ]
+      steps:
+            - name: Build and deploy
+              if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+              run: |
+                echo "Deploying to production..."
