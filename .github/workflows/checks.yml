@@ -23,3 +23,6 @@ jobs:
                   python3 -m pip install --upgrade pip --break-system-packages
                   python3 -m pip install types-psutil --break-system-packages
                   pip3 install -r requirements.txt --break-system-packages
+            - name: Code Checking
+              run: |
+                  mypy .
