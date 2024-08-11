@@ -13,6 +13,14 @@ jobs:
             matrix:
                 python-version: [ 3.12 ]
         steps:
+            - uses: actions/checkout@v4
+            - name: Linter
+              uses: sunnysid3up/python-linter@master
+              with:
+                source: "src"
+                mypy-options: "--ignore-missing-imports --show-error-codes"
+                pylint-options: "--rcfile=setup.cfg"
+                isort-options: "-w 100"
             - uses: actions/checkout@v2
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
@@ -23,6 +31,6 @@ jobs:
                   python3 -m pip install --upgrade pip --break-system-packages
                   python3 -m pip install types-psutil --break-system-packages
                   pip3 install -r requirements.txt --break-system-packages
-            - name: Code Checking
+            - name: MyPy
               run: |
                   mypy .
