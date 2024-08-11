@@ -56,7 +56,7 @@ def return_url(user_id: int, lesson: str):
 
 def return_send_notifications(user_id: int):
     loging(logger_level='INFO', user_id=str(user_id), do='Search by db send_notifications . . .')
-    cursor.execute(f'SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
+    cursor.execute('SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
     return bool(cursor.fetchone()[0])
 
 def return_user_id(user_id: int):
