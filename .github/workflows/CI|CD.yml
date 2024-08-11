@@ -71,7 +71,7 @@ jobs:
         - name: Connect and pull
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
           run: |
-            mkdir -p $GITHUB_WORKSPACE/.ssh'
+            mkdir -p $GITHUB_WORKSPACE/.ssh
             touch $GITHUB_WORKSPACE/.ssh/id_rsa
             chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
             echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
