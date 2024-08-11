@@ -73,14 +73,14 @@ jobs:
           run: |
             mkdir -p $GITHUB_WORKSPACE/.ssh
 
-            touch $GITHUB_WORKSPACE/.ssh/id_rsa
-            touch $GITHUB_WORKSPACE/.ssh/id_rsa.pub
+            touch /home/runner/.ssh/id_rsa
+            touch /home/runner/.ssh/id_rsa.pub
 
-            chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa
-            chmod 600 $GITHUB_WORKSPACE/.ssh/id_rsa.pub
+            chmod 600 /home/runner/.ssh/id_rsa
+            chmod 600 /home/runner/.ssh/id_rsa.pub
 
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
-            echo "${{ secrets.SSH_PUBLIC_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa.pub
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" >> /home/runner/.ssh/id_rsa
+            echo "${{ secrets.SSH_PUBLIC_KEY }}" >> /home/runner/.ssh/id_rsa.pub
 
         - name: Connect and pull
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
