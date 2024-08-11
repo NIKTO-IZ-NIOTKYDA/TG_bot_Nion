@@ -71,6 +71,7 @@ jobs:
         - name: Preparation for connection
           if: github.event_name == 'push' && github.ref == 'refs/heads/master'
           run: |
+            mkdir -p $GITHUB_WORKSPACE/.ssh/
             touch /home/runner/.ssh/id_rsa
             touch /home/runner/.ssh/id_rsa.pub
 
