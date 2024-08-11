@@ -12,7 +12,9 @@ jobs:
                 python-version: [ 3.12, 3.10.12 ]
         steps:
             - name: Download repo
-              uses: actions/setup-python@v2
+              uses: actions/checkout@v2
+              with:
+                python-version: ${{ matrix.python-version }}
 
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
@@ -39,13 +41,15 @@ jobs:
             matrix:
                 python-version: [ 3.12, 3.10.12 ]
         steps:
+            - name: Download repo
+              uses: actions/checkout@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
                 python-version: ${{ matrix.python-version }}
-
-            - name: Download repo
-              uses: actions/setup-python@v2
 
             - name: Install dependencies
               run: |
@@ -53,8 +57,5 @@ jobs:
                 pip3 install mypy types-psutil
 
             - name: MyPy
-              uses: actions/checkout@v2
-              with:
-                python-version: ${{ matrix.python-version }}
-            - run: |
+              run: |
                   mypy .
