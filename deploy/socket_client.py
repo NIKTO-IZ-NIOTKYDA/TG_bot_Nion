@@ -9,9 +9,11 @@ try:
     print('Connection: OK')
 except Exception as Error:
     print(f'[Errno 111] Connection refused\nlog: {Error}')
+    exit(1)
 try:
     s.sendall(socket_config.STRING.encode('utf-8')) # Отправляем фразу.
     data = s.recv(1024) #Получаем данные из сокета.
     print(data.decode('utf-8'))
 except Exception as Error:
     print(f'! ERROR: {Error}')
+    exit(1)
