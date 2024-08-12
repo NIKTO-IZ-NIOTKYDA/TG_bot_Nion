@@ -18,11 +18,10 @@ try:
                 conn.sendall('ValueError'.encode('utf-8'))
             else:
                 try:
-                    os.system(command=socket_config.CAMMAND_COPY)
-                    os.system(command=socket_config.CAMMAND_UPDATE)
-                    os.system(command=socket_config.CAMMAND_REMOVE)
-                    os.system(command=socket_config.CAMMAND_PASTE)
-                    os.system(command=socket_config.CAMMAND_RESTART)
+                    script = open('script.sh', 'rw')
+                    script.write(socket_config.CAMMAND)
+                    script.close()
+                    os.system('bash script.sh')
                     print('Successfully')
                 except Exception as Error:
                     conn.sendall(f'ERROR: {Error}'.encode('utf-8'))
