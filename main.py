@@ -17,6 +17,7 @@ from KeyboardsMarkup import markup_start, markup_dz, markup_dz_update, markup_dz
 bot: telebot.TeleBot = telebot.TeleBot(config.BotToken)
 input_text: str = ''
 
+
 # main fn
 def rename(file_name_in: str, file_name_out: str) -> None:
     os.system(f'mv {file_name_in} {file_name_out}')

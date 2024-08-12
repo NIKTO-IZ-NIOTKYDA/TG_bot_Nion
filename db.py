@@ -10,6 +10,7 @@ global cursor
 conn: sqlite3.Connection
 cursor: sqlite3.Cursor
 
+
 def db_connect() -> None:
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
     conn: sqlite3.Connection = sqlite3.connect(name_database, check_same_thread=False)
