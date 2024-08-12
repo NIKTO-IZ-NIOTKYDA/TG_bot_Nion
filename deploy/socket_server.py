@@ -18,10 +18,7 @@ try:
                 conn.sendall('ValueError'.encode('utf-8'))
             else:
                 try:
-                    script = open('script.sh', 'rw')
-                    script.write(socket_config.CAMMAND)
-                    script.close()
-                    os.system('bash script.sh')
+                    os.system(f'bash {socket_config.NAME}')
                     print('Successfully')
                 except Exception as Error:
                     conn.sendall(f'ERROR: {Error}'.encode('utf-8'))
