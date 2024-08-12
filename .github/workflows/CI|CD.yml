@@ -67,19 +67,22 @@ jobs:
     Deploy:
       #needs: Tests
       runs-on: ubuntu-latest
+      strategy:
+        matrix:
+            python-version: [ 3.12 ]
       steps:
-        - name: Preparation for connection
-          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-          run: |
-            mkdir -p $GITHUB_WORKSPACE/.ssh
+          - name: Download repo
+            uses: actions/checkout@v2
+            with:
+              python-version: ${{ matrix.python-version }}
 
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_WORKSPACE/.ssh/id_rsa
-            echo "fv" >> /etc/hostname
+          - name: Install dependencies
+            run: |
+              pip3 install -r requirements.txt
 
-        - name: Connect and pull
-          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-          run: |
-            ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && exit 0"
-
-        - name: Cleanup
-          run: rm -rf $GITHUB_WORKSPACE/.ssh && exit 0
+          - name: Deploy
+            if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+            run: |
+                cd deploy
+                python3 socket_client.py
+            
