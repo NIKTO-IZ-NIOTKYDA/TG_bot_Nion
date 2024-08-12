@@ -13,8 +13,8 @@ except Exception as Error:
 try:
     print(f'Working . . .')
     s.sendall(socket_config.STRING.encode('utf-8')) # Отправляем фразу.
-    data = s.recv(1024) #Получаем данные из сокета.
     print(f'Working: OK')
+    exit(0)
 except Exception as Error:
     print(f'Working: FAIL\n\nlog: {Error}')
     exit(1)
