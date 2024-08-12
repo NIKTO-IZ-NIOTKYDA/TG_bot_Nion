@@ -12,7 +12,7 @@ while True: # Создаем вечный цикл.
     try:
         data = conn.recv(1024) # Получаем данные из сокета.
 
-        print(f'Data: {data.decode('utf-8')}') # Выводим информацию в stdout.
+        print('Data: ' + data.decode('utf-8')) # Выводим информацию в stdout.
 
         if data.decode('utf-8') != socket_config.STRING:
             conn.sendall('ValueError'.encode('utf-8'))
