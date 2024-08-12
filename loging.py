@@ -20,7 +20,8 @@ except FileNotFoundError:
     pass
 log_file = open(str(name_log_file), 'w+')
 
-def welcome_ani():
+
+def welcome_ani() -> None:
     system(clear_konsole)
     load_str = 'launching a telegram bot...'
     ls_len = len(load_str)
@@ -56,7 +57,8 @@ if welcome_animation:
 print('[FORMAN]   [ID]            [TIME]              [DO]')
 log_file.write('[FORMAN]   [ID]            [TIME]              [DO]\n')
 
-def loging(logger_level: str, user_id: str, do: str):
+
+def loging(logger_level: str, user_id: str, do: str) -> None:
     if log:
         current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         if logger_level == 'INFO':

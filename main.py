@@ -1,40 +1,45 @@
 ﻿import os
 import datetime
+from typing import Any
 from sqlite3 import sqlite_version
 from time import sleep, strftime, localtime
 from platform import system, release, python_version
 
 import psutil
 import telebot
+from telebot import types
 
 import db
 import config
 from loging import loging
-from KeyboardsMarkup import *
+from KeyboardsMarkup import markup_start, markup_dz, markup_dz_update, markup_dz_update_p, markup_update_dz_or_gdz, markup_url, markup_del_schedule, markup_del_schedule_warn, markup_admin_panel, markup_photo, markup_off_notifications_warn, markup_chack_mailing
 
-bot = telebot.TeleBot(config.BotToken)
+bot: telebot.TeleBot = telebot.TeleBot(config.BotToken)
+input_text: str = ''
 
 # main fn
-def rename(file_name_in: str, file_name_out: str):
+def rename(file_name_in: str, file_name_out: str) -> None:
     os.system(f'mv {file_name_in} {file_name_out}')
 
-def send_status_text(user_id: int):
+
+def send_status_text(user_id: int) -> None:
     if config.debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Send status . . .')
     bot.send_chat_action(user_id, action='typing')
 
-def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool):
+
+def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool) -> None:
     res = db.return_all_user_id(user_id, auto=auto)
-    if res == '[]':
+    if str(res) == '[]':
         try:
             bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
         except telebot.apihelper.ApiException:
-            loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+            loging(logger_level='WARN', user_id=str(config.main_admin_id), do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
 
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
-    if timer <= 29 and res != '[]':
+    if timer <= 29 and str(res) != '[]':
         try:
             bot.send_message(int(res[i]), str(text))
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {res[i]}')
@@ -57,7 +62,7 @@ def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool):
             try:
                 bot.send_message(config.main_admin_id, text, reply_markup=markup_start)
             except telebot.apihelper.ApiException:
-                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                loging(logger_level='WARN', user_id=str(config.main_admin_id), do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             loging(logger_level='INFO', user_id=str(user_id), do=f'Sent: {config.main_admin_id}')
             loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
             bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
@@ -66,7 +71,8 @@ def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool):
         timer = 0
         newsletter(user_id=user_id, text=text, i=i, timer=timer, auto=auto)
 
-def send_update_dz(user_id: int, lesson: str):
+
+def send_update_dz(user_id: int, lesson: str) -> None:
     if lesson == 'algebra':
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Алгебра].', i=0, timer=0, auto=True)
     elif lesson == 'english_lang_1':
@@ -106,45 +112,51 @@ def send_update_dz(user_id: int, lesson: str):
     elif lesson == 'chemistry':
         newsletter(user_id=user_id, text='⚠ Обновлено Д/З [Химия].', i=0, timer=0, auto=True)
 
-def check_for_admin(user_id: int):
+
+def check_for_admin(user_id: int) -> bool:
     if user_id == config.main_admin_id:
         loging(logger_level='INFO', user_id=str(user_id), do='Admin check: success')
         return True
+    else:
+        for admin_id in config.admin_id:
+            if user_id == admin_id:
+                loging(logger_level='INFO', user_id=str(user_id), do='Admin check: success')
+                return True
+        return False
 
-    for admin_id in config.admin_id:
-        if user_id == admin_id:
-            loging(logger_level='INFO', user_id=str(user_id), do='Admin check: success')
-            return True
 
-def check_user_in_db(message):
-    if db.return_user_authentication(user_id=message.chat.id) == 0:
+def check_user_in_db(message: Any) -> bool:
+    if db.return_user_authentication(user_id=message.chat.id):
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User authenticated !')
         if message.chat.id != config.main_admin_id:
             db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
-        return 0
-    elif db.return_user_authentication(user_id=message.chat.id) == 1:
-        loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
-        db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
-        loging(logger_level='INFO', user_id=str(message.chat.id), do='Add user . . .')
-        send_status_text(user_id=message.chat.id)
-        bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
+        return False
 
-def start_bot_notification_admin():
+    loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
+    db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
+    loging(logger_level='INFO', user_id=str(message.chat.id), do='Add user . . .')
+    send_status_text(user_id=message.chat.id)
+    bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
+    return True
+
+
+def start_bot_notification_admin() -> None:
     try:
         loging(logger_level='INFO', user_id='none', do='Sending notifications to admins . . .')
         send_status_text(user_id=config.main_admin_id)
         bot.send_message(config.main_admin_id, f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
     except telebot.apihelper.ApiException:
-        loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+        loging(logger_level='WARN', user_id=str(config.main_admin_id), do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
     for admin_id in config.admin_id:
         try:
-            bot.send_message(admin_id, f'⚠Бот запущен!⚠')
+            bot.send_message(admin_id, '⚠Бот запущен!⚠')
         except telebot.apihelper.ApiException:
-            loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+            loging(logger_level='WARN', user_id=str(admin_id), do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+
 
 # Command
 @bot.message_handler(commands=['start'])
-def start(message):
+def start(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/start\'')
     if check_for_admin(user_id=message.chat.id):
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Admin pressed \'/start\'')
@@ -156,14 +168,16 @@ def start(message):
         send_status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, f'Добро пожаловать !\n\nVersion: {config.version}', reply_markup=markup_start)
 
+
 @bot.message_handler(commands=['dz'])
-def dz(message):
+def dz(message: Any) -> None:
     if check_user_in_db(message) == 0:
         send_status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
 
+
 @bot.message_handler(commands=['schedule'])
-def schedule(message):
+def schedule(message: Any) -> None:
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/schedule\'')
         try:
@@ -179,15 +193,16 @@ def schedule(message):
             try:
                 bot.send_message(config.main_admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
             except telebot.apihelper.ApiException:
-                loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                loging(logger_level='WARN', user_id=str(config.main_admin_id), do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
             for admin_id in config.admin_id:
                 try:
                     bot.send_message(admin_id, 'Файл расписание не найден.\nПожалуйста добавьте расписание !')
                 except telebot.apihelper.ApiException:
-                    loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+                    loging(logger_level='WARN', user_id=str(admin_id), do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+
 
 @bot.message_handler(commands=['call_schedule'])
-def call_schedule(message):
+def call_schedule(message: Any) -> Any:
     try:
         if check_user_in_db(message) == 0:
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
@@ -251,9 +266,10 @@ def call_schedule(message):
     except Exception as E:
         print(E)
 
+
 # Main Admin Panel
 @bot.message_handler(commands=['AdminPanel_4qB7cY9jZ2gP'])
-def AdminPanel_4qB7cY9jZ2gP(message):
+def AdminPanel_4qB7cY9jZ2gP(message: Any) -> None:
     if message.chat.id == config.main_admin_id:
         loging(logger_level='WARN', user_id=message.chat.id, do='Admin logged into the panel . . .')
         send_status_text(user_id=message.chat.id)
@@ -262,103 +278,119 @@ def AdminPanel_4qB7cY9jZ2gP(message):
 
 # Посхалки
 @bot.message_handler(commands=['help_p'])
-def help_p(message):
+def help_p(message: Any) -> None:
     send_status_text(user_id=message.chat.id)
     bot.send_message(message.chat.id, '''/1488\n/fah\n/deadp47\n/isaac\n/sigma\n/genshin\n/ambulance\n/carl_marks\n/nik\n/murzik\n/spooky\n/10hours\n/ded\n/usa\n/z''', reply_markup=markup_start)
 
+
 @bot.message_handler(commands=['1488'])
-def _1488(message):
+def _1488(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
     bot.send_video(message.chat.id, video=open('res/gif/1488.gif', 'rb'), caption='ОСУЖДАЮ НАЦИЗМ ! ! !')
 
+
 @bot.message_handler(commands=['fah'])
-def fah(message):
+def fah(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/fah.jpg', 'rb'), caption='Марина😏😏😏😏')
 
+
 @bot.message_handler(commands=['deadp47'])
-def deadp47(message):
+def deadp47(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/deadp47.jpg', 'rb'), caption='Эй скууууф')
 
+
 @bot.message_handler(commands=['isaac'])
-def isaac(message):
+def isaac(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_video')
     bot.send_video(message.chat.id, video=open('res/gif/isaac.gif', 'rb'), caption='Тут должен был быть коко дамбо но я незнаю как его вставить | Ярик©️')
 
+
 @bot.message_handler(commands=['sigma'])
-def sigma(message):
+def sigma(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/sigma.jpg', 'rb'), caption='σ')
 
+
 @bot.message_handler(commands=['genshin'])
-def genshin(message):
+def genshin(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/genshin.jpg', 'rb'), caption='Out for you live, NOW!')
 
+
 @bot.message_handler(commands=['ambulance'])
-def ambulance(message):
+def ambulance(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/ambulance.jpg', 'rb'), caption='Ambulance')
 
+
 @bot.message_handler(commands=['carl_marks'])
-def carl_marks(message):
+def carl_marks(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/carl_marks.jpg', 'rb'), caption='Мой пиар-менеджер - Карл Маркс')
 
+
 @bot.message_handler(commands=['nik'])
-def nik(message):
+def nik(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/nik.jpg', 'rb'), caption='[данные_удалены]')
 
+
 @bot.message_handler(commands=['murzik'])
-def murzik(message):
+def murzik(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/murzik.jpg', 'rb'), caption='Oh, hello there!')
 
+
 @bot.message_handler(commands=['spooky'])
-def spooky(message):
+def spooky(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/spooky.jpg', 'rb'), caption='You scared?')
 
+
 @bot.message_handler(commands=['10hours'])
-def tenhours(message):
+def tenhours(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/10hours.jpg', 'rb'), caption='Я ненавижу рпг макер')
 
+
 @bot.message_handler(commands=['ded'])
-def ded(message):
+def ded(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/ded.jpg', 'rb'), caption='Мой дедушка прошел афган.....')
 
+
 @bot.message_handler(commands=['usa'])
-def usa(message):
+def usa(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/usa.jpg', 'rb'), caption='🇺🇸 USA 🇺🇸')
 
+
 @bot.message_handler(commands=['z'])
-def z(message):
+def z(message: Any) -> None:
     loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
     bot.send_chat_action(message.chat.id, action='upload_photo')
     bot.send_photo(message.chat.id, photo=open('res/photo/z.jpg', 'rb'), caption='🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺 ZZZZZZZZZZZZZZZZZ 🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺')
 
+
 # Other
 @bot.message_handler(content_types=['photo'])
-def photo(message):
+def photo(message: Any) -> None:
     if check_user_in_db(message) == 0 and check_for_admin(user_id=message.chat.id):
         photo = message.photo[-1]
         file_info = bot.get_file(photo.file_id)
@@ -372,7 +404,7 @@ def photo(message):
 
 # Inline-button
 @bot.callback_query_handler(func=lambda call: True)
-def callback_handler(call):
+def callback_handler(call: Any) -> Any:
     if db.return_user_authentication(user_id=call.message.chat.id) == 0:
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'Call \'[{call.data}]\'')
         # Show D/Z
@@ -413,7 +445,7 @@ def callback_handler(call):
             send_status_text(user_id=call.message.chat.id)
             try:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]}', reply_markup=markup_del_dz_warn)
-            except Exception as Error:
+            except Exception:
                 loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Error in edit_message_text')
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                 bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]} + Photo', reply_markup=markup_del_dz_warn)
@@ -433,7 +465,7 @@ def callback_handler(call):
             bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
         # WARN Del schedule
         elif call.data == 'schedule_del_warn':
-            bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nSchedule', reply_markup=markup_del_schedule_warn)
+            bot.send_message(chat_id=call.message.chat.id, text='⚠ Вы уверены ?\n\nSchedule', reply_markup=markup_del_schedule_warn)
         # Del schedule
         elif call.data == 'schedule_del':
             send_status_text(user_id=call.message.chat.id)
@@ -442,7 +474,7 @@ def callback_handler(call):
                 os.remove('schedule.jpg')
             except FileNotFoundError:
                 pass
-            loging(logger_level='WARN', user_id=str(call.message.chat.id), do=f'Admin deleted schedule')
+            loging(logger_level='WARN', user_id=str(call.message.chat.id), do='Admin deleted schedule')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
         # Notification admin
@@ -450,12 +482,12 @@ def callback_handler(call):
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'User: {call.message.chat.id} requested a D/Z update')
             less = call.data.replace("_notification_admin", "")
 
-            def enter_message(call):
+            def enter_message(call: Any) -> None:
                 send_status_text(user_id=call.message.chat.id)
                 msg = bot.send_message(call.message.chat.id, '⚠️ Введите комментарий к запросу в нём можно указать на ошибку или предложить правильное Д/З', reply_markup=types.ReplyKeyboardRemove())
                 bot.register_next_step_handler(msg, start_mailing_admin)
 
-            def start_mailing_admin(call):
+            def start_mailing_admin(call: Any) -> None:
                 if call.text[0] == '/' or call.text == 'Домашнее задание 📚' or call.text == 'Расписание 📑' or call.text == 'Расписание звонков 🕝':
                     send_status_text(user_id=call.chat.id)
                     bot.send_message(call.chat.id, '⚠️ Отправка прервана вы перенаправлены в главное меню.', reply_markup=markup_start)
@@ -463,12 +495,12 @@ def callback_handler(call):
                     try:
                         bot.send_message(config.main_admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
                     except telebot.apihelper.ApiException:
-                        loging(logger_level='WARN', user_id=config.main_admin_id, do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
+                        loging(logger_level='WARN', user_id=str(config.main_admin_id), do=f'MAIN Admin {config.main_admin_id} blocked or didn\'t start the bot!')
                     for admin_id in config.admin_id:
                         try:
                             bot.send_message(admin_id, f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
                         except telebot.apihelper.ApiException:
-                            loging(logger_level='WARN', user_id=admin_id, do=f'Admin {admin_id} blocked or didn\'t start the bot!')
+                            loging(logger_level='WARN', user_id=str(admin_id), do=f'Admin {admin_id} blocked or didn\'t start the bot!')
                     send_status_text(user_id=call.chat.id)
                     bot.send_message(call.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.')
             enter_message(call)
@@ -566,7 +598,7 @@ def callback_handler(call):
 
 # Text
 @bot.message_handler(content_types=['text'])
-def logic(message):
+def logic(message: Any) -> Any:
     if check_user_in_db(message) == 0:
         loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
         if message.text == 'Домашнее задание 📚':
@@ -606,12 +638,11 @@ def logic(message):
             loging(logger_level='WARN', user_id=str(message.chat.id), do='Start of the mailing list')
             newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', i=0, timer=0, auto=True)
         elif message.text == 'Д/З' and check_for_admin(user_id=message.chat.id):
-            def enter_dz(message):
+            def enter_dz(message: Any) -> None:
                 msg = bot.send_message(message.chat.id, 'Введите Д/З', reply_markup=types.ReplyKeyboardRemove())
                 bot.register_next_step_handler(msg, enter_lessons)
 
-            def enter_lessons(message):
-                global input_text
+            def enter_lessons(message: Any) -> None:
                 input_text = message.text
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update_p)
@@ -636,11 +667,11 @@ def logic(message):
             bot.send_photo(message.chat.id, photo=open('res/photo/ola.jpg', 'rb'), caption='ниф ниф или нуф нуф?')
         # Main Admin Panel
         elif message.text == 'Рассылка✉️' and message.chat.id == config.main_admin_id:
-            def enter_message(message):
+            def enter_message(message: Any) -> None:
                 msg = bot.send_message(message.chat.id, '⚠️ Введите сообщение', reply_markup=types.ReplyKeyboardRemove())
                 bot.register_next_step_handler(msg, start_mailing)
 
-            def start_mailing(message):
+            def start_mailing(message: Any) -> None:
                 config.input_text_mailing = message.text
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
@@ -651,30 +682,13 @@ def logic(message):
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             try:
-                newsletter(user_id=message.chat.id, text=config.input_text_mailing, i=0, timer=0, auto=False)
+                newsletter(user_id=message.chat.id, text=str(config.input_text_mailing), i=0, timer=0, auto=False)
             except Exception as E:
                 loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
             config.input_text_mailing = [None]
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
-        elif message.text == 'Перезагрузка 🔄' and message.chat.id == config.main_admin_id:
-            loging(logger_level='WARN', user_id=message.chat.id, do='Rebooting . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.', i=0, timer=0, auto=False)
-            send_status_text(user_id=message.chat.id)
-            bot.send_message(message.chat.id, '⚠️ Бот будет перезагружен !\n\nПодождите ~20 секунд.')
-            db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0, auto=False)
-            bot.stop_bot()
-            os.system(config.reboot_command)
-        elif message.text == 'Выключение сервера ‼️' and message.chat.id == config.main_admin_id:
-            loging(logger_level='WARN', user_id=message.chat.id, do='Shutdown . . .')
-            newsletter(user_id=message.chat.id, text='⚠️ Выключение сервера . . .', i=0, timer=0, auto=False)
-            db.db_stop(user_id=message.chat.id)
-            newsletter(user_id=message.chat.id, text='⚠ База данных отключена !', i=0, timer=0, auto=False)
-            bot.stop_bot()
-            os.system(config.shutdown_command)
-        elif message.text == 'Бэкап базы данных 📑' and message.chat.id == config.main_admin_id:
             loging(logger_level='WARN', user_id=message.chat.id, do='Admin performs db backup . . .')
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Отправляю . . .')
@@ -731,7 +745,6 @@ Network: = {Network}'''
             if message.chat.id == config.main_admin_id:
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, 'Где нужно поставить этот текст ?', reply_markup=markup_update_dz_or_gdz)
-                global input_text
                 input_text = message.text
             elif check_for_admin(user_id=message.chat.id):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='User replase D/Z')

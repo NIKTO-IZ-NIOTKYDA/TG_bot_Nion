@@ -62,7 +62,7 @@ jobs:
 
             - name: MyPy
               run: |
-                  mypy .
+                  mypy . -v
 
     Deploy:
       needs: Tests
