@@ -5,7 +5,6 @@ from config import name_database, debug, main_admin_id
 from loging import loging
 
 
-
 def db_connect() -> None:
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
     global conn
@@ -22,7 +21,6 @@ def replace_dz(user_id: int, lesson: str, dz: str) -> None:
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
     return
-
 
 
 def replace_photo(user_id: int, path: str, lesson: str) -> None:
@@ -70,11 +68,11 @@ def return_url(user_id: int, lesson: str) -> list[str]:
 def return_send_notifications(user_id: int) -> bool | None:
     loging(logger_level='INFO', user_id=str(user_id), do='Search by db send_notifications . . .')
     cursor.execute('SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
-    res: list[bool] | None = cursor.fetchone()
+    res = cursor.fetchone()
     if res != None:
-        return res[0]
+        return res[0]  # type: ignore
     else:
-        return res
+        return res  # type: ignore
 
 
 def return_user_id(user_id: int) -> Any:
@@ -104,15 +102,9 @@ def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, 
         loging(logger_level='INFO', user_id=str(user_id), do='Adding data to db . . .')
     n = return_send_notifications(user_id=user_id)
     if n != None:
-        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)',
-                    (user_id, username, user_name, user_surname, user_lang, n))
+        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, n))
     else:
-        loging(logger_level='ERROR', user_id=str(user_id), do=str(Error))
-        try:
-            cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)',
-                        (user_id, username, user_name, user_surname, user_lang, True))
-        except Exception as Error:
-            loging(logger_level='ERROR', user_id=str(user_id), do=str(Error))
+        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, True))
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()

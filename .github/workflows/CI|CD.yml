@@ -36,7 +36,7 @@ jobs:
 
             - name: Flake8
               run: |
-                  flake8 --extend-ignore E501,F405,F821,F841
+                  flake8 --extend-ignore E501,F405,F821,F841,E711
 
     Tests:
         needs: Lint

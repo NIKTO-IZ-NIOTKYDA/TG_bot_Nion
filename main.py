@@ -16,6 +16,7 @@ from KeyboardsMarkup import markup_start, markup_dz, markup_dz_update, markup_dz
 
 bot: telebot.TeleBot = telebot.TeleBot(config.BotToken)
 
+
 # main fn
 def rename(file_name_in: str, file_name_out: str) -> None:
     os.system(f'mv {file_name_in} {file_name_out}')
@@ -663,9 +664,9 @@ def logic(message: Any) -> Any:
                 bot.register_next_step_handler(msg, start_mailing)
 
             def start_mailing(message: Any) -> None:
-                config.config.input_text_mailing = message.text
+                config.input_text_mailing = message.text
                 send_status_text(user_id=message.chat.id)
-                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
 
             enter_message(message)
         elif message.text == '✅ YES ✅' and message.chat.id == config.main_admin_id:
@@ -673,11 +674,11 @@ def logic(message: Any) -> Any:
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             try:
-                newsletter(user_id=message.chat.id, text=str(config.config.input_text_mailing), i=0, timer=0, auto=False)
+                newsletter(user_id=message.chat.id, text=str(config.input_text_mailing), i=0, timer=0, auto=False)
             except Exception as E:
                 loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
-            config.config.input_text_mailing = [None]
+            config.input_text_mailing = [None]
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
             loging(logger_level='WARN', user_id=message.chat.id, do='Admin performs db backup . . .')

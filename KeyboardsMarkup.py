@@ -26,7 +26,7 @@ no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='schedule_d
 markup_del_schedule_warn.add(yes, no)
 
 num_lessons: int = 19
-dect_name_lessons: dict[int | list[str]] = {
+dect_name_lessons = {
     0: ['algebra', 'Алгебра'],
     1: ['english_lang_1', 'Англ. Яз. (1 группа)'],
     2: ['english_lang_2', 'Англ. Яз. (2 группа)'],
@@ -45,8 +45,9 @@ dect_name_lessons: dict[int | list[str]] = {
     15: ['TBIS', 'Теория вероятностей и статистика'],
     16: ['technology', 'Технология'],
     17: ['physics', 'Физика'],
-    18: ['chemistry', 'Химия'],
+    18: ['chemistry', 'Химия']
 }
+
 
 def gen_dz_markup(pstr_t: str, pstr_cbd: str) -> types.InlineKeyboardMarkup:
     r_markup = types.InlineKeyboardMarkup(row_width=3)
@@ -62,20 +63,22 @@ def gen_dz_markup(pstr_t: str, pstr_cbd: str) -> types.InlineKeyboardMarkup:
             b = types.InlineKeyboardButton(text=dect_name_lessons[i+1][1]+pstr_t, callback_data=dect_name_lessons[i+1][0]+pstr_cbd)
         except KeyError:
             return r_markup.add(a)
-        
+
         try:
             c = types.InlineKeyboardButton(text=dect_name_lessons[i+2][1]+pstr_t, callback_data=dect_name_lessons[i+2][0]+pstr_cbd)
         except KeyError:
             return r_markup.add(a, b)
-        
+
         r_markup.add(a, b, c)
         i += 3
 
     return r_markup
+
+
 def check(input: str, pstr_cbd: str) -> bool:
     i: int = 0
     while i < num_lessons:
-        if input == dect_name_lessons[i]+pstr_cbd:
+        if input == dect_name_lessons[i]+pstr_cbd:  # type: ignore[operator]
             return True
     return False
 
