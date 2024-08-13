@@ -12,11 +12,9 @@ from telebot import types
 import db
 import config
 from loging import loging
-from KeyboardsMarkup import markup_start, markup_dz, markup_dz_update, markup_dz_update_p, markup_update_dz_or_gdz, markup_url, markup_del_schedule, markup_del_schedule_warn, markup_admin_panel, markup_photo, markup_off_notifications_warn, markup_chack_mailing
+from KeyboardsMarkup import markup_start, markup_dz, markup_dz_update, markup_dz_update_p, markup_update_dz_or_gdz, markup_url, markup_del_schedule, markup_del_schedule_warn, markup_admin_panel, markup_photo, markup_off_notifications_warn, markup_chack_mailing, check
 
 bot: telebot.TeleBot = telebot.TeleBot(config.BotToken)
-input_text: str = ''
-
 
 # main fn
 def rename(file_name_in: str, file_name_out: str) -> None:
@@ -40,6 +38,7 @@ def newsletter(user_id: int, text: str, i: int, timer: int, auto: bool) -> None:
 
         loging(logger_level='INFO', user_id=str(user_id), do='Mailing is over')
         bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=markup_start)
+        return
     if timer <= 29 and str(res) != '[]':
         try:
             bot.send_message(int(res[i]), str(text))
@@ -131,14 +130,14 @@ def check_user_in_db(message: Any) -> bool:
         loging(logger_level='INFO', user_id=str(message.chat.id), do='User authenticated !')
         if message.chat.id != config.main_admin_id:
             db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
+        return True
+    else:
+        loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
+        db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
+        loging(logger_level='INFO', user_id=str(message.chat.id), do='Add user . . .')
+        send_status_text(user_id=message.chat.id)
+        bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
         return False
-
-    loging(logger_level='INFO', user_id=str(message.chat.id), do='User unauthenticated !')
-    db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
-    loging(logger_level='INFO', user_id=str(message.chat.id), do='Add user . . .')
-    send_status_text(user_id=message.chat.id)
-    bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
-    return True
 
 
 def start_bot_notification_admin() -> None:
@@ -172,14 +171,14 @@ def start(message: Any) -> None:
 
 @bot.message_handler(commands=['dz'])
 def dz(message: Any) -> None:
-    if check_user_in_db(message) == 0:
+    if check_user_in_db(message):
         send_status_text(user_id=message.chat.id)
         bot.send_message(message.chat.id, '👇 Выберете предмет', reply_markup=markup_dz)
 
 
 @bot.message_handler(commands=['schedule'])
 def schedule(message: Any) -> None:
-    if check_user_in_db(message) == 0:
+    if check_user_in_db(message):
         loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/schedule\'')
         try:
             photo = open('schedule.jpg', 'rb')
@@ -205,18 +204,11 @@ def schedule(message: Any) -> None:
 @bot.message_handler(commands=['call_schedule'])
 def call_schedule(message: Any) -> Any:
     try:
-        if check_user_in_db(message) == 0:
+        if check_user_in_db(message):
             loging(logger_level='INFO', user_id=str(message.chat.id), do='Received \'/call_schedule\'')
 
             if datetime.datetime.isoweekday(datetime.datetime.now()) < 5 or datetime.datetime.isoweekday(datetime.datetime.now()) > 5:
-                call_schedule = '''Урок 1: 8:00   -  8:45
-    Урок 2: 8:55   -  9:40
-    Урок 3: 10:00 - 10:45
-    Урок 4: 11:05 - 11:50
-    Урок 5: 12:00 - 12:45
-    Урок 6: 12:55 - 13:40
-    Урок 7: 13:45 - 14:30
-    Урок 8: 14:35 - 15:20'''
+                call_schedule = '''Урок 1: 8:00   -  8:45\nУрок 2: 8:55   -  9:40\nУрок 3: 10:00 - 10:45\nУрок 4: 11:05 - 11:50\nУрок 5: 12:00 - 12:45\nУрок 6: 12:55 - 13:40\nУрок 7: 13:45 - 14:30\nУрок 8: 14:35 - 15:20'''
 
                 lessons = [
                     {"start_time": 8_00, "end_time": 8_45},
@@ -229,13 +221,7 @@ def call_schedule(message: Any) -> Any:
                     {"start_time": 14_35, "end_time": 15_20}
                         ]
             elif datetime.datetime.isoweekday(datetime.datetime.now()) == 5:
-                call_schedule = '''⚠️ Расписание на пятницу\n
-Урок 1: 8:00   -  8:45
-Урок 2: 8:55   -  9:35
-Урок 3: 9:55   - 10:35
-Урок 4: 10:55 - 11:35
-Урок 5: 11:45 - 12:20
-Урок 6: 12:30 - 13:10'''
+                call_schedule = '''⚠️ Расписание на пятницу\nУрок 1: 8:00   -  8:45\nУрок 2: 8:55   -  9:35\nУрок 3: 9:55   - 10:35\nУрок 4: 10:55 - 11:35\nУрок 5: 11:45 - 12:20\nУрок 6: 12:30 - 13:10'''
 
                 lessons = [
                     {"start_time": 8_00, "end_time": 8_45},
@@ -392,7 +378,7 @@ def z(message: Any) -> None:
 # Other
 @bot.message_handler(content_types=['photo'])
 def photo(message: Any) -> None:
-    if check_user_in_db(message) == 0 and check_for_admin(user_id=message.chat.id):
+    if check_user_in_db(message) and check_for_admin(user_id=message.chat.id):
         photo = message.photo[-1]
         file_info = bot.get_file(photo.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
@@ -406,39 +392,42 @@ def photo(message: Any) -> None:
 # Inline-button
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call: Any) -> Any:
-    if db.return_user_authentication(user_id=call.message.chat.id) == 0:
+    if db.return_user_authentication(user_id=call.message.chat.id):
         loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'Call \'[{call.data}]\'')
         # Show D/Z
-        if call.data == 'algebra' or call.data == 'english_lang_1' or call.data == 'english_lang_2' or call.data == 'biology' or call.data == 'geography' or call.data == 'geometry' or call.data == 'computer_science_1' or call.data == 'computer_science_2' or call.data == 'story' or call.data == 'literature' or call.data == 'music' or call.data == 'OBZH' or call.data == 'social_science' or call.data == 'native_literature' or call.data == 'russian_lang' or call.data == 'TBIS' or call.data == 'technology' or call.data == 'physics' or call.data == 'chemistry':
-            markup_back = types.InlineKeyboardMarkup(row_width=1)
-            url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
-            notification_admin = types.InlineKeyboardButton(text='⚠️ Задание не верное или устаревшее ⚠️', callback_data=f'{call.data}_notification_admin')
-            del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz_warn')
-            photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
-            # URL
-            if url != 'None':
-                url = types.InlineKeyboardButton(text='ГДЗ', url=url)
-                back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                if check_for_admin(user_id=call.message.chat.id):
-                    markup_back.add(url, del_dz, back)
+        if check(input=call.data, pstr_cbd=''):
+            try:
+                markup_back = types.InlineKeyboardMarkup(row_width=1)
+                url = db.return_url(user_id=call.message.chat.id, lesson=call.data)[0]
+                notification_admin = types.InlineKeyboardButton(text='⚠️ Задание не верное или устаревшее ⚠️', callback_data=f'{call.data}_notification_admin')
+                del_dz = types.InlineKeyboardButton(text='❌ Удалить Д/З ❌', callback_data=f'{call.data}_del_dz_warn')
+                photo = db.return_photo(user_id=call.message.chat.id, lesson=call.data)[0]
+                # URL
+                if url != 'None':
+                    url = types.InlineKeyboardButton(text='ГДЗ', url=url)
+                    back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
+                    if check_for_admin(user_id=call.message.chat.id):
+                        markup_back.add(url, del_dz, back)
+                    else:
+                        markup_back.add(url, notification_admin, back)
                 else:
-                    markup_back.add(url, notification_admin, back)
-            else:
-                back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
-                if check_for_admin(user_id=call.message.chat.id):
-                    markup_back.add(del_dz, back)
+                    back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back')
+                    if check_for_admin(user_id=call.message.chat.id):
+                        markup_back.add(del_dz, back)
+                    else:
+                        markup_back.add(notification_admin, back)
+                # Photo
+                if photo != 'None':
+                    bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
+                    bot.send_chat_action(call.message.chat.id, action='upload_photo')
+                    bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+                # Default
                 else:
-                    markup_back.add(notification_admin, back)
-            # Photo
-            if photo != 'None':
-                bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
-                bot.send_chat_action(call.message.chat.id, action='upload_photo')
-                bot.send_photo(call.message.chat.id, photo=open(photo, 'rb'), caption=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
-            # Default
-            else:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=str(db.return_dz(user_id=call.message.chat.id, lesson=call.data)[0]), reply_markup=markup_back)
+            except Exception as e:
+                print(e)
         # WARN Del D/Z
-        elif call.data == 'algebra_del_dz_warn' or call.data == 'english_lang_1_del_dz_warn' or call.data == 'english_lang_2_del_dz_warn' or call.data == 'biology_del_dz_warn' or call.data == 'geography_del_dz_warn' or call.data == 'geometry_del_dz_warn' or call.data == 'computer_science_1_del_dz_warn' or call.data == 'computer_science_2_del_dz_warn' or call.data == 'story_del_dz_warn' or call.data == 'literature_del_dz_warn' or call.data == 'music_del_dz_warn' or call.data == 'OBZH_del_dz_warn' or call.data == 'social_science_del_dz_warn' or call.data == 'native_literature_del_dz_warn' or call.data == 'russian_lang_del_dz_warn' or call.data == 'TBIS_del_dz_warn' or call.data == 'technology_del_dz_warn' or call.data == 'physics_del_dz_warn' or call.data == 'chemistry_del_dz_warn':
+        elif check(input=call.data, pstr_cbd='_del_dz_warn'):
             markup_del_dz_warn = types.InlineKeyboardMarkup(row_width=1)
             yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=f'{call.data.replace("_warn", "")}')
             no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data='no_del_dz')
@@ -451,7 +440,7 @@ def callback_handler(call: Any) -> Any:
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
                 bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz_warn", ""))[0]} + Photo', reply_markup=markup_del_dz_warn)
         # Del D/Z
-        elif call.data == 'algebra_del_dz' or call.data == 'english_lang_1_del_dz' or call.data == 'english_lang_2_del_dz' or call.data == 'biology_del_dz' or call.data == 'geography_del_dz' or call.data == 'geometry_del_dz' or call.data == 'computer_science_1_del_dz' or call.data == 'computer_science_2_del_dz' or call.data == 'story_del_dz' or call.data == 'literature_del_dz' or call.data == 'music_del_dz' or call.data == 'OBZH_del_dz' or call.data == 'social_science_del_dz' or call.data == 'native_literature_del_dz' or call.data == 'russian_lang_del_dz' or call.data == 'TBIS_del_dz' or call.data == 'technology_del_dz' or call.data == 'physics_del_dz' or call.data == 'chemistry_del_dz':
+        elif check(input=call.data, pstr_cbd='_del_dz'):
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется удаление, пожалуйста, подождите . . .')
             db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_del_dz", ""), dz='Не добавлено домашнее задание =(')
@@ -479,7 +468,7 @@ def callback_handler(call: Any) -> Any:
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !')
         # Notification admin
-        elif call.data == 'algebra_notification_admin' or call.data == 'english_lang_1_notification_admin' or call.data == 'english_lang_2_notification_admin' or call.data == 'biology_notification_admin' or call.data == 'geography_notification_admin' or call.data == 'geometry_notification_admin' or call.data == 'computer_science_1_notification_admin' or call.data == 'computer_science_2_notification_admin' or call.data == 'story_notification_admin' or call.data == 'literature_notification_admin' or call.data == 'music_notification_admin' or call.data == 'OBZH_notification_admin' or call.data == 'social_science_notification_admin' or call.data == 'native_literature_notification_admin' or call.data == 'russian_lang_notification_admin' or call.data == 'TBIS_notification_admin' or call.data == 'technology_notification_admin' or call.data == 'physics_notification_admin' or call.data == 'chemistry_notification_admin':
+        elif check(input=call.data, pstr_cbd='_notification_admin'):
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do=f'User: {call.message.chat.id} requested a D/Z update')
             less = call.data.replace("_notification_admin", "")
 
@@ -530,11 +519,11 @@ def callback_handler(call: Any) -> Any:
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
         # Replace D/Z
-        elif call.data == 'algebra_update' or call.data == 'english_lang_1_update' or call.data == 'english_lang_2_update' or call.data == 'biology_update' or call.data == 'geography_update' or call.data == 'geometry_update' or call.data == 'computer_science_1_update' or call.data == 'computer_science_2_update' or call.data == 'story_update' or call.data == 'literature_update' or call.data == 'music_update' or call.data == 'OBZH_update' or call.data == 'social_science_update' or call.data == 'native_literature_update' or call.data == 'russian_lang_update' or call.data == 'TBIS_update' or call.data == 'technology_update' or call.data == 'physics_update' or call.data == 'chemistry_update':
+        elif check(input=call.data, pstr_cbd='_update'):
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
-            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=input_text)
+            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), dz=config.input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""), path='None')
             try:
                 os.remove('photo/' + call.data.replace("_update", "") + '.jpg')
@@ -549,11 +538,11 @@ def callback_handler(call: Any) -> Any:
             loging(logger_level='WARN', user_id=str(call.message.chat.id), do='Start of the mailing list')
             send_update_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update", ""))
         # Replace D/Z + photo
-        elif call.data == 'algebra_update_p' or call.data == 'english_lang_1_update_p' or call.data == 'english_lang_2_update_p' or call.data == 'biology_update_p' or call.data == 'geography_update_p' or call.data == 'geometry_update_p' or call.data == 'computer_science_1_update_p' or call.data == 'computer_science_2_update_p' or call.data == 'story_update_p' or call.data == 'literature_update_p' or call.data == 'music_update_p' or call.data == 'OBZH_update_p' or call.data == 'social_science_update_p' or call.data == 'native_literature_update_p' or call.data == 'russian_lang_update_p' or call.data == 'TBIS_update_p' or call.data == 'technology_update_p' or call.data == 'physics_update_p' or call.data == 'chemistry_update_p':
+        elif check(input=call.data, pstr_cbd='_update_p'):
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
-            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), dz=input_text)
+            db.replace_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), dz=config.input_text)
             db.replace_photo(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""), path='photo/' + call.data.replace("_update_p", "") + '.jpg')
             rename(file_name_in='photo.jpg', file_name_out='photo/' + call.data.replace("_update_p", "") + '.jpg')
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace("_update_p", ""))
@@ -565,14 +554,15 @@ def callback_handler(call: Any) -> Any:
             loging(logger_level='WARN', user_id=str(call.message.chat.id), do='Start of the mailing list')
             send_update_dz(user_id=call.message.chat.id, lesson=call.data.replace("_update_p", ""))
         # Replace URL
-        elif call.data == 'algebra_url' or call.data == 'english_lang_1_url' or call.data == 'english_lang_2_url' or call.data == 'biology_url' or call.data == 'geography_url' or call.data == 'geometry_url' or call.data == 'computer_science_1_url' or call.data == 'computer_science_2_url' or call.data == 'story_url' or call.data == 'literature_url' or call.data == 'music_url' or call.data == 'OBZH_url' or call.data == 'social_science_url' or call.data == 'native_literature_url' or call.data == 'russian_lang_url' or call.data == 'TBIS_url' or call.data == 'technology_url' or call.data == 'physics_url' or call.data == 'chemistry_url':
+        elif check(input=call.data, pstr_cbd='_url'):
             bot.delete_message(call.message.chat.id, message_id=call.message.message_id)
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '⚙️ Выполняется замена, пожалуйста, подождите . . .', reply_markup=types.ReplyKeyboardRemove())
-            db.replace_url(user_id=call.message.chat.id, url=input_text, lesson=call.data.replace("_url", ""))
+            db.replace_url(user_id=call.message.chat.id, url=config.input_text, lesson=call.data.replace("_url", ""))
             loging(logger_level='INFO', user_id=str(call.message.chat.id), do='Successfully !')
             send_status_text(user_id=call.message.chat.id)
             bot.send_message(call.message.chat.id, '✅ Успешно !', reply_markup=markup_start)
+        # Notifications
         elif call.data == 'off_notifications_warn':
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Вы уверены ?\n\n*Если вы отключите уведомления вы не будете получать сообщения об обновлении домашнего задания и расписания. Сюда НЕ входит рассылка от администраторов бота.', reply_markup=markup_off_notifications_warn)
         elif call.data == 'off_notifications':
@@ -600,7 +590,7 @@ def callback_handler(call: Any) -> Any:
 # Text
 @bot.message_handler(content_types=['text'])
 def logic(message: Any) -> Any:
-    if check_user_in_db(message) == 0:
+    if check_user_in_db(message):
         loging(logger_level='INFO', user_id=str(message.chat.id), do=f'Received \'{message.text}\'')
         if message.text == 'Домашнее задание 📚':
             dz(message)
@@ -644,7 +634,7 @@ def logic(message: Any) -> Any:
                 bot.register_next_step_handler(msg, enter_lessons)
 
             def enter_lessons(message: Any) -> None:
-                input_text = message.text
+                config.input_text = message.text
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update_p)
             enter_dz(message)
@@ -673,9 +663,9 @@ def logic(message: Any) -> Any:
                 bot.register_next_step_handler(msg, start_mailing)
 
             def start_mailing(message: Any) -> None:
-                config.input_text_mailing = message.text
+                config.config.input_text_mailing = message.text
                 send_status_text(user_id=message.chat.id)
-                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+                bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{config.config.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
 
             enter_message(message)
         elif message.text == '✅ YES ✅' and message.chat.id == config.main_admin_id:
@@ -683,11 +673,11 @@ def logic(message: Any) -> Any:
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅ Рассылка началась!', reply_markup=types.ReplyKeyboardRemove())
             try:
-                newsletter(user_id=message.chat.id, text=str(config.input_text_mailing), i=0, timer=0, auto=False)
+                newsletter(user_id=message.chat.id, text=str(config.config.input_text_mailing), i=0, timer=0, auto=False)
             except Exception as E:
                 loging(logger_level='ERROR', user_id=str(message.chat.id), do=f'Error: {E}')
         elif message.text == '❌ NO ❌' and message.chat.id == config.main_admin_id:
-            config.input_text_mailing = [None]
+            config.config.input_text_mailing = [None]
             send_status_text(user_id=message.chat.id)
             bot.send_message(message.chat.id, '✅Вы вернулись назад!', reply_markup=markup_admin_panel)
             loging(logger_level='WARN', user_id=message.chat.id, do='Admin performs db backup . . .')
@@ -746,10 +736,10 @@ Network: = {Network}'''
             if message.chat.id == config.main_admin_id:
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, 'Где нужно поставить этот текст ?', reply_markup=markup_update_dz_or_gdz)
-                input_text = message.text
+                config.input_text = message.text
             elif check_for_admin(user_id=message.chat.id):
                 loging(logger_level='INFO', user_id=str(message.chat.id), do='User replase D/Z')
-                input_text = message.text
+                config.input_text = message.text
                 send_status_text(user_id=message.chat.id)
                 bot.send_message(message.chat.id, '👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=markup_dz_update)
             else:

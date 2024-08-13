@@ -4,18 +4,15 @@ from typing import Any
 from config import name_database, debug, main_admin_id
 from loging import loging
 
-global conn
-global cursor
-
-conn: sqlite3.Connection
-cursor: sqlite3.Cursor
 
 
 def db_connect() -> None:
     loging(logger_level='INFO', user_id='none', do='Connecting to db . . .')
-    conn: sqlite3.Connection = sqlite3.connect(name_database, check_same_thread=False)
+    global conn
+    conn = sqlite3.connect(name_database, check_same_thread=False)
     loging(logger_level='INFO', user_id='none', do='Create a course . . .')
-    cursor: sqlite3.Cursor = conn.cursor()
+    global cursor
+    cursor = conn.cursor()
 
 
 def replace_dz(user_id: int, lesson: str, dz: str) -> None:
@@ -24,6 +21,8 @@ def replace_dz(user_id: int, lesson: str, dz: str) -> None:
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
+    return
+
 
 
 def replace_photo(user_id: int, path: str, lesson: str) -> None:
@@ -68,10 +67,14 @@ def return_url(user_id: int, lesson: str) -> list[str]:
     return [str(url[0]) for url in cursor.fetchall()]
 
 
-def return_send_notifications(user_id: int) -> bool:
+def return_send_notifications(user_id: int) -> bool | None:
     loging(logger_level='INFO', user_id=str(user_id), do='Search by db send_notifications . . .')
     cursor.execute('SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
-    return bool(cursor.fetchone()[0])
+    res: list[bool] | None = cursor.fetchone()
+    if res != None:
+        return res[0]
+    else:
+        return res
 
 
 def return_user_id(user_id: int) -> Any:
@@ -99,10 +102,17 @@ def remove_user(user_id: int) -> None:
 def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, user_lang: str) -> None:
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Adding data to db . . .')
-    try:
-        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, return_send_notifications(user_id=user_id)))
-    except Exception:
-        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)', (user_id, username, user_name, user_surname, user_lang, True))
+    n = return_send_notifications(user_id=user_id)
+    if n != None:
+        cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)',
+                    (user_id, username, user_name, user_surname, user_lang, n))
+    else:
+        loging(logger_level='ERROR', user_id=str(user_id), do=str(Error))
+        try:
+            cursor.execute('INSERT OR REPLACE INTO users (user_id, username, user_name, user_surname, user_lang, send_notifications) VALUES (?, ?, ?, ?, ?, ?)',
+                        (user_id, username, user_name, user_surname, user_lang, True))
+        except Exception as Error:
+            loging(logger_level='ERROR', user_id=str(user_id), do=str(Error))
     if debug:
         loging(logger_level='INFO', user_id=str(user_id), do='Saving data to db . . .')
     conn.commit()
@@ -110,15 +120,15 @@ def db_add_data(user_id: int, username: str, user_name: str, user_surname: str, 
 
 def return_user_authentication(user_id: int) -> bool:
     if user_id == main_admin_id:
-        return False
+        return True
     else:
         if debug:
             loging(logger_level='INFO', user_id=str(user_id), do='Search by db user_id . . .')
         cursor.execute('SELECT user_id FROM users WHERE user_id = ' + str(user_id))
         if str(cursor.fetchone()) != 'None':
-            return False
-        else:
             return True
+        else:
+            return False
 
 
 def db_stop(user_id: int) -> None:

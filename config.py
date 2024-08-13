@@ -1,8 +1,8 @@
-BotToken = '6552240356:AAHmdQHQ9Y0p84G-zFNo_Ho1D6TPdoOMtJQ'  # Токен бота
+BotToken = '6708933796:AAFQ8sc4n3VRCXpCWzxemg-rkVP-NVJxsOA'  # Токен бота 6552240356:AAHmdQHQ9Y0p84G-zFNo_Ho1D6TPdoOMtJQ
 commands_admin = 'AdminPanel_4qB7cY9jZ2gP'  # Команда для доступа к админ панели
 clear_konsole = 'clear'
 name_database = 'db/db.db'
-version = 'Release 1.3.2 [beta]'  # X.X.X [stable\beta\dev]
+version = 'Release 1.3.3 [beta]'  # X.X.X [stable\beta\dev]
 log = True
 debug = True
 welcome_animation = False
@@ -11,3 +11,4 @@ main_admin_id = 5731571131
 main_admin_url = 'niktoizneotkyda_QQQ'
 input_text_mailing = [None]
 admin_id = [5287168197, 1670389988]
+input_text = ''
