@@ -533,4 +533,4 @@ if __name__ == 'main':
     notification_admin(text=f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
     bot.infinity_polling(timeout=60, long_polling_timeout=60, logger_level=0, interval=0)
 else:
-    log.cerror(user_id=None, do=f'__name__ == \'main\': {__name__ == 'main'}')
+    log.cerror(user_id=None, do=f"__name__ == \'main\': {__name__ == 'main'}")
