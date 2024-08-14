@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12 ]
+                python-version: [ 3.12, 3.10.12 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12 ]
+                python-version: [ 3.12, 3.10.12 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
