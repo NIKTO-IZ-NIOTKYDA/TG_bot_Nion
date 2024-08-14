@@ -72,10 +72,10 @@ def return_send_notifications(user_id: int) -> bool | None:
     log.info(user_id=str(user_id), do='Search by db send_notifications . . .')
     cursor.execute('SELECT send_notifications FROM users WHERE user_id = ?', (user_id, ))
     result = cursor.fetchone()
-    if result != None:
-        return res[0]  # type: ignore
+    if str(result) != None:
+        return result[0]  # type: ignore
     else:
-        return res  # type: ignore
+        return None
 
 
 def return_user_id(user_id: int) -> Any:
