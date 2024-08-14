@@ -296,7 +296,7 @@ def callback_handler(call: Any) -> Any:
             except Exception:
                 log.info(user_id=str(call.message.chat.id), do='Error in edit_message_text')
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-                bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]} + Photo', reply_markup=markup_del_dz_warn)
+                bot.send_message(chat_id=call.message.chat.id, text=f"⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]} + Photo", reply_markup=markup_del_dz_warn)
         # Del D/Z
         elif check(input=call.data, pstr_cbd='_del_dz'):
             send_status_text(user_id=call.message.chat.id)
@@ -308,7 +308,7 @@ def callback_handler(call: Any) -> Any:
             except FileNotFoundError:
                 pass
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace('_del_dz', ''))
-            log.warn(user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace('_del_dz', '')}\'')
+            log.warn(user_id=str(call.message.chat.id), do=f"Admin deleted dz \'{call.data.replace('_del_dz', '')}\'")
             send_status_text(user_id=call.message.chat.id)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно !', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=call.data.replace('_del_dz', '')), back_in_main_menu))
 
