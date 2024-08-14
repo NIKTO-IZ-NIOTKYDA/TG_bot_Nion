@@ -240,8 +240,8 @@ def callback_handler(call: Any) -> Any:
                         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'{call_schedule}\n\nДо конца урока осталось: {divmod(end_time - current_time, 60)[0]} часов и {(end_time - current_time) - (divmod(end_time - current_time, 60)[0] * 60)} минут.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
                         return 0
 
-                if (min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] // 100 * 60 + min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] % 100) - (current_time // 100 * 60 + current_time % 100) >= 0:
-                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'{call_schedule}\n\nСледующий урок через {divmod((min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] // 100 * 60 + min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0]} часов {(min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] // 100 * 60 + min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] % 100) - (current_time // 100 * 60 + current_time % 100) - (divmod((min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] // 100 * 60 + min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] % 100) - (current_time // 100 * 60 + current_time % 100), 60)[0] * 60)} минут', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
+                if (min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] / 100 * 60 + min(lessons, key=lambda x: abs(x['start_time'] - current_time))['start_time'] % 100) - (current_time / 100 * 60 + current_time % 100) >= 0:
+                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'{call_schedule}\n\nСледующий урок через {divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] / 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time / 100 * 60 + current_time % 100), 60)[0]} часов {(min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] / 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time / 100 * 60 + current_time % 100) - (divmod((min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] / 100 * 60 + min(lessons, key=lambda x: abs(x["start_time"] - current_time))["start_time"] % 100) - (current_time / 100 * 60 + current_time % 100), 60)[0] * 60)} минут', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
                 else:
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'{call_schedule}\n\nУроки закончились на сегодня!', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
         elif call.data == 'profile':
@@ -288,15 +288,15 @@ def callback_handler(call: Any) -> Any:
         # WARN Del D/Z
         elif check(input=call.data, pstr_cbd='_del_dz_warn'):
             markup_del_dz_warn = types.InlineKeyboardMarkup(row_width=1)
-            yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=f'{call.data.replace('_warn', '')}')
-            no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data=f'{call.data.replace('_del_dz_warn', '')}')
+            yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=call.data.replace('_warn', ''))
+            no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data=call.data.replace('_del_dz_warn', ''))
             markup_del_dz_warn.add(yes, no)
             try:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]}', reply_markup=markup_del_dz_warn)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]}", reply_markup=markup_del_dz_warn)
             except Exception:
                 log.info(user_id=str(call.message.chat.id), do='Error in edit_message_text')
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-                bot.send_message(chat_id=call.message.chat.id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]} + Photo', reply_markup=markup_del_dz_warn)
+                bot.send_message(chat_id=call.message.chat.id, text=f"⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]} + Photo", reply_markup=markup_del_dz_warn)
         # Del D/Z
         elif check(input=call.data, pstr_cbd='_del_dz'):
             send_status_text(user_id=call.message.chat.id)
@@ -308,7 +308,7 @@ def callback_handler(call: Any) -> Any:
             except FileNotFoundError:
                 pass
             db.replace_url(user_id=call.message.chat.id, url='None', lesson=call.data.replace('_del_dz', ''))
-            log.warn(user_id=str(call.message.chat.id), do=f'Admin deleted dz \'{call.data.replace('_del_dz', '')}\'')
+            log.warn(user_id=str(call.message.chat.id), do=f"Admin deleted dz \'{call.data.replace('_del_dz', '')}\'")
             send_status_text(user_id=call.message.chat.id)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно !', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=call.data.replace('_del_dz', '')), back_in_main_menu))
 
@@ -533,4 +533,4 @@ if __name__ == 'main':
     notification_admin(text=f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}')
     bot.infinity_polling(timeout=60, long_polling_timeout=60, logger_level=0, interval=0)
 else:
-    log.cerror(user_id=None, do=f'__name__ == \'main\': {__name__ == 'main'}')
+    log.cerror(user_id=None, do=f"__name__ == \'main\': {__name__ == 'main'}")
