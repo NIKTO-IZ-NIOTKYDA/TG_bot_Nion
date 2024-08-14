@@ -292,7 +292,7 @@ def callback_handler(call: Any) -> Any:
             no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data=call.data.replace('_del_dz_warn', ''))
             markup_del_dz_warn.add(yes, no)
             try:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]}', reply_markup=markup_del_dz_warn)
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]}", reply_markup=markup_del_dz_warn)
             except Exception:
                 log.info(user_id=str(call.message.chat.id), do='Error in edit_message_text')
                 bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
