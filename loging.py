@@ -1,18 +1,10 @@
-from os import remove, system
 from sys import stdout
 from time import sleep
+from os import remove, system
 from datetime import datetime
 
-from config import clear_konsole, log, welcome_animation, name_log_file
-
-
-# Colors
-normal = '\x1b[0m'
-red = '\x1b[31m'
-green = '\x1b[32m'
-yellow = '\x1b[33m'
-blue = '\x1b[34m'
-purple = '\x1b[35m'
+import colors_log
+from config import clear_konsole, log, debug, name_log_file, welcome_animation
 
 try:
     remove(str(name_log_file))
@@ -20,15 +12,16 @@ except FileNotFoundError:
     pass
 log_file = open(str(name_log_file), 'w+')
 
-def welcome_ani():
+
+def welcome_ani() -> None:
     system(clear_konsole)
-    load_str = 'launching a telegram bot...'
+    load_str = 'Launching a telegram bot...'
     ls_len = len(load_str)
-    animation = "|/-\\"
+    animation = '|/-\\'
     anicount = 0
     counttime = 0
     i = 0
-    while counttime != 100:
+    while counttime != 52:
         sleep(0.075)
         load_str_list = list(load_str)
         x = ord(load_str_list[i])
@@ -42,7 +35,7 @@ def welcome_ani():
         res = ''
         for j in range(ls_len):
             res = res + load_str_list[j]
-        stdout.write("\r"+res + animation[anicount])
+        stdout.write('\r'+res + animation[anicount])
         stdout.flush()
         load_str = res
         anicount = (anicount + 1) % 4
@@ -50,25 +43,50 @@ def welcome_ani():
         counttime = counttime + 1
 
 
+system(clear_konsole)
+
 if welcome_animation:
     welcome_ani()
+    system(clear_konsole)
 
-print('[FORMAN]   [ID]            [TIME]              [DO]')
-log_file.write('[FORMAN]   [ID]            [TIME]              [DO]\n')
+print('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]')
+log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]\n')
 
-def loging(logger_level: str, user_id: str, do: str):
-    if log:
-        current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-        if logger_level == 'INFO':
-            print('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (green+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+
+class logging:
+    current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+
+    def __init__(self, Name: str, Color: str) -> None:
+        self.Name = Name
+        self.Color = Color
+
+    def debug(self, user_id: str | None, do: str) -> None:
+        if log | debug:
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
             log_file.flush()
-        elif logger_level == 'WARN':
-            print('%-15s %-20s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (yellow+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+
+    def info(self, user_id: str | None, do: str) -> None:
+        if log:
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
             log_file.flush()
-        elif logger_level == 'ERROR':
-            print('%-15s %-20s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-10s' % (red+f'[{logger_level}]', purple+f'{user_id}', blue+f'{current_time}', normal+f'{do}\n'))
+
+    def warn(self, user_id: str | None, do: str) -> None:
+        if log:
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            log_file.flush()
+
+    def error(self, user_id: str | None, do: str) -> None:
+        if log:
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            log_file.flush()
+
+    def cerror(self, user_id: str | None, do: str) -> None:
+        if log:
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
             log_file.flush()
             exit(1)

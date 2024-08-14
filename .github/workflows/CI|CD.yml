@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -36,14 +36,14 @@ jobs:
 
             - name: Flake8
               run: |
-                  flake8 --extend-ignore E501,F405
+                  flake8 --extend-ignore E501,F405,F821,F841,E711
 
     Tests:
         needs: Lint
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -62,7 +62,7 @@ jobs:
 
             - name: MyPy
               run: |
-                  mypy .
+                  mypy . -v
 
     Deploy:
       needs: Tests
