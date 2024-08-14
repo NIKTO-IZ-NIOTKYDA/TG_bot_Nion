@@ -288,8 +288,8 @@ def callback_handler(call: Any) -> Any:
         # WARN Del D/Z
         elif check(input=call.data, pstr_cbd='_del_dz_warn'):
             markup_del_dz_warn = types.InlineKeyboardMarkup(row_width=1)
-            yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=f'{call.data.replace('_warn', '')}')
-            no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data=f'{call.data.replace('_del_dz_warn', '')}')
+            yes = types.InlineKeyboardButton(text='✅ Да ✅', callback_data=call.data.replace('_warn', ''))
+            no = types.InlineKeyboardButton(text='❌ Нет ❌', callback_data=call.data.replace('_del_dz_warn', ''))
             markup_del_dz_warn.add(yes, no)
             try:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'⚠ Вы уверены ?\n\nД/З: {db.return_dz(user_id=call.message.chat.id, lesson=call.data.replace('_del_dz_warn', ''))[0]}', reply_markup=markup_del_dz_warn)
