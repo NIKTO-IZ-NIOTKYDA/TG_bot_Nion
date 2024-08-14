@@ -137,6 +137,12 @@ def start(message: Any) -> None:
         bot.send_message(message.chat.id, f'Добро пожаловать !\n\nVersion: {config.version}', reply_markup=markup_start)
 
 
+@bot.message_handler(commands=['clear_RKM'])
+def clear_RKM(message: Any) -> None:
+    bot.send_message(message.chat.id, '[INFO] ReplyKeyboardMarkup deleted.', reply_markup=types.ReplyKeyboardRemove())
+    start()
+
+
 # Main Admin Panel
 @bot.message_handler(commands=['AdminPanel_4qB7cY9jZ2gP'])
 def AdminPanel_4qB7cY9jZ2gP(message: Any) -> None:
