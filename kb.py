@@ -4,9 +4,10 @@ from telebot import types
 markup_start = types.InlineKeyboardMarkup(row_width=1)
 DZ = types.InlineKeyboardButton(text='Домашнее задание 📚', callback_data='dz')
 schedule = types.InlineKeyboardButton(text='Расписание 📑', callback_data='schedule')
+sgo = types.InlineKeyboardButton(text='СГО [В разработке]', callback_data='pass')
 call_schedule = types.InlineKeyboardButton(text='Расписание звонков 🕝', callback_data='call_schedule')
 profile = types.InlineKeyboardButton(text='Профиль 👤', callback_data='profile')
-markup_start.add(DZ, schedule, call_schedule, profile)
+markup_start.add(DZ, schedule, call_schedule, sgo, profile)
 
 # Warn off notifications
 markup_off_notifications_warn = types.InlineKeyboardMarkup(row_width=1)

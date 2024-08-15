@@ -1,2 +1,3 @@
 psutil
 telebot
+netschoolapi
