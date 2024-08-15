@@ -6,3 +6,10 @@ version: str = r'Release 1.4.1 [stable]'  # X.X.X [stable\beta\dev]
 log: bool = True
 debug: bool = True
 welcome_animation: bool = False
+name_log_file: str = r'log.log'
+main_admin_url: str = r'niktoizneotkyda_QQQ'
+admin_id: list[int] = [5731571131, 5287168197, 1670389988]
+
+input_text_mailing: str | list[str | None] = [None]
+newsletter: bool = False
+input_text: str = r'None'
