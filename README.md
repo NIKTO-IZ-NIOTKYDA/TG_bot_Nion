@@ -1,12 +1,12 @@
-# Release 1.4.1 [beta]
-- Обновлён интерфейс
-- Добавлена новая /clear_RKM она создана для удаления старого интерфейса (на картинке)
-- Обновлена система логирования
-- Обновлён генератор кнопок
-- Переписана рассылку
-- Обновлена система аутентификации
-- Исправлено несколько багов
-- Повышена читабельность кода
+# Release 1.4.1 [stable]
+- Updated interface
+- Added a new /clear_RKM, it was created to remove the old interface
+- Updated logging system
+- Updated button generator
+- Mailing list rewritten
+- Updated authentication system
+- Fixed several bugs
+- Improved code readability
 
 # Release 1.3.2 [beta]
 - Added system for checking schedule deletion
