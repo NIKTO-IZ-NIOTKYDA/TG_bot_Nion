@@ -45,23 +45,23 @@ def newsletter(user_id: int, text: str, auto: bool) -> None:
     if all_user_id != None:
         timer: int = 0
 
-        for user_id in all_user_id:  # type: ignore[union-attr]
+        for user_id_ in all_user_id:  # type: ignore[union-attr]
             if timer < 29:
                 try:
-                    bot.send_message(chat_id=user_id, text=text)
-                    log.info(user_id=str(user_id), do=f'Sent: {user_id}')
+                    bot.send_message(chat_id=user_id_, text=text)
+                    log.info(user_id=str(user_id_), do=f'Sent: {user_id_}')
 
                     timer += 1
                     continue
                 except telebot.apihelper.ApiException as Error:
                     if Error.result.status_code == 403 or Error.result.status_code == 400:
-                        log.warn(user_id=str(user_id), do=f'User {user_id} has blocked the bot!')
-                        # db.remove_user(user_id=str(user_id))
+                        log.warn(user_id=str(user_id_), do=f'User {user_id_} has blocked the bot!')
+                        # db.remove_user(user_id=str(user_id_))
 
                         timer += 1
                         continue
                 except Exception as Error:
-                    log.error(user_id=str(user_id), do=str(Error))
+                    log.error(user_id=str(user_id_), do=str(Error))
 
                     timer += 1
                     continue
@@ -69,13 +69,9 @@ def newsletter(user_id: int, text: str, auto: bool) -> None:
                 sleep(1.15)
                 timer = 0
 
-        log.info(user_id=str(user_id), do='Mailing is over')
-        bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
-        return
-    else:
-        log.info(user_id=str(user_id), do='Mailing is over')
-        bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
-        return
+    log.info(user_id=str(user_id), do='Mailing is over')
+    bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
+    return
 
 
 def send_update_dz(user_id: int, lesson: str) -> None:
