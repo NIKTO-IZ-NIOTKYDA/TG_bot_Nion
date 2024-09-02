@@ -8,7 +8,7 @@ debug: bool = True
 welcome_animation: bool = False
 name_log_file: str = r'log.log'
 main_admin_url: str = r'niktoizneotkyda_QQQ'
-admin_id: list[int] = [5287168197, 5731571131,1670389988]
+admin_id: list[int] = [5287168197, 5731571131, 1670389988]
 
 input_text_mailing: str | list[str | None] = [None]
 newsletter: bool = False
