@@ -15,12 +15,12 @@ def gen_markup_start(user_id: int):
     DZ = types.InlineKeyboardButton(text='Домашнее задание 📚', callback_data='dz')
     Schedule = types.InlineKeyboardButton(text='Расписание 📑', callback_data='schedule')
     Call_schedule = types.InlineKeyboardButton(text='Расписание звонков 🕝', callback_data='call_schedule')
-    NetSchool = types.InlineKeyboardButton(text='СГО 💀', callback_data='netschool')
+    NetSchool = types.InlineKeyboardButton(text='СГО [В разработке]', callback_data='pass')
     Profile = types.InlineKeyboardButton(text='Профиль 👤', callback_data='profile')
 
     markup.add(DZ, Schedule, Call_schedule)
 
-    if get_net_school(user_id=user_id) != None:
+    if get_net_school(user_id=user_id, decode=False) != None:
         markup.add(NetSchool)
 
     if check_for_admin(user_id):
@@ -99,8 +99,8 @@ def gen_profile_markup(rsn: bool | None, net_school: dict[str] | KeyError | None
     else:
         markup.add(types.InlineKeyboardButton(text='Включить уведомления', callback_data='on_notifications'))
 
-    if net_school == None:
-        markup.add(types.InlineKeyboardButton(text='Включить интеграцию с СГО', callback_data='on_net_school'))
+    #if net_school == None:
+        #markup.add(types.InlineKeyboardButton(text='Включить интеграцию с СГО', callback_data='on_net_school'))
     #else:
         #markup.add(types.InlineKeyboardButton(text='Отключить интеграцию с СГО', callback_data='off_net_school'))
 

@@ -12,10 +12,10 @@ log = loging.logging(Name='DB', Color=colors_log.yellow)
 
 
 def db_connect() -> None:
-    log.info(user_id='none', msg='Connecting to db . . .')
+    log.info(user_id=None, msg='Connecting to db . . .')
     global conn
     conn = sqlite3.connect(name_database, check_same_thread=False)
-    log.info(user_id='none', msg='Create a course . . .')
+    log.info(user_id=None, msg='Create a course . . .')
     global cursor
     cursor = conn.cursor()
 
@@ -91,13 +91,13 @@ def get_send_notifications(user_id: int) -> bool | None:
     log.info(user_id=str(user_id), msg='Search by db send_notifications . . .')
     cursor.execute('SELECT send_notifications FROM users WHERE user_id = ?', [user_id])
     result = cursor.fetchone()
-    if str(result) != None:
+    if result != None:
         return result[0]  # type: ignore
     else:
         return None
 
 
-def get_net_school(user_id: int) -> dict[str] | KeyError | None:
+def get_net_school(user_id: int, decode: bool = True) -> dict[str] | bool | KeyError | None:
     log.info(user_id=str(user_id), msg='Getting login and password from NetSchool . . .')
     cursor.execute('SELECT * FROM net_school WHERE user_id = ?', [user_id])
     try:
@@ -105,18 +105,21 @@ def get_net_school(user_id: int) -> dict[str] | KeyError | None:
     except IndexError:
         log.info(user_id=str(user_id), msg='Incorrect user_id')
         return None
+    
+    if not decode:
+        return True
+    else:
+        try:
+            dict = {
+                'login': b64decode(result[1]).decode('utf-8'),
+                'password': encryption.decrypt(encrypted_password=result[2], key=b64decode(result[3]).decode('utf-8')),
+                'key': b64decode(result[3]).decode('utf-8')
+            }
 
-    try:
-        dict = {
-            'login': b64decode(result[1]).decode('utf-8'),
-            'password': encryption.decrypt(encrypted_password=result[2], key=b64decode(result[3]).decode('utf-8')),
-            'key': b64decode(result[3]).decode('utf-8')
-        }
-
-    except Exception:
-        log.info(user_id=str(user_id), msg='Incorrect key')
-        return KeyError
-    return dict
+        except Exception:
+            log.info(user_id=str(user_id), msg='Incorrect key')
+            return KeyError
+        return dict
 
 
 def get_user_id(user_id: int) -> Any:

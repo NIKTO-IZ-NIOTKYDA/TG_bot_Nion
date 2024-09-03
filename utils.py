@@ -1,4 +1,5 @@
 import os
+from re import U
 from typing import Any
 from time import sleep
 from math import gcd
@@ -46,9 +47,10 @@ def rename(user_id: int, file_name_in: str, file_name_out: str) -> None:
 
 
 def send_status_text(user_id: int, bot: telebot.TeleBot) -> None:
-    if config.debug:
-        log.info(user_id=str(user_id), msg='Send status . . .')
-    bot.send_chat_action(user_id, action='typing')
+    log.info(user_id=user_id, msg='Call send_status_text')
+    # if config.debug:
+        # log.info(user_id=str(user_id), msg='Send status . . .')
+    # bot.send_chat_action(user_id, action='typing')
 
 
 def newsletter(user_id: int, text: str, auto: bool, bot: telebot.TeleBot) -> None:
@@ -121,3 +123,4 @@ def check_user_in_db(message: Any, bot: telebot.TeleBot) -> bool:
         return False
     else:
         return True
+

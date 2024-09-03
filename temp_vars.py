@@ -5,6 +5,7 @@ class tmp_vars:
     on_net_school_list_users: list[int] = []
     login_net_school_list_users: list[int] = []
     logined_net_school_list_users: dict[int, NetSchoolAPI] = {}
+    press_button_notification_admin_list_users: dict[int, str] = {}
     newsletter: bool = False
     input_text: str = r'None'
 

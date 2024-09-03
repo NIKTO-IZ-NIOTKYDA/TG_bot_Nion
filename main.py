@@ -37,10 +37,11 @@ log.info(user_id=None, msg='The bot is running !')
 
 
 def notification_admin(text: str, reply_markup: telebot.types.InlineKeyboardMarkup | None = None) -> None:
-    log.info(user_id='none', msg='Sending notifications to admins . . .')
+    log.info(user_id=None, msg='Sending notifications to admins . . .')
     for admin_id in config.admin_id:
         try:
             bot.send_message(admin_id, text, reply_markup=reply_markup)
+            log.info(user_id=None, msg=f'Send {admin_id} . . .')
         except telebot.apihelper.ApiException:
             log.warn(user_id=str(admin_id), msg=f'Admin {admin_id} blocked or didn\'t start the bot!')
 
@@ -119,7 +120,6 @@ def photo(message: Any) -> None:
             rename(user_id=message.chat.id, file_name_in='photo.jpg', file_name_out='schedule.jpg')
 
             bot.send_message(chat_id=message.chat.id, text='⚠ Активирована система уведомлений . . .')
-
             newsletter(user_id=message.chat.id, text='⚠ Обновлено расписание.', auto=True, bot=bot)
 
 
@@ -188,6 +188,12 @@ def callback_handler(call: Any) -> Any:
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'{call_schedule}\n\nУроки закончились на сегодня!', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
         elif call.data == 'profile':
+            if tmp_vars.on_net_school_list_users != []:
+                try:
+                    tmp_vars.on_net_school_list_users.remove(call.message.chat.id)
+                except ValueError:
+                    pass
+
             try:
                 rsn = db.get_send_notifications(user_id=call.message.chat.id)
                 net_school = db.get_net_school(user_id=call.message.chat.id)
@@ -214,6 +220,12 @@ def callback_handler(call: Any) -> Any:
                 log.error(user_id=call.message.chat.id, msg=str(Error))
         # Show D/Z
         elif check(input=call.data, pstr_cbd=''):
+            if tmp_vars.press_button_notification_admin_list_users != {}:
+                try:
+                    tmp_vars.logined_net_school_list_users.pop(call.message.chat.id)
+                except Exception:
+                    pass
+
             markup_back = types.InlineKeyboardMarkup(row_width=1)
             url = db.get_url(user_id=call.message.chat.id, lesson=call.data)
             photo = db.get_photo(user_id=call.message.chat.id, lesson=call.data)
@@ -288,24 +300,10 @@ def callback_handler(call: Any) -> Any:
 
         # Notification admin
         elif check(input=call.data, pstr_cbd='_notification_admin'):
-            log.info(user_id=str(call.message.chat.id), msg=f'User: {call.message.chat.id} requested a D/Z update')
-            less = call.data.replace('_notification_admin', '')
 
-            def enter_message(call: Any) -> None:
-                send_status_text(user_id=call.message.chat.id, bot=bot)
-                msg = bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='⚠️ Введите комментарий к запросу в нём можно указать на ошибку или предложить правильное Д/З', reply_markup=types.ReplyKeyboardRemove())
-                bot.register_next_step_handler(msg, start_mailing_admin)
-
-            def start_mailing_admin(call: Any) -> None:
-                if call.text[0] == '/':
-                    send_status_text(user_id=call.chat.id, bot=bot)
-                    bot.send_message(call.message.chat.id, '⚠️ Отправка прервана вы перенаправлены в главное меню.', reply_markup=gen_markup_start(user_id=call.message.chat.id))
-                else:
-                    notification_admin(f'⚠️ Пользователь: {call.chat.id} уведомил вас в неактуальности Д/З по {less}\n\nКомментарий: {call.text}')
-                    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Отчёт успешно отправлен. Извините за неудобства.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=less), back_in_main_menu))
-
-            enter_message(call)
-
+            tmp_vars.press_button_notification_admin_list_users.update({(call.message.chat.id, call.data.replace('_notification_admin', ''))})
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='⚠️ Введите комментарий к запросу в нём можно указать на ошибку или предложить правильное Д/З',
+                                  reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=call.data.replace('_notification_admin', '')), back_in_main_menu))
         # Back
         elif call.data == 'back_dz':
             try:
@@ -327,6 +325,11 @@ def callback_handler(call: Any) -> Any:
                 except ValueError:
                     pass
             if tmp_vars.logined_net_school_list_users != {}:
+                try:
+                    tmp_vars.logined_net_school_list_users.pop(call.message.chat.id)
+                except Exception:
+                    pass
+            if tmp_vars.press_button_notification_admin_list_users != {}:
                 try:
                     tmp_vars.logined_net_school_list_users.pop(call.message.chat.id)
                 except Exception:
@@ -603,6 +606,21 @@ def logic(message: Any) -> Any:
                 bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text='NetSchool', reply_markup=markup_NetSchool)
             except Exception as Error:
                 bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(back_in_main_menu)))
+        
+        # Notifications admin
+        if [message.chat.id == user_id for user_id in tmp_vars.press_button_notification_admin_list_users]:
+            log.info(user_id=str(message.chat.id), msg=f'User: {message.chat.id} requested a D/Z update')
+
+            if str(message.text)[0] == '/':
+                send_status_text(user_id=message.chat.id, bot=bot)
+                bot.send_message(message.chat.id, '⚠️ Отправка прервана.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=tmp_vars.press_button_notification_admin_list_users[message.chat.id]), back_in_main_menu))
+            else:
+                notification_admin_ = multiprocessing.Process(target=notification_admin, args=(f'⚠️ Пользователь: {message.chat.id} уведомил вас в неактуальности Д/З по q\n\nКомментарий: {message.text}', None))
+                notification_admin_.start()
+                
+                bot.send_message(message.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=str(tmp_vars.press_button_notification_admin_list_users[message.chat.id])), back_in_main_menu))
+
+                notification_admin_.join()
 
         # Main Admin Panel
         elif check_for_admin(user_id=message.chat.id) and tmp_vars.newsletter:
@@ -611,6 +629,7 @@ def logic(message: Any) -> Any:
 
             send_status_text(user_id=message.chat.id, bot=bot)
             bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{tmp_vars.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
+            
 
         # Panel replace
         elif check_for_admin(user_id=message.chat.id):
@@ -626,14 +645,14 @@ def logic(message: Any) -> Any:
 
 
 if __name__ == 'main':
-    n_admin = multiprocessing.Process(target=notification_admin, args=(f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}', None))
+    notification_admin_ = multiprocessing.Process(target=notification_admin, args=(f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}', None))
     chk_grade = multiprocessing.Process(target=check_grade)
 
-    #n_admin.start()
+    #notification_admin_.start()
     #chk_grade.start()
     bot.infinity_polling(timeout=60, long_polling_timeout=60, logger_level=0, interval=0)
 
-    chk_grade.kill()
-    n_admin.kill()
+    #chk_grade.kill()
+    #notification_admin_.kill()
 else:
     log.cerror(user_id=None, msg=f"__name__ == \'main\': {__name__ == 'main'}")
