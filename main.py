@@ -34,7 +34,7 @@ def rename(user_id: int, file_name_in: str, file_name_out: str) -> None:
 def send_status_text(user_id: int) -> None:
     if config.debug:
         log.info(user_id=str(user_id), do='Send status . . .')
-    bot.send_chat_action(user_id, action='typing')
+    #bot.send_chat_action(user_id, action='typing')
 
 
 def newsletter(user_id: int, text: str, auto: bool) -> None:
