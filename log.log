@@ -1,0 +1,31 @@
+[FORMAN]   [ID]            [TIME]              [DO]
+[32m[INFO]     [35mnone            [34m2024/09/03 15:33:37 [0mThe bot is running . . .
+[32m[INFO]     [35mnone            [34m2024/09/03 15:33:37 [0mConnecting to db . . .
+[32m[INFO]     [35mnone            [34m2024/09/03 15:33:37 [0mCreate a course . . .
+[32m[INFO]     [35mnone            [34m2024/09/03 15:33:37 [0mSending notifications to admins . . .
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:37 [0mSend status . . .
+[33m[WARN]     [35m5287168197      [34m2024/09/03 15:33:38 [0mAdmin 5287168197 blocked or didn't start the bot!
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mReceived '/start'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mReceived '/start'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mAdmin check: success
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mAdmin check: success
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mAdmin pressed '/start'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mSend status . . .
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mAdmin pressed '/start'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:38 [0mSend status . . .
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:42 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:42 [0mReceived 'Домашнее задание 📚'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:42 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:42 [0mSend status . . .
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:44 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:44 [0mReceived 'Расписание 📑'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:44 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:44 [0mReceived '/schedule'
+[33m[WARN]     [35m5731571131      [34m2024/09/03 15:33:44 [0mSchedule not found !
+[33m[WARN]     [35m5287168197      [34m2024/09/03 15:33:45 [0mAdmin 5287168197 blocked or didn't start the bot!
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mReceived 'Расписание звонков 🕝'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mUser authenticated !
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mReceived '/call_schedule'
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mThe enumeration of all lessons and variables has begun
+[32m[INFO]     [35m5731571131      [34m2024/09/03 15:33:46 [0mSend status . . .
