@@ -49,44 +49,47 @@ if welcome_animation:
     welcome_ani()
     system(clear_konsole)
 
-print('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]')
-log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]\n')
+print('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]')
+log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]\n')
 
 
 class logging:
-    current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
     def __init__(self, Name: str, Color: str) -> None:
         self.Name = Name
         self.Color = Color
 
-    def debug(self, user_id: str | None, do: str) -> None:
+    def debug(self, user_id: str | None, msg: str) -> None:
         if log | debug:
-            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.blue+'[DEBUG]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}\n'))
             log_file.flush()
 
-    def info(self, user_id: str | None, do: str) -> None:
+    def info(self, user_id: str | None, msg: str) -> None:
         if log:
-            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.green+'[INFO]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}\n'))
             log_file.flush()
 
-    def warn(self, user_id: str | None, do: str) -> None:
+    def warn(self, user_id: str | None, msg: str) -> None:
         if log:
-            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.yellow+'[WARN]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}\n'))
             log_file.flush()
 
-    def error(self, user_id: str | None, do: str) -> None:
+    def error(self, user_id: str | None, msg: str) -> None:
         if log:
-            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[ERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}\n'))
             log_file.flush()
 
-    def cerror(self, user_id: str | None, do: str) -> None:
+    def cerror(self, user_id: str | None, msg: str) -> None:
         if log:
-            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}'))
-            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{self.current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{do}\n'))
+            current_time = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}'))
+            log_file.write('%-15s %-20s %-15s %-15s %-10s' % (colors_log.red+'[CERROR]', colors_log.purple+f'{user_id}', colors_log.blue+f'{current_time}', self.Color+f'[{self.Name}]', colors_log.normal+f'{msg}\n'))
             log_file.flush()
-            exit(1)
