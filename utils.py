@@ -1,11 +1,10 @@
 import os
-from re import U
+import re
+import html
 from typing import Any
 from time import sleep
-from math import gcd
 
 import telebot
-from sympy import randprime, primerange
 
 import db
 import config
@@ -37,6 +36,7 @@ dict_name_lessons = {
     18: ['chemistry', 'Химия']
 }
 
+
 def rename(user_id: int, file_name_in: str, file_name_out: str) -> None:
     log.info(user_id=str(user_id), msg=f'Rename {file_name_in} -> {file_name_out}')
     try:
@@ -47,10 +47,10 @@ def rename(user_id: int, file_name_in: str, file_name_out: str) -> None:
 
 
 def send_status_text(user_id: int, bot: telebot.TeleBot) -> None:
-    log.info(user_id=user_id, msg='Call send_status_text')
-    # if config.debug:
-        # log.info(user_id=str(user_id), msg='Send status . . .')
-    # bot.send_chat_action(user_id, action='typing')
+    log.info(user_id=str(user_id), msg='Call send_status_text')
+    if config.debug:
+        log.info(user_id=str(user_id), msg='Send status . . .')
+    bot.send_chat_action(user_id, action='typing')
 
 
 def newsletter(user_id: int, text: str, auto: bool, bot: telebot.TeleBot) -> None:
@@ -60,30 +60,21 @@ def newsletter(user_id: int, text: str, auto: bool, bot: telebot.TeleBot) -> Non
 
     if all_user_id != None:
         timer: int = 0
-
+        print(all_user_id)
         for user_id_ in all_user_id:  # type: ignore[union-attr]
-            if timer < 29:
-                try:
-                    bot.send_message(chat_id=user_id_, text=text)
-                    log.info(user_id=str(user_id_), msg=f'Sent: {user_id_}')
-
-                    timer += 1
-                    continue
-                except telebot.apihelper.ApiException as Error:
-                    if Error.result.status_code == 403 or Error.result.status_code == 400:
-                        log.warn(user_id=str(user_id_), msg=f'User {user_id_} has blocked the bot!')
-                        # db.remove_user(user_id=str(user_id_))
-
-                        timer += 1
-                        continue
-                except Exception as Error:
-                    log.error(user_id=str(user_id_), msg=str(Error))
-
-                    timer += 1
-                    continue
-            else:
-                sleep(1.15)
+            if timer == 29:
                 timer = 0
+                sleep(1.15)
+
+            try:
+                bot.send_message(chat_id=user_id_[0], text=text)  # type: ignore[index]
+                log.info(user_id=str(user_id_[0]), msg=f'Sent: {user_id_[0]}')  # type: ignore[index]
+
+            except telebot.apihelper.ApiException:
+                log.warn(user_id=str(user_id_[0]), msg=f'User {user_id_[0]} has blocked the bot!')  # type: ignore[index]
+                # db.remove_user(user_id=str(user_id_[0]))
+
+            timer += 1
 
     log.info(user_id=str(user_id), msg='Mailing is over')
     bot.send_message(user_id, '✅ Рассылка закончена!', reply_markup=telebot.types.InlineKeyboardMarkup(row_width=1).add(telebot.types.InlineKeyboardButton(text='⏪ Вернуться в главное меню', callback_data='back_in_main_menu')))
@@ -117,10 +108,19 @@ def check_user_in_db(message: Any, bot: telebot.TeleBot) -> bool:
         db.db_add_data(user_id=message.chat.id, username=message.from_user.username, user_name=message.from_user.first_name, user_surname=message.from_user.last_name, user_lang=message.from_user.language_code)
         log.info(user_id=str(message.chat.id), msg='Add user . . .')
 
-        send_status_text(user_id=message.chat.id)
+        send_status_text(user_id=message.chat.id, bot=bot)
         bot.send_message(message.chat.id, f'[ ! ] Ошибка аутентификации !\n[ * ] Данные добавлены !\n\nVersion: {config.version}')
 
         return False
     else:
         return True
 
+
+def convert_html_to_text(html_text: str) -> str:
+    # Удаляем HTML-теги
+    text = re.sub(r'<[^>]+>', '', html_text)
+
+    # Заменяем HTML-сущности на соответствующие символы
+    text = html.unescape(text)
+
+    return text

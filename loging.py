@@ -49,8 +49,8 @@ if welcome_animation:
     welcome_ani()
     system(clear_konsole)
 
-print('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]')
-log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [DO]\n')
+print('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]')
+log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]\n')
 
 
 class logging:

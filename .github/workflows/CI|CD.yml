@@ -62,7 +62,7 @@ jobs:
 
             - name: MyPy
               run: |
-                  mypy . -v
+                  mypy . --no-namespace-packages
 
     Deploy:
       needs: Tests

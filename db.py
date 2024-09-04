@@ -6,7 +6,7 @@ from base64 import b64encode, b64decode
 import loging
 import colors_log
 import encryption
-from config import name_database, debug
+from config import name_database
 
 log = loging.logging(Name='DB', Color=colors_log.yellow)
 
@@ -46,7 +46,7 @@ def set_url(user_id: int, url: str, lesson: str) -> None:
 def set_send_notifications(user_id: int, send_notifications: bool) -> None:
     log.info(user_id=str(user_id), msg=f'Setting send_notifications \'{send_notifications}\'')
     cursor.execute('UPDATE users SET send_notifications = ? WHERE user_id = ?', [send_notifications, user_id])
-    
+
     log.debug(user_id=str(user_id), msg='Saving data to db . . .')
     conn.commit()
 
@@ -105,7 +105,7 @@ def get_net_school(user_id: int, decode: bool = True) -> dict[str] | bool | KeyE
     except IndexError:
         log.info(user_id=str(user_id), msg='Incorrect user_id')
         return None
-    
+
     if not decode:
         return True
     else:
@@ -124,7 +124,7 @@ def get_net_school(user_id: int, decode: bool = True) -> dict[str] | bool | KeyE
 
 def get_user_id(user_id: int) -> Any:
     log.info(user_id=str(user_id), msg='Getting users . . .')
-    cursor.execute(f'SELECT * FROM users WHERE user_id = ?', [user_id])
+    cursor.execute('SELECT * FROM users WHERE user_id = ?', [user_id])
     return cursor.fetchone()
 
 
@@ -136,7 +136,7 @@ def get_all_user_id(user_id: int, auto: bool) -> list[int] | None:
         cursor.execute('SELECT user_id FROM users')
     result = cursor.fetchall()
     if result != None:
-        return result[0]
+        return result
     else:
         return None
 

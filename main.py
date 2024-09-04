@@ -4,10 +4,10 @@ import datetime
 import multiprocessing
 from typing import Any
 from sqlite3 import sqlite_version
+from base64 import b64decode
 from time import strftime, localtime, sleep
 from platform import system, release, python_version
 
-from annotated_types import T
 import psutil
 import telebot
 from telebot import types
@@ -35,7 +35,6 @@ tmp_vars = temp_vars.tmp_vars
 log.info(user_id=None, msg='The bot is running !')
 
 
-
 def notification_admin(text: str, reply_markup: telebot.types.InlineKeyboardMarkup | None = None) -> None:
     log.info(user_id=None, msg='Sending notifications to admins . . .')
     for admin_id in config.admin_id:
@@ -46,7 +45,7 @@ def notification_admin(text: str, reply_markup: telebot.types.InlineKeyboardMark
             log.warn(user_id=str(admin_id), msg=f'Admin {admin_id} blocked or didn\'t start the bot!')
 
 
-def check_grade(sleep_sec: float = 300):
+def check_grade(sleep_sec: float = 300) -> None:
     while True:
         # TODO: Проверка на наличие новых оценок
         log_grade.info(user_id=None, msg='Check for new grade')
@@ -126,7 +125,11 @@ def photo(message: Any) -> None:
 # Inline-button
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call: Any) -> Any:
-    if check_user_in_db(message=call.message, bot=bot):
+    if call.data == 'pass':
+        log.info(user_id=str(call.message.chat.id), msg=f'Call \'[{call.data}]\'')
+        return
+
+    elif check_user_in_db(message=call.message, bot=bot):
         log.info(user_id=str(call.message.chat.id), msg=f'Call \'[{call.data}]\'')
         # Main menu
         if call.data == 'dz':
@@ -197,7 +200,7 @@ def callback_handler(call: Any) -> Any:
             try:
                 rsn = db.get_send_notifications(user_id=call.message.chat.id)
                 net_school = db.get_net_school(user_id=call.message.chat.id)
-                isAdmin = utils.check_for_admin(user_id=call.message.chat.id)
+                isAdmin: bool | str = utils.check_for_admin(user_id=call.message.chat.id)
 
                 if rsn:
                     notifications_status = '✅'
@@ -334,6 +337,10 @@ def callback_handler(call: Any) -> Any:
                     tmp_vars.logined_net_school_list_users.pop(call.message.chat.id)
                 except Exception:
                     pass
+            if tmp_vars.input_text != r'None':
+                tmp_vars.input_text = r'None'
+            if tmp_vars.input_text_mailing != None:
+                tmp_vars.input_text_mailing = None
 
             cfa = check_for_admin(user_id=call.message.chat.id)
             try:
@@ -403,22 +410,23 @@ def callback_handler(call: Any) -> Any:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы больше не будете получать уведомления.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
             except Exception as Error:
                 log.warn(user_id=str(call.message.chat.id), msg=f'Error: {Error}')
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
         elif call.data == 'on_notifications':
             try:
                 db.set_send_notifications(user_id=call.message.chat.id, send_notifications=True)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='✅ Успешно! Вы будете получать уведомления.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
             except Exception as Error:
                 log.warn(user_id=str(call.message.chat.id), msg=f'Error: {Error}')
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
 
 #########################################
 
-
+        # On NetSchool
         elif call.data == 'on_net_school':
             tmp_vars.on_net_school_list_users.append(call.message.chat.id)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Введите данные в таком формате:\nлогин<b>[пробел]</b>пароль<b>[пробел]</b>ключ шифрования\nНапример:\n<b>ПетровА0 12345678 qwerty</b>', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
 
+        # Login
         elif call.data == 'netschool':
             if temp_vars.get_logined_net_school(self=tmp_vars, user_id=call.message.chat.id) == ValueError:
                 tmp_vars.login_net_school_list_users.append(call.message.chat.id)
@@ -426,28 +434,53 @@ def callback_handler(call: Any) -> Any:
             else:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='NetSchool', reply_markup=markup_NetSchool)
 
+        # diary
         elif call.data == 'diary':
             check_client_NetSchoolAPI(user_id=call.message.chat.id, msg_id=call.message.message_id)
 
             data_diary = loop.run_until_complete(NetSchoolAPI.diary(NSAPI=temp_vars.get_logined_net_school(self=tmp_vars, user_id=call.message.chat.id)))
-            
-            if type(data_diary) == type(str):
+
+            if type(data_diary) is type(str):
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=data_diary, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='netschool'), back_in_main_menu))
                 return
 
             log.warn(user_id=call.message.chat.id, msg=str(data_diary))
+
+        # Overdues
         elif call.data == 'overdue':
             check_client_NetSchoolAPI(user_id=call.message.chat.id, msg_id=call.message.message_id)
 
             data_overdue = loop.run_until_complete(NetSchoolAPI.overdue(NSAPI=temp_vars.get_logined_net_school(self=tmp_vars, user_id=call.message.chat.id)))
             log.warn(user_id=call.message.chat.id, msg=str(data_overdue))
+
+        # Announcements
         elif call.data == 'announcements':
             check_client_NetSchoolAPI(user_id=call.message.chat.id, msg_id=call.message.message_id)
 
             data_announcements = loop.run_until_complete(NetSchoolAPI.announcements(NSAPI=temp_vars.get_logined_net_school(self=tmp_vars, user_id=call.message.chat.id)))
-            log.warn(user_id=call.message.chat.id, msg=str(data_announcements))
-            
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='NetSchool/Объявления', reply_markup=gen_announcements(an=data_announcements))
+        elif call.data.startswith('announcements:'):
+            check_client_NetSchoolAPI(user_id=call.message.chat.id, msg_id=call.message.message_id)
+
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='⚙️ Обработка', reply_markup=types.InlineKeyboardMarkup(row_width=1))
+
+            name = str(b64decode(str(call.data).split(':')[-1]).decode('utf-8'))
+            announcement: NetSchoolAPI.types_NSAPI.schemas.Announcement | None = None
+            data_announcements = loop.run_until_complete(NetSchoolAPI.announcements(NSAPI=temp_vars.get_logined_net_school(self=tmp_vars, user_id=call.message.chat.id)))
+            for announcements in data_announcements:
+                if announcements.name[0:8] == name:
+                    announcement = announcements
+                    break
+                else:
+                    continue
+
+            if announcement == None:
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='❌ Incorrect call', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='announcements'), back_in_main_menu))
+                return
+
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f'Имя: <b>{announcement.name}</b>\n\nАвтор: <code>{announcement.author.full_name}</code>\n\nТекст: <b>{utils.convert_html_to_text(announcement.content)}</b>', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='announcements'), back_in_main_menu))  # type: ignore[union-attr]
+
+        # Info school
         elif call.data == 'school':
             check_client_NetSchoolAPI(user_id=call.message.chat.id, msg_id=call.message.message_id)
 
@@ -508,28 +541,31 @@ def callback_handler(call: Any) -> Any:
 
                 # Загруженость
                 # CPU
-                log.info(user_id=str(call.message.chat.id), msg='Generating information about: CPUs, CPU_stats')
-                cpu = psutil.cpu_times()
-                cpu_stats = psutil.cpu_stats()
+                log.info(user_id=str(call.message.chat.id), msg='Generating information about: CPU')
+                cpu = psutil.cpu_percent(interval=1)
 
                 # Memory
-                log.info(user_id=str(call.message.chat.id), msg='Generating information about: Memory_Virtual, Memory_Swap')
-                Memory_Virtual = psutil.virtual_memory()
+                log.info(user_id=str(call.message.chat.id), msg='Generating information about: Memory, Memory_Swap')
+                Memory = psutil.virtual_memory()
                 Memory_Swap = psutil.swap_memory()
 
                 # Disks
                 log.info(user_id=str(call.message.chat.id), msg='Generating information about: Disks')
-                Disks = psutil.disk_io_counters()
+                Disks = psutil.disk_usage('/')
 
                 # Network
                 log.info(user_id=str(call.message.chat.id), msg='Generating information about: Network')
-                Network = psutil.net_if_addrs()
+                all_interf = psutil.net_if_addrs()
+                Network: str = '\n'
+
+                for interf in all_interf:
+                    Network = f'{Network}- {interf}: {all_interf[interf][0][1]}\n'
 
                 log.info(user_id=str(call.message.chat.id), msg='Generating a report based on the data received . . .')
-                info = f'OS: {SystemName} {SystemRelease}\nPython: {PythonVersion} Version\nSQLite3: {SQLite3Version} Version\n\nЗагруженость:\n#~CPU~#\nCPU: {cpu}\nCPU Stats: {cpu_stats}\n#~MEMORY~#\nMemory Virtual: = {Memory_Virtual}\nMemory Swap: = {Memory_Swap}\n#~DISKS~#\nDisks: {Disks}\n#~NETWORK~#\nNetwork: = {Network}'
+                report = f'OS: {SystemName} {SystemRelease}\nPython: {PythonVersion}\nSQLite3: {SQLite3Version}\n\nЗагруженость:\n\nCPU: {cpu}%\nMemory: {Memory.percent}%\nMemory Swap: {Memory_Swap.percent}%\nDisks: {Disks.percent}%\nNetwork: {Network}'
                 log.info(user_id=str(call.message.chat.id), msg='Successfully !')
 
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=info, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='chack_mailing_no'), back_in_main_menu))
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=report, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='chack_mailing_no'), back_in_main_menu))
 
                 log.info(user_id=str(call.message.chat.id), msg='Report Sent !')
 
@@ -551,11 +587,8 @@ def logic(message: Any) -> Any:
                 return
 
             msg_id = bot.send_message(message.chat.id, '⚠️ Проверка возможности входа . . .').message_id
-            
-            try:
-                
-                
 
+            try:
                 client_NetSchoolAPI = loop.run_until_complete(NetSchoolAPI.create_client(API=config.API_NetSchool))
                 loop.run_until_complete(NetSchoolAPI.login(NSAPI=client_NetSchoolAPI, login=login, password=password, school=config.School_NetSchool))
                 loop.run_until_complete(NetSchoolAPI.logout(NSAPI=client_NetSchoolAPI))
@@ -567,23 +600,23 @@ def logic(message: Any) -> Any:
                 return
 
             except Exception as Error:
-                bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text=f'❌ Произошла ошибка при попытке обращения к NetSchoolAPI.login. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
+                bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text=f'❌ Произошла ошибка при попытке обращения к NetSchoolAPI.login. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
                 return
-            
+
             try:
                 db.set_net_school(user_id=message.chat.id, login=login, password=password, key=key)
                 return
             except Exception as Error:
-                bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
+                bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка при попытке обращения к базе данных. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='profile'), back_in_main_menu))
                 return
-        if [message.chat.id == user_id for user_id in tmp_vars.login_net_school_list_users]:
+        elif [message.chat.id == user_id for user_id in tmp_vars.login_net_school_list_users]:
             try:
                 msg_id = bot.send_message(message.chat.id, '⚙️ Инициализация входа . . .').message_id
-                
+
                 key = message.text
                 ns_data = db.get_net_school(user_id=message.chat.id)
-                
-                if key != ns_data['key']:
+
+                if key != ns_data['key']:  # type: ignore[index]
                     bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text='⚙️ Вход . . .')
                     bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text='❌ Вход не удался', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
                     return
@@ -595,8 +628,8 @@ def logic(message: Any) -> Any:
                 loop.run_until_complete(
                     NetSchoolAPI.login(
                         NSAPI=client_NetSchoolAPI,
-                        login=ns_data['login'],
-                        password=ns_data['password'],
+                        login=ns_data['login'],  # type: ignore[index]
+                        password=ns_data['password'],  # type: ignore[index]
                         school=config.School_NetSchool
                         ))
 
@@ -605,10 +638,10 @@ def logic(message: Any) -> Any:
 
                 bot.edit_message_text(chat_id=message.chat.id, message_id=msg_id, text='NetSchool', reply_markup=markup_NetSchool)
             except Exception as Error:
-                bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка. Пожалуйста, отправте данный отчёт разработчику бота [@{tmp_vars.config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(back_in_main_menu)))
-        
+                bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(back_in_main_menu)))
+
         # Notifications admin
-        if [message.chat.id == user_id for user_id in tmp_vars.press_button_notification_admin_list_users]:
+        elif [message.chat.id == user_id for user_id in tmp_vars.press_button_notification_admin_list_users]:
             log.info(user_id=str(message.chat.id), msg=f'User: {message.chat.id} requested a D/Z update')
 
             if str(message.text)[0] == '/':
@@ -617,7 +650,7 @@ def logic(message: Any) -> Any:
             else:
                 notification_admin_ = multiprocessing.Process(target=notification_admin, args=(f'⚠️ Пользователь: {message.chat.id} уведомил вас в неактуальности Д/З по q\n\nКомментарий: {message.text}', None))
                 notification_admin_.start()
-                
+
                 bot.send_message(message.chat.id, '✅ Отчёт успешно отправлен. Извините за неудобства.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data=str(tmp_vars.press_button_notification_admin_list_users[message.chat.id])), back_in_main_menu))
 
                 notification_admin_.join()
@@ -629,7 +662,6 @@ def logic(message: Any) -> Any:
 
             send_status_text(user_id=message.chat.id, bot=bot)
             bot.send_message(message.chat.id, f'<u><b>‼️ВЫ ТОЧНО ХОТИТЕ ОТПРАВИТЬ СООБЩЕНИЕ ВСЕМ ПОЛЬЗОВАТЕЛЯМ⁉️</b></u>\nТЕКСТ СООБЩЕНИЯ:\n{tmp_vars.input_text_mailing}', parse_mode='html', reply_markup=markup_chack_mailing)
-            
 
         # Panel replace
         elif check_for_admin(user_id=message.chat.id):
@@ -648,11 +680,11 @@ if __name__ == 'main':
     notification_admin_ = multiprocessing.Process(target=notification_admin, args=(f'⚠Бот запущен!⚠\nДля доступа к админ панели введите: \n/{config.commands_admin}', None))
     chk_grade = multiprocessing.Process(target=check_grade)
 
-    #notification_admin_.start()
-    #chk_grade.start()
+    notification_admin_.start()
+    # chk_grade.start()
     bot.infinity_polling(timeout=60, long_polling_timeout=60, logger_level=0, interval=0)
 
-    #chk_grade.kill()
-    #notification_admin_.kill()
+    # chk_grade.kill()
+    notification_admin_.kill()
 else:
     log.cerror(user_id=None, msg=f"__name__ == \'main\': {__name__ == 'main'}")

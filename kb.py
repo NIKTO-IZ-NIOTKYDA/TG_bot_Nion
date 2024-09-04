@@ -1,7 +1,9 @@
+from base64 import b64encode
+
 from telebot import types
 
-import sgo.types_NSAPI as types_NSAPI
 from db import get_net_school
+import sgo.types_NSAPI as types_NSAPI
 from utils import dict_name_lessons, num_lessons, check_for_admin
 
 del_schedule_button = types.InlineKeyboardButton(text='❌ Удалить ❌', callback_data='schedule_del_warn')
@@ -10,12 +12,12 @@ back = types.InlineKeyboardButton(text='⬅️  Назад', callback_data='back
 back_in_main_menu = types.InlineKeyboardButton(text='⏪ Вернуться в главное меню', callback_data='back_in_main_menu')
 
 
-def gen_markup_start(user_id: int):
+def gen_markup_start(user_id: int) -> types.InlineKeyboardMarkup:
     markup = types.InlineKeyboardMarkup(row_width=1)
     DZ = types.InlineKeyboardButton(text='Домашнее задание 📚', callback_data='dz')
     Schedule = types.InlineKeyboardButton(text='Расписание 📑', callback_data='schedule')
     Call_schedule = types.InlineKeyboardButton(text='Расписание звонков 🕝', callback_data='call_schedule')
-    NetSchool = types.InlineKeyboardButton(text='СГО [В разработке]', callback_data='pass')
+    NetSchool = types.InlineKeyboardButton(text='СГО', callback_data='netschool')
     Profile = types.InlineKeyboardButton(text='Профиль 👤', callback_data='profile')
 
     markup.add(DZ, Schedule, Call_schedule)
@@ -27,7 +29,7 @@ def gen_markup_start(user_id: int):
         markup.add(types.InlineKeyboardButton(text='Админ-панель‼️', callback_data='admin_panel'))
 
     markup.add(Profile)
-    
+
     return markup
 
 
@@ -88,7 +90,7 @@ def check(input: str, pstr_cbd: str) -> bool:
     return False
 
 
-def gen_profile_markup(rsn: bool | None, net_school: dict[str] | KeyError | None) -> types.InlineKeyboardMarkup:
+def gen_profile_markup(rsn: bool | None, net_school: dict[str, str] | bool | KeyError | None) -> types.InlineKeyboardMarkup:
     if rsn == None:
         return types.InlineKeyboardMarkup().add(types.InlineKeyboardButton(text='DB_ERROR', callback_data='pass'))
 
@@ -99,23 +101,38 @@ def gen_profile_markup(rsn: bool | None, net_school: dict[str] | KeyError | None
     else:
         markup.add(types.InlineKeyboardButton(text='Включить уведомления', callback_data='on_notifications'))
 
-    #if net_school == None:
-        #markup.add(types.InlineKeyboardButton(text='Включить интеграцию с СГО', callback_data='on_net_school'))
-    #else:
-        #markup.add(types.InlineKeyboardButton(text='Отключить интеграцию с СГО', callback_data='off_net_school'))
+    type(net_school)
+    # if net_school == None:
+    # markup.add(types.InlineKeyboardButton(text='Включить интеграцию с СГО', callback_data='on_net_school'))
 
     return markup.add(back_in_main_menu)
 
 
-def gen_announcements(an: list) -> types.InlineKeyboardMarkup:
+def gen_announcements(an: list[types_NSAPI.schemas.Announcement]) -> types.InlineKeyboardMarkup:
     markup = types.InlineKeyboardMarkup(row_width=3)
 
     if an != []:
-        # TODO:
-        pass
+        markup.add(
+            types.InlineKeyboardButton(text='Имя', callback_data='pass'),
+            types.InlineKeyboardButton(text='Автор', callback_data='pass'),
+            types.InlineKeyboardButton(text='Дата публикации', callback_data='pass'),
+        )
+        for announcement in an:
+            id: str = b64encode(announcement.name[0:8].encode()).decode()
+            notformat = str(announcement.post_date.date()).split('-')
+
+            markup.add(
+                types.InlineKeyboardButton(text=announcement.name, callback_data=f'announcements:{id}'),
+                types.InlineKeyboardButton(text=announcement.author.full_name, callback_data=f'announcements:{id}'),
+                types.InlineKeyboardButton(text=f'{notformat[-1]}.{notformat[-2]}.{notformat[-3]}', callback_data=f'announcements:{id}')
+            )
+    else:
+        markup.row_width = 1
+        markup.add(types.InlineKeyboardButton(text='Объявлений нет', callback_data='pass'))
 
     markup.row_width = 1
-    markup.add(types.InlineKeyboardButton(text='Объявлений нет', callback_data='pass'), types.InlineKeyboardButton(text='⬅️  Назад', callback_data='netschool'), back_in_main_menu)
+    markup.add(types.InlineKeyboardButton(text='⬅️  Назад', callback_data='netschool'), back_in_main_menu)
+
     return markup
 
 

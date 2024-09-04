@@ -20,7 +20,7 @@ async def login(NSAPI: NetSchoolAPI, login: str, password: str, school: str) -> 
         )
     except types_NSAPI.errors.AuthError() | types_NSAPI.errors.SchoolNotFoundError():
         return ValueError
-    
+
     except Exception as Error:
         return Error
 
@@ -37,7 +37,7 @@ async def diary(
     if start > end:
         return 'start > end'
     try:
-        diary =  await NSAPI.diary(start=start, end=end)
+        diary = await NSAPI.diary(start=start, end=end)
     except HTTPStatusError:
         return 'Сервис дневника недоступен. Ошибка подключения.'
 
@@ -54,14 +54,14 @@ async def overdue(
     return NSAPI.overdue(start=start, end=end)
 
 
-# Прикреплённые файлы 
+# Прикреплённые файлы
 async def attachments(NSAPI: NetSchoolAPI, Assignment: types_NSAPI.schemas.Assignment) -> list[types_NSAPI.schemas.Attachment]:
-    return await NSAPI.attachments(assignment_id=Assignment.id)
+    return await NSAPI.attachments(assignment_id=Assignment.id)  # type: ignore[no-any-return]
 
 
 # Объявления
 async def announcements(NSAPI: NetSchoolAPI) -> list[types_NSAPI.schemas.Announcement]:
-    return await NSAPI.announcements()
+    return await NSAPI.announcements()  # type: ignore[no-any-return]
 
 
 # Информация о школе

@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from config import salt512
 
+
 def encrypt(password: str, key: str) -> str:
     # Создаем ключ.
     kdf = PBKDF2HMAC(
@@ -16,16 +17,16 @@ def encrypt(password: str, key: str) -> str:
         backend=default_backend()
     )
     # Генерируем urlsafe base64 ключ.
-    key = urlsafe_b64encode(kdf.derive(key.encode('utf-8')))
+    key = str(urlsafe_b64encode(kdf.derive(key.encode('utf-8'))))
 
     # Создаем шифровальщик.
     cipher_suite = Fernet(key)
 
     # Шифруем пароль.
     encrypted_password = cipher_suite.encrypt(password.encode('utf-8'))
-    
+
     return encrypted_password.decode('utf-8')
-    
+
 
 def decrypt(encrypted_password: str, key: str) -> str:
 
@@ -38,7 +39,7 @@ def decrypt(encrypted_password: str, key: str) -> str:
         backend=default_backend()
     )
     # Генерируем urlsafe base64 ключ.
-    key = urlsafe_b64encode(kdf.derive(key.encode('utf-8')))
+    key = str(urlsafe_b64encode(kdf.derive(key.encode('utf-8'))))
 
     # Создаем расфровальщик.
     cipher_suite = Fernet(key)
