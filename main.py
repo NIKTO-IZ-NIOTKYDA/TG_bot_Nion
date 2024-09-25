@@ -142,7 +142,7 @@ def callback_handler(call: Any) -> Any:
                 if check_for_admin(user_id=call.message.chat.id):
                     bot.send_photo(call.message.chat.id, photo=open_photo, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(del_schedule_button, back_in_main_menu))
                 else:
-                    bot.send_photo(call.message.chat.id, photo=open_photo, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(del_schedule_button, back_in_main_menu))
+                    bot.send_photo(call.message.chat.id, photo=open_photo, reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
             except FileNotFoundError:
                 log.warn(user_id=str(call.message.chat.id), msg='Schedule not found !')
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Ошибка: файл не найден.', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(back_in_main_menu))
