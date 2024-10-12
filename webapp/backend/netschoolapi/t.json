@@ -1,0 +1,25 @@
+{
+	"params": null,
+	"selectedData": [
+		{
+			"filterId": "SID",
+			"filterText": "Артемьев Арсений",
+			"filterValue": "3374132"
+		},
+		{
+			"filterId": "MarksType",
+			"filterText": "Итоговые отметки",
+			"filterValue": "T"
+		},
+		{
+			"filterId": "PCLID",
+			"filterText": "9б",
+			"filterValue": "1622948"
+		},
+		{
+			"filterId": "TERMID",
+			"filterText": "2 триместр",
+			"filterValue": "722645"
+		}
+	]
+}

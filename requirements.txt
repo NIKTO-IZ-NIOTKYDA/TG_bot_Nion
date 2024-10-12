@@ -1,5 +1,12 @@
-psutil
-telebot
-netschoolapi
-cryptography
-annotated-types
+psutil==6.0.0
+aiofiles==24.1.0
+aiogram==3.13.1
+aiohttp==3.10.8
+cryptography==43.0.1
+SQLAlchemy==2.0.35
+aiosqlite==0.20.0
+netschoolapi==11.0.2
+annotated-types==0.7.0
+fastapi[standard]
+python-jose
+uvicorn

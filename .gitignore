@@ -1,7 +1,6 @@
 __pycache__
 __pycache__/*
-.vk_photo
-.vk_photo/*
 .mypy_cache
 .vscode
+.env
 log.log

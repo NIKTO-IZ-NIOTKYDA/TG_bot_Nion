@@ -1,0 +1,144 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson algebra : 'Алгебра'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson english_lang_1 : 'Англ. Яз. (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson english_lang_2 : 'Англ. Яз. (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson biology : 'Биология'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson geography : 'География'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson geometry : 'Геометрия'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson computer_science_1 : 'Информатика (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson computer_science_2 : 'Информатика (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson story : 'История'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson literature : 'Литература'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson OBZR : 'ОБЗР'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson social_science : 'Обществознание'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson russian_lang : 'Русский язык'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson technology : 'Технология'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson physics : 'Физика'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoad lesson chemistry : 'Химия'
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [34m[LESSONS]  [0mLoaded 16 lessons
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mConnecting to db
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mCreating tables
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mStarting sync lessons
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'OBZR' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'biology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'biology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'biology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'chemistry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'computer_science_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'english_lang_1' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'english_lang_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'english_lang_2' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geography' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geography' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geography' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geography' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geometry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geometry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geometry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geometry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'geometry' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'literature' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'physics' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'russian_lang' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'social_science' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'story' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[35m[INIT]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mThe field 'technology' from the Lessons table is removed
+[34m[DEBUG]    [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mSaving data to db . . .
+[32m[INFO]     [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mSetting Homework 'algebra'
+[34m[DEBUG]    [35mNone            [34m02/10/2024 16:21:08 [33m[DB]       [0mSaving data to db . . .

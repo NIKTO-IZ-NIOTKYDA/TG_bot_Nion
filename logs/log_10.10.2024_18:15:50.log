@@ -1,0 +1,7 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[32m[INFO]     [35m0               [34m10/10/2024 18:15:27 [33m[DB]       [0mGetting User: '0'
+[33m[WARN]     [35m0               [34m10/10/2024 18:15:27 [33m[DB]       [0mUser '0' not found!
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:15:39 [33m[DB]       [0mGetting User: '5731571131'
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:15:50 [33m[DB]       [0mGetting User: '5731571131'
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:15:50 [33m[DB]       [0mGetting NetSchool
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:15:50 [34m[SM]       [0mAdding new session

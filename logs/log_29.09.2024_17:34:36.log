@@ -1,0 +1,52 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mConnecting to db . . .
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mCreate a cursor . . .
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons algebra : 'Алгебра'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons english_lang_1 : 'Англ. Яз. (1 группа)'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons english_lang_2 : 'Англ. Яз. (2 группа)'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons biology : 'Биология'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons geography : 'География'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons geometry : 'Геометрия'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons computer_science_1 : 'Информатика (1 группа)'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons computer_science_2 : 'Информатика (2 группа)'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons story : 'История'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons literature : 'Литература'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons OBZR : 'ОБЗР'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons social_science : 'Обществознание'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons russian_lang : 'Русский язык'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons technology : 'Технология'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons physics : 'Физика'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoad lessons chemistry : 'Химия'
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [34m[LESSONS]  [0mLoaded 16 lessons
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__PARAGRAPH__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__UPDATE_HOMEWORK__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__UPDATE_HOMEWORK_P__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__UPDATE_URL__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__DELETE_SCHEDULE_WARN__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__DELETE_SCHEDULE__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__UPDATE_MENU__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__ADMIN_PANEL__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__NEWSLETTER_WARN__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__HOMEWORK__: OK
+[35m[INIT]     [35mNone            [34m29/09/2024 17:34:36 [32m[INIT]     [0m__OFF__NOTIFICATIONS__: OK
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0malgebra not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0menglish_lang_1 not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0menglish_lang_2 not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mbiology not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mgeography not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mgeometry not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mcomputer_science_1 not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mcomputer_science_2 not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mstory not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mliterature not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mmusic not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mOBZH not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0msocial_science not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mnative_literature not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mrussian_lang not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mTBIS not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mtechnology not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mphysics not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mOBZR not fount in lessons
+[33m[WARN]     [35mNone            [34m29/09/2024 17:34:36 [33m[DB]       [0mchemistry not fount in lessons
+[32m[INFO]     [35mNone            [34m29/09/2024 17:34:36 [32m[MAIN]     [0mThe bot is running !

@@ -1,0 +1,3 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[32m[INFO]     [35m0               [34m10/10/2024 17:37:04 [33m[DB]       [0mGetting User: '0'
+[33m[WARN]     [35m0               [34m10/10/2024 17:37:04 [33m[DB]       [0mUser '0' not found!

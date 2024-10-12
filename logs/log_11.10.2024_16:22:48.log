@@ -1,0 +1,17 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:01 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:03 [33m[DB]       [0mGetting User: '5731571131'
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:03 [33m[DB]       [0mGetting NetSchool
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:04 [34m[SM]       [0mAdding new session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:10 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:10 [34m[SM]       [0mGetting session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:39 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:39 [34m[SM]       [0mGetting session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:58 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:19:58 [34m[SM]       [0mGetting session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:21:40 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:21:40 [34m[SM]       [0mGetting session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:21:51 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:21:51 [34m[SM]       [0mGetting session
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:22:48 [34m[SM]       [0mChecking isSession
+[32m[INFO]     [35m5731571131      [34m11/10/2024 16:22:48 [34m[SM]       [0mGetting session

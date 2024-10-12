@@ -1,0 +1,54 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mConnecting to db . . .
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mCreate a cursor . . .
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons algebra : 'Алгебра'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons english_lang_1 : 'Англ. Яз. (1 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons english_lang_2 : 'Англ. Яз. (2 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons biology : 'Биология'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons geography : 'География'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons geometry : 'Геометрия'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons computer_science_1 : 'Информатика (1 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons computer_science_2 : 'Информатика (2 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons story : 'История'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons literature : 'Литература'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons OBZR : 'ОБЗР'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons social_science : 'Обществознание'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons russian_lang : 'Русский язык'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons technology : 'Технология'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons physics : 'Физика'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons chemistry : 'Химия'
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoaded 16 lessons
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mConnecting to db . . .
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mCreate a cursor . . .
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mConnecting to db . . .
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mCreate a cursor . . .
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__PARAGRAPH__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__UPDATE_HOMEWORK__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__UPDATE_HOMEWORK_P__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__UPDATE_URL__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__DELETE_SCHEDULE_WARN__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__DELETE_SCHEDULE__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__UPDATE_MENU__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__ADMIN_PANEL__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__NEWSLETTER_WARN__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__HOMEWORK__: OK
+[34m[INIT]     [35mNone            [34m29/09/2024 15:39:14 [32m[INIT]     [0m__OFF__NOTIFICATIONS__: OK
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mConnecting to db . . .
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [33m[DB]       [0mCreate a cursor . . .
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons algebra : 'Алгебра'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons english_lang_1 : 'Англ. Яз. (1 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons english_lang_2 : 'Англ. Яз. (2 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons biology : 'Биология'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons geography : 'География'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons geometry : 'Геометрия'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons computer_science_1 : 'Информатика (1 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons computer_science_2 : 'Информатика (2 группа)'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons story : 'История'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons literature : 'Литература'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons OBZR : 'ОБЗР'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons social_science : 'Обществознание'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons russian_lang : 'Русский язык'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons technology : 'Технология'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons physics : 'Физика'
+[34m[DEBUG]    [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoad lessons chemistry : 'Химия'
+[32m[INFO]     [35mNone            [34m29/09/2024 15:39:14 [34m[LESSONS]  [0mLoaded 16 lessons

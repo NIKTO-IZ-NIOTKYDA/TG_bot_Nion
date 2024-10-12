@@ -1,0 +1,6 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:29:01 [33m[DB]       [0mGetting User: '5731571131'
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:29:01 [33m[DB]       [0mGetting NetSchool
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:29:01 [34m[SM]       [0mAdding new session
+[34m[DEBUG]    [35m5731571131      [34m10/10/2024 18:29:01 [34m[SM]       [0mExpire: 2024-11-09 13:29:01.271876+00:00
+[32m[INFO]     [35m5731571131      [34m10/10/2024 18:29:01 [34m[SM]       [0mGetting session

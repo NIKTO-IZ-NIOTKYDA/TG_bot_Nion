@@ -1,0 +1,61 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson algebra : 'Алгебра'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson english_lang_1 : 'Англ. Яз. (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson english_lang_2 : 'Англ. Яз. (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson biology : 'Биология'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson geography : 'География'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson geometry : 'Геометрия'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson computer_science_1 : 'Информатика (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson computer_science_2 : 'Информатика (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson story : 'История'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson literature : 'Литература'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson OBZR : 'ОБЗР'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson social_science : 'Обществознание'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson russian_lang : 'Русский язык'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson technology : 'Технология'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson physics : 'Физика'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson chemistry : 'Химия'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoaded 16 lessons
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__PARAGRAPH__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__UPDATE_HOMEWORK__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__UPDATE_HOMEWORK_P__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__UPDATE_URL__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__DELETE_SCHEDULE_WARN__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__DELETE_SCHEDULE__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__UPDATE_MENU__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__ADMIN_PANEL__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__NEWSLETTER_WARN__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__HOMEWORK__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [35m[INIT]     [0m__OFF__NOTIFICATIONS__: OK
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson algebra : 'Алгебра'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson english_lang_1 : 'Англ. Яз. (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson english_lang_2 : 'Англ. Яз. (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson biology : 'Биология'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson geography : 'География'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson geometry : 'Геометрия'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson computer_science_1 : 'Информатика (1 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson computer_science_2 : 'Информатика (2 группа)'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson story : 'История'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson literature : 'Литература'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson OBZR : 'ОБЗР'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson social_science : 'Обществознание'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson russian_lang : 'Русский язык'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson technology : 'Технология'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson physics : 'Физика'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoad lesson chemistry : 'Химия'
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [34m[LESSONS]  [0mLoaded 16 lessons
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [33m[DB]       [0mConnecting to db
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [33m[DB]       [0mCreating tables
+[35m[INIT]     [35mNone            [34m02/10/2024 19:15:40 [33m[DB]       [0mStarting sync lessons
+[34m[DEBUG]    [35mNone            [34m02/10/2024 19:15:40 [33m[DB]       [0mSaving data to db
+[32m[INFO]     [35mNone            [34m02/10/2024 19:15:40 [32m[MAIN]     [0mThe bot is running !
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:50 [32m[HANDLER]  [0mReceived '/start'
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:50 [33m[DB]       [0mGetting User: '5731571131'
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:50 [33m[DB]       [0mGetting NetSchool
+[34m[DEBUG]    [35m5731571131      [34m02/10/2024 19:15:50 [34m[UTILS]    [0mAdmin check: success
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:52 [32m[HANDLER]  [0mCall '[homework]'
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:54 [32m[HANDLER]  [0mReceived '[menu]'
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:54 [33m[DB]       [0mGetting NetSchool
+[34m[DEBUG]    [35m5731571131      [34m02/10/2024 19:15:54 [34m[UTILS]    [0mAdmin check: success
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:55 [32m[HANDLER]  [0mCall '[homework]'
+[32m[INFO]     [35m5731571131      [34m02/10/2024 19:15:57 [32m[HANDLER]  [0mReceived '[algebra:homework]'

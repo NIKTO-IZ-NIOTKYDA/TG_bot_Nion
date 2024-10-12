@@ -1,0 +1,16 @@
+[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCritical error: "No module named 'aiogram'"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCommand: "import main  # noqa: F401"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mLine: 8
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mFile: "/usr/local/Project/Python/TG_bot_Nion/start.py"
+
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCritical error: "No module named 'aiogram'"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCommand: "File "/usr/local/Project/Python/TG_bot_Nion/main.py", line 13, in <module>"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mLine: ^^^^^^^^^^^
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mFile: ^^^^^^^^^^^
+
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCritical error: "No module named 'aiogram'"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mCommand: "ModuleNotFoundError: No module named 'aiogram'"
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mLine: from aiogram.types import Message
+[31m[CERROR]   [35mNone            [34m27/09/2024 17:03:40 [31m[START]    [0mFile: from aiogram.types import Message
+
