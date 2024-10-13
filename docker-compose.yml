@@ -1,5 +1,5 @@
 networks:
-  nion
+  nion:
 
 services:
   nginx:
