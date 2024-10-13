@@ -13,8 +13,6 @@ jobs:
         steps:
             - name: Download repo
               uses: actions/checkout@v2
-              with:
-                python-version: ${{ matrix.python-version }}
 
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
@@ -43,8 +41,6 @@ jobs:
         steps:
             - name: Download repo
               uses: actions/checkout@v2
-              with:
-                python-version: ${{ matrix.python-version }}
 
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
