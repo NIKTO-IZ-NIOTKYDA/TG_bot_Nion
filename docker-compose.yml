@@ -1,0 +1,30 @@
+networks:
+  nion
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - nion
+
+  backend:
+    build:
+      context: .
+    networks:
+      - nion
+  
+  frontend:
+    build:
+      context: ./webapp/frontend
+    networks:
+      - nion
+        
+    

@@ -8,7 +8,7 @@ from bot.database.models import Lesson
 from bot.handlers.core import GetLessons as GetLessons_
 from webapp.backend.handlers.auth import Cookies
 
-router = APIRouter(prefix='', tags=['GetLessons'])
+router = APIRouter(prefix='api/', tags=['GetLessons'])
 
 
 @router.get('/GetLessons', summary='Get lessons')

@@ -9,7 +9,7 @@ import bot.database.requests as rq
 from webapp.backend.session_manager import SessionManager
 
 
-router = APIRouter(prefix='', tags=['Auth'])
+router = APIRouter(prefix='api/', tags=['Auth'])
 
 
 class Cookies(BaseModel):

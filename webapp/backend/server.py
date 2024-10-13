@@ -13,9 +13,11 @@ from webapp.backend.handlers.GetAverageMark import router as GetAverageMark_rout
 """
 
 /GetAverageMarks -> {
-    lesson_name: str,
-    value: float,
-    status: int (-1, 0, 1)
+    [
+        lesson_name: str,
+        value: float,
+        status: int (-1, 0, 1)
+    ]
 }
 
 """

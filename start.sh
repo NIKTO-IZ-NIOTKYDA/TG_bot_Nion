@@ -14,16 +14,12 @@ PID_BOT=$!;
 echo "-> Starting backend"; python3 init_webapp.py &
 PID_WEBAPP_BACKEND=$!;
 
-#echo "-> Starting frontend"; (cd "$WORK_DIR/webapp/frontend" && npm start &)
-PID_WEBAPP_FRONDEND=$!;
-
 
 #echo "PID BOT: $PID_BOT"
 echo "PID WEBAPP BACKEND: $PID_WEBAPP_BACKEND"
-#echo "PID WEBAPP FRONDEND: $PID_WEBAPP_FRONDEND"
 
 
-trap 'kill -2 $PID_BOT $PID_WEBAPP_BACKEND $PID_WEBAPP_FRONDEND; exit(0)' ERR
+trap 'kill -2 $PID_BOT $PID_WEBAPP_BACKEND; exit(0)' ERR
 
 
 while : ; do sleep 1; done

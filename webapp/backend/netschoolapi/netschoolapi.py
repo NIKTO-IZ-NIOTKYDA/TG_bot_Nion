@@ -288,29 +288,24 @@ class NetSchoolAPI_:
 
             responses: list[Response] = []
 
-            await self._request_with_optional_relogin(
-                requests_timeout,
-                self._wrapped_client.client.build_request(
-                    method="GET",
-                    url="https://sgo.edu-74.ru/app/school/reports/studentaveragemarkdyn"
-                )
-            )
-
             for body in bodys:
-                print(body)
-                r = await self._request_with_optional_relogin(
-                    requests_timeout,
-                    self._wrapped_client.client.build_request(
-                        method="POST",
-                        url="v2/reports/studentaveragemarkdyn/initfilters",
-                        json=body
+                try:
+                    print(body)
+                    r = await self._request_with_optional_relogin(
+                        requests_timeout,
+                        self._wrapped_client.client.build_request(
+                            method="POST",
+                            url="v2/reports/studentaveragemarkdyn/initfilters",
+                            json=body
+                            )
                         )
-                    )
-                print(r.url)
-                print(r.status_code)
-                print(r.headers)
-                print(r.json())
-                responses.append(r)
+                    print(r.url)
+                    print(r.status_code)
+                    print(r.headers)
+                    print(r.json())
+                    responses.append(r)
+                except Exception as Error:
+                    print(Error)
 
 
         responses_json: list[dict] = []
