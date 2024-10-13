@@ -1,4 +1,4 @@
-FROM node:apline as build
+FROM node:apline3.19 as build
 
 COPY package.json package.json
 RUN npm install
