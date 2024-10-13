@@ -10,7 +10,7 @@ from webapp.backend.netschoolapi import NetSchoolAPI
 from webapp.backend.session_manager import SessionManager
 
 
-router = APIRouter(prefix='api/', tags=['AverageMark'])
+router = APIRouter(tags=['AverageMark'])
 
 
 # async def GenAverageMark(user_id: int) -> dict:

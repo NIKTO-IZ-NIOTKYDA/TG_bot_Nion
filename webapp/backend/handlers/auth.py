@@ -9,7 +9,7 @@ import bot.database.requests as rq
 from webapp.backend.session_manager import SessionManager
 
 
-router = APIRouter(prefix='api/', tags=['Auth'])
+router = APIRouter(tags=['Auth'])
 
 
 class Cookies(BaseModel):
@@ -38,5 +38,5 @@ async def login(user_id: int, key: str):
     response = JSONResponse(status_code=status.HTTP_201_CREATED, content={'SessionID': SessionID})
     response.set_cookie(key='UserID', value=user_id, httponly=True, secure=False, expires=expire)
     response.set_cookie(key='SessionID', value=SessionID, httponly=True, secure=False, expires=expire)
-    
+
     return response

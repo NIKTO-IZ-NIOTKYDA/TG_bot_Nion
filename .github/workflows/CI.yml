@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12.7 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12.7 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -58,4 +58,4 @@ jobs:
 
             - name: MyPy
               run: |
-                  mypy . --no-namespace-packages
+                  mypy . --explicit-package-bases --show-column-numbers

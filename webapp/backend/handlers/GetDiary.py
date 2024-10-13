@@ -10,7 +10,7 @@ from webapp.backend.netschoolapi import NetSchoolAPI
 from webapp.backend.session_manager import SessionManager
 
 
-router = APIRouter(prefix='api/', tags=['Diary'])
+router = APIRouter(tags=['Diary'])
 
 
 @router.get('/GetDiary', summary='Get diary')

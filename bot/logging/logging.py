@@ -1,12 +1,11 @@
 import datetime
-from typing import Any
+from os import mkdir
 from shutil import move
 from os.path import getctime
-from os import system, mkdir
 from datetime import datetime
 
 import bot.logging.colors as colors
-from bot.config import __COMMAND_CLEAR_CONSOLE__, __LOGING__, __DEBUGGING__, __LOG_FILE_NAME__
+from bot.config import __LOGING__, __DEBUGGING__, __LOG_FILE_NAME__
 
 try:
     try: mkdir('logs')
@@ -18,7 +17,6 @@ except FileNotFoundError: pass
 log_file = open(__LOG_FILE_NAME__, 'w+')
 
 
-system(__COMMAND_CLEAR_CONSOLE__)
 print('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]')
 log_file.write('[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]\n')
 

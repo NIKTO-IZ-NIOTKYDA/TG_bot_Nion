@@ -5,7 +5,7 @@ from fastapi import APIRouter, status, HTTPException
 
 from bot.config import __SCHEDULE_PATH_FILE__
 
-router = APIRouter(prefix='api/', tags=['GetLessonPhoto'])
+router = APIRouter(tags=['GetLessonPhoto'])
 
 
 @router.get('/GetLessonPhoto', summary='Get lesson photo')

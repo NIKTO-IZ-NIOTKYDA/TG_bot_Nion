@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12.7 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [ 3.12, 3.10.12 ]
+                python-version: [ 3.12.7 ]
         steps:
             - name: Download repo
               uses: actions/checkout@v2
@@ -62,14 +62,14 @@ jobs:
 
             - name: MyPy
               run: |
-                  mypy . --no-namespace-packages
+                  mypy . --explicit-package-bases --show-column-numbers
 
     Deploy:
       needs: Tests
       runs-on: ubuntu-latest
       strategy:
         matrix:
-            python-version: [ 3.10.12 ]
+            python-version: [ 3.12.7 ]
       steps:
           - name: Download repo
             uses: actions/checkout@v2
@@ -80,8 +80,35 @@ jobs:
             run: |
               pip3 install -r requirements.txt
 
+          - name: Build docker
+            run: |
+              
+
           - name: Deploy
             if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-            run: |
-                cd deploy
-                python3 socket_client.py
+            uses: appleboy/ssh-action@master
+            with:
+              host: ${{ secrets.HOST }}
+              username: ${{ secrets.SSH_USERNAME }}
+              key: ${{ secrets.SSH_PRIVATE_KEY }}
+              port: ${{ secrets.SSH_PORT }}
+              script: |
+                cd ~/TG_bot_Nion && echo ${{secrets.SSH_PASSWORD}} | sudo --stdin systemctl stop TG_bot_Nion
+
+                mv bot/database/photo/ /tmp/
+                mv bot/database/db.sqlite3 /tmp/
+                mv bot/database/photo/schedule.png /tmp/
+
+                git pull origin master -f && git status
+
+                rm -rf bot/database/photo/
+                rm -rf bot/database/db.sqlite3
+                rm bot/database/photo/schedule.png
+
+                mv /tmp/bot/database/photo/ ./bot/database/
+                mv /tmp/bot/database/db.sqlite3 ./bot/database/
+                mv /tmp/bot/database/schedule.png ./bot/database/
+
+                echo ${{secrets.SSH_PASSWORD}} | sudo --stdin systemctl restart TG_bot_Nion
+
+                exit 0

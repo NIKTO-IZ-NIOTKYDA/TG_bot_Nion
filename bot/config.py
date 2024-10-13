@@ -1,8 +1,8 @@
 from os import getenv
+from typing import Optional
 
-__BOT_TOKEN__: str = getenv('__BOT_TOKEN__')
+__BOT_TOKEN__: Optional[str] = getenv('__BOT_TOKEN__')
 __COMMAND_AP__: str = r'AdminPanel_4qB7cY9jZ2gP'
-__COMMAND_CLEAR_CONSOLE__: str = r'clear'
 __DATABASE__: str = 'sqlite+aiosqlite:///bot/database/db.sqlite3'
 __NO_FOUND_HOMEWORK_MSG__: str = 'Не добавлено домашнее задание =('
 __VERSION__: str = r'Release 2.0.0 [dev]'  # X.X.X [stable\beta\dev]
@@ -13,8 +13,8 @@ __WEBAPP_BACKEND_PORT__: int = 8000
 __WEBAPP_FRONTEND_PORT__: int = 3000
 __WEBAPP_HOST__: str = '0.0.0.0'
 __WEBAPP_URL__: str = 'https://ya.ru/'
-__WEBAPP_SECRET_KEY__: str = getenv('__SECRET_KEY__')
-__WEBAPP_ALGORITHM__: str = getenv('__ALGORITHM__')
+__WEBAPP_SECRET_KEY__: Optional[str] = getenv('__SECRET_KEY__')
+__WEBAPP_ALGORITHM__: Optional[str] = getenv('__ALGORITHM__')
 __LOG_FILE_NAME__: str = r'log.log'
 __SCHEDULE_PATH_FILE__: str = r'bot/database/photo/schedule.png'
 __TEMP_PHOTO_PATH_FILE__: str = r'bot/database/photo/tmp_photo.png'
