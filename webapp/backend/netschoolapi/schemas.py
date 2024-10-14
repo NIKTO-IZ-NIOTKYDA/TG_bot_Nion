@@ -137,30 +137,29 @@ class ParamsAverageMark(NetSchoolAPISchema):
     TERMIDs: list[ParamsAverageMark_TERMID] = []
 
 
-    def __init__(self, response: Response, ResponseStatusCode: int):
-        if ResponseStatusCode == 200:
-            TERMIDs: list[dict[str, str]] = response['filterSources'][3]['items']
-            TERMIDs.pop(0)
+    def __init__(self, response: Response):
+        TERMIDs: list[dict[str, str]] = response['filterSources'][3]['items']
+        TERMIDs.pop(0)
 
-            self.SID = ParamsAverageMark_SID(
-                filterText=response['filterSources'][0]['items'][0]['title'],
-                filterValue=response['filterSources'][0]['items'][0]['value'])
-            
-            self.MarkType = ParamsAverageMark_MarksType(
-                filterText=response['filterSources'][1]['items'][0]['title'],
-                filterValue=response['filterSources'][1]['items'][0]['value'])
-            
-            self.PCLID = ParamsAverageMark_PCLID(
-                filterText=response['filterSources'][2]['items'][0]['title'],
-                filterValue=response['filterSources'][2]['items'][0]['value'])
+        self.SID = ParamsAverageMark_SID(
+            filterText=response['filterSources'][0]['items'][0]['title'],
+            filterValue=response['filterSources'][0]['items'][0]['value'])
+        
+        self.MarkType = ParamsAverageMark_MarksType(
+            filterText=response['filterSources'][1]['items'][0]['title'],
+            filterValue=response['filterSources'][1]['items'][0]['value'])
+        
+        self.PCLID = ParamsAverageMark_PCLID(
+            filterText=response['filterSources'][2]['items'][0]['title'],
+            filterValue=response['filterSources'][2]['items'][0]['value'])
 
-            for TERMID in TERMIDs:
-                self.TERMIDs.append(
-                    ParamsAverageMark_TERMID(
-                        filterText=TERMID["title"],
-                        filterValue=TERMID["value"]
-                    )
+        for TERMID in TERMIDs:
+            self.TERMIDs.append(
+                ParamsAverageMark_TERMID(
+                    filterText=TERMID["title"],
+                    filterValue=TERMID["value"]
                 )
+            )
 
 
 @dataclass

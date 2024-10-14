@@ -8,7 +8,7 @@ from httpx import AsyncClient, Response
 
 from webapp.backend.netschoolapi import errors, schemas
 
-__all__ = ['NetSchoolAPI_']
+__all__ = ['NetSchoolAPI']
 
 from webapp.backend.netschoolapi.async_client_wrapper import AsyncClientWrapper, Requester
 
@@ -18,7 +18,7 @@ async def _die_on_bad_status(response: Response):
         response.raise_for_status()
 
 
-class NetSchoolAPI_:
+class NetSchoolAPI:
     def __init__(self, url: str, default_requests_timeout: int = None):
         url = url.rstrip('/')
         self._wrapped_client = AsyncClientWrapper(
@@ -38,7 +38,7 @@ class NetSchoolAPI_:
         self._login_data = ()
         self._access_token = None
 
-    async def __aenter__(self) -> 'NetSchoolAPI_':
+    async def __aenter__(self) -> 'NetSchoolAPI':
         return self
 
     async def __aexit__(self, _exc_type, _exc_val, _exc_tb):
@@ -252,74 +252,72 @@ class NetSchoolAPI_:
 
             return return_data
 
-        return schemas.ParamsAverageMark(response_json, response.status_code)  # type: ignore
+        return schemas.ParamsAverageMark(response_json)  # type: ignore
 
-    async def initfilters(self, requests_timeout: int = None, json: bool = False, json_data: dict = None, Class_data: schemas.ParamsAverageMark = None):
+    async def initfilters(
+            self,
+            requests_timeout: int = None,
+            json: bool = False,
+            json_data: dict = None,
+            Class_data: schemas.ParamsAverageMark = await params_average_mark()
+            ) -> schemas.ParamsAverageMark | dict | Exception:
         if Class_data != None:
-            bodys: list[dict] = []
+            rq_bodys: list[dict] = []
+
             for TERMID in Class_data.TERMIDs:
-                bodys.append(
+                rq_bodys.append(
                     {
-                        "params": "null",
-                        "selectedData": [
-                            {
-                                "filterId": Class_data.SID.filterId,
-                                "filterText": Class_data.SID.filterText,
-                                "filterValue": Class_data.SID.filterValue
-                            },
-                            {
-                                "filterId": Class_data.MarkType.filterId,
-                                "filterText": Class_data.MarkType.filterText,
-                                "filterValue": Class_data.MarkType.filterValue
-                            },
-                            {
-                                "filterId": Class_data.PCLID.filterId,
-                                "filterText": Class_data.PCLID.filterText,
-                                "filterValue": Class_data.PCLID.filterValue
-                            },
-                            {
-                                "filterId": TERMID.filterId,
-                                "filterText": TERMID.filterText,
-                                "filterValue": TERMID.filterValue
-                            }
-                        ]
+                        "selectedData":
+                            [
+                                {
+                                    "filterId":f"{Class_data.SID.filterId}",
+                                    "filterValue":f"{Class_data.SID.filterText}",
+                                    "filterText":f"{Class_data.SID.filterValue}"
+                                },
+                                {
+                                    "filterId":f"{Class_data.MarkType.filterId}",
+                                    "filterValue":f"{Class_data.MarkType.filterText}",
+                                    "filterText":f"{Class_data.MarkType.filterValue}"
+                                },
+                                {
+                                    "filterId":f"{Class_data.PCLID.filterId}",
+                                    "filterValue":f"{Class_data.PCLID.filterText}",
+                                    "filterText":f"{Class_data.PCLID.filterValue}"
+                                },
+                                {
+                                    "filterId":f"{TERMID.filterId}",
+                                    "filterValue":f"{TERMID.filterText}",
+                                    "filterText":f"{TERMID.filterValue}"
+                                    }
+                            ],
+                        "params":"null"
                     }
                 )
 
-            responses: list[Response] = []
+            responses_json: list[dict] = []
 
-            for body in bodys:
+            for rq_body in rq_bodys:
                 try:
-                    print(body)
-                    r = await self._request_with_optional_relogin(
+                    response = (await self._request_with_optional_relogin(
                         requests_timeout,
                         self._wrapped_client.client.build_request(
                             method="POST",
                             url="v2/reports/studentaveragemarkdyn/initfilters",
-                            json=body
+                            json=rq_body
                             )
+                        )).json()
+
+                    responses_json.append(
+                            {  
+                                'start': response[0]['minValue'],
+                                'end': response[0]['maxValue']
+                            }
                         )
-                    print(r.url)
-                    print(r.status_code)
-                    print(r.headers)
-                    print(r.json())
-                    responses.append(r)
+                    return responses_json
                 except Exception as Error:
-                    print(Error)
+                    raise Error
 
-
-        responses_json: list[dict] = []
-        for response in responses:
-            response_json = response.json()
-
-            responses_json.append({
-                'start': response_json[0]['minValue'],
-                'end': response_json[0]['maxValue']
-            })
-
-        if json: return responses_json
-
-        #return schemas.ParamsAverageMark(responses_json, response.status_code)  # type: ignore
+        return schemas.ParamsAverageMark(responses_json)  # type: ignore
 
     async def overdue(
         self,

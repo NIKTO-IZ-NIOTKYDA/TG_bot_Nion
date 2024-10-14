@@ -1,0 +1,9 @@
+README.md
+__pycache__
+.dockerignore
+.mypy_cache
+.gitignore
+.vscode
+.github
+.venv
+setup.cfg

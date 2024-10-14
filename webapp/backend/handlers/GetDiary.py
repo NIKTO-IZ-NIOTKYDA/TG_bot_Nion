@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Cookie, status, HTTPException
 
 from webapp.backend.handlers.auth import Cookies
-from webapp.backend.netschoolapi import NetSchoolAPI
 from webapp.backend.session_manager import SessionManager
+from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI
 
 
 router = APIRouter(tags=['Diary'])

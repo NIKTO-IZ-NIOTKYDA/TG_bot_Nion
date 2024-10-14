@@ -1,4 +1,0 @@
-[FORMAT]   [ID]            [TIME]              [MODULE]   [MESSAGE]
-[32m[INFO]     [35mNone            [34m10/10/2024 13:07:47 [32m[WEBAPP]   [0mThe web server is running !
-[32m[INFO]     [35mNone            [34m10/10/2024 13:07:51 [32m[WEBAPP]   [0mRequest https://0.0.0.0:5367/api/v1/login/?key=textr185498124%261561
-[32m[INFO]     [35mNone            [34m10/10/2024 13:07:59 [32m[WEBAPP]   [0mRequest https://0.0.0.0:5367/api/v1/login/?key=1234

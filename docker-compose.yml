@@ -16,6 +16,7 @@ services:
       - nion
 
   backend:
+    env_file: ".env"
     build:
       context: .
     networks:

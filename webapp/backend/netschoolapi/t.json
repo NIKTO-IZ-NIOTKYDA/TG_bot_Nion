@@ -23,3 +23,30 @@
 		}
 	]
 }
+
+{
+	"selectedData":
+		[
+			{
+				"filterId":"SID",
+				"filterValue":"3374132",
+				"filterText":"Артемьев Арсений"
+			},
+			{
+				"filterId":"MarksType",
+				"filterValue":"T",
+				"filterText":"Итоговые отметки"
+			},
+			{
+				"filterId":"PCLID",
+				"filterValue":"1622948",
+				"filterText":"9б"
+			},
+			{
+				"filterId":"TERMID",
+				"filterValue":"722646",
+				"filterText":"3 триместр"
+				}
+		],
+	"params":null
+}

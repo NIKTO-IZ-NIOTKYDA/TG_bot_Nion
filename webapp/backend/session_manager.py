@@ -6,18 +6,17 @@ from jose.jwt import encode as jwt_encode
 import bot.logging.colors as colors
 from bot.logging.logging import logging
 from bot.database.models import NetSchool
-import webapp.backend.netschoolapi.NetSchoolAPI as NetSchoolAPI
-from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI_
+from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI
 from bot.config import __WEBAPP_SECRET_KEY__, __WEBAPP_ALGORITHM__, __API_NETSCHOOL__, __SCHOOL_NAME__
 
 
 class Session_:
     UserID: int = None
     SessionID: str = None
-    Session: NetSchoolAPI_ = None
+    Session: NetSchoolAPI = None
     Expire: datetime = None
 
-    def __init__(self, UserID: int, SessionID: str, Session: NetSchoolAPI_, Expire: datetime) -> None:
+    def __init__(self, UserID: int, SessionID: str, Session: NetSchoolAPI, Expire: datetime) -> None:
         self.UserID = UserID
         self.SessionID = SessionID
         self.Session = Session
@@ -38,7 +37,7 @@ class SessionManager_:
 
         SessionID = await self.__CreateSessionID(UserID)
 
-        Session = await NetSchoolAPI.create_client(__API_NETSCHOOL__, 60)
+        Session = NetSchoolAPI(__API_NETSCHOOL__, 60)
         await NetSchoolAPI.login(Session, NetSchool.enc_login, NetSchool.enc_password, __SCHOOL_NAME__)
 
         self.sessions.append(
@@ -62,7 +61,7 @@ class SessionManager_:
         return False
 
 
-    async def GetSession(self, UserID: int, SessionID: str) -> NetSchoolAPI_ | NotFoundErr:
+    async def GetSession(self, UserID: int, SessionID: str) -> NetSchoolAPI | NotFoundErr:
         self.log.info(str(UserID), 'Getting session')
 
         for session in self.sessions:

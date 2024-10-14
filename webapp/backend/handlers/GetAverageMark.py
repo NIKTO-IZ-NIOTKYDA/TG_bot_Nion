@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Cookie, status, HTTPException
 
 from webapp.backend.handlers.auth import Cookies
-from webapp.backend.netschoolapi import NetSchoolAPI
+from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI
 from webapp.backend.session_manager import SessionManager
 
 
@@ -14,6 +14,22 @@ router = APIRouter(tags=['AverageMark'])
 
 
 # async def GenAverageMark(user_id: int) -> dict:
+
+
+@router.get('/InitFilters')
+async def InitFilters(cookies: Annotated[Cookies, Cookie()]):
+    if not await SessionManager.isSession(cookies.UserID): raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+    detail='Вы не авторизованны')
+
+    try: SessionNetSchool = await SessionManager.GetSession(cookies.UserID, cookies.SessionID)
+    except NotFoundErr: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Сессия не найдена')
+    
+    try:
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content=await SessionNetSchool.initfilters())
+    except Exception as Error:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                                   detail=f'UserID: {cookies.UserID} | SessionID: {cookies.SessionID} | Critical error: {Error}')
 
 
 
@@ -25,10 +41,7 @@ async def GetAverageMark(cookies: Annotated[Cookies, Cookie()]):
     try: SessionNetSchool = await SessionManager.GetSession(cookies.UserID, cookies.SessionID)
     except NotFoundErr: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Сессия не найдена')
 
-    try:
-        print(await SessionNetSchool.initfilters(Class_data=await SessionNetSchool.params_average_mark()))
-
-        return JSONResponse(status_code=status.HTTP_200_OK, content=await SessionNetSchool.params_average_mark(json=True))
+    try: return JSONResponse(status_code=status.HTTP_200_OK, content=await SessionNetSchool.params_average_mark(json=True))
     except Exception as Error:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                                                    detail=f'UserID: {cookies.UserID} | SessionID: {cookies.SessionID} | Critical error: {Error}')

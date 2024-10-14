@@ -1,9 +1,5 @@
 #!/usr/bin/bash
 
-echo "Setup env . . .";
-source .env
-source .venv/bin/activate
-
 echo "-> Starting bot"; python3 main.py &
 PID_BOT=$!;
 

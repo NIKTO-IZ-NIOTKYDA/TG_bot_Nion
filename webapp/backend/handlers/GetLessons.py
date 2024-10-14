@@ -1,12 +1,12 @@
 from typing import Annotated
 
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Cookie, status, HTTPException
+from fastapi import APIRouter, Cookie, status
 
 import bot.database.requests as rq
 from bot.database.models import Lesson
-from bot.handlers.core import GetLessons as GetLessons_
 from webapp.backend.handlers.auth import Cookies
+from bot.handlers.core import GetLessons as GetLessons_
 
 router = APIRouter(tags=['GetLessons'])
 

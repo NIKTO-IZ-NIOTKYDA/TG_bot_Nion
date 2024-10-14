@@ -33,7 +33,8 @@ async def login(user_id: int, key: str):
     if netschool.enc_key != key: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Неправильный ключ шифрования')
 
     expire=datetime.now(timezone.utc) + timedelta(days=1)
-    SessionID = await SessionManager.AddSession(user_id, expire, netschool)
+    try: SessionID = await SessionManager.AddSession(user_id, expire, netschool)
+    except: raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail='API СГО недоступен!')
 
     response = JSONResponse(status_code=status.HTTP_201_CREATED, content={'SessionID': SessionID})
     response.set_cookie(key='UserID', value=user_id, httponly=True, secure=False, expires=expire)
