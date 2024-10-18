@@ -38,7 +38,7 @@ app.add_middleware(
 )
 
 
-def server_start(host: str, port: int) -> None:
+def start(host: str, port: int) -> None:
     app.include_router(login_router)
     app.include_router(GetDiary_router)
     app.include_router(GetLessons_router)

@@ -1,7 +1,9 @@
-from datetime import date, timedelta
-from hashlib import md5
+from json import dumps
 from io import BytesIO
+from hashlib import md5
+from datetime import date, timedelta
 from typing import Optional, Dict, List, Union, Any
+from webapp.backend.handlers.bodys.InitFilters import Body as BodyRQFromInitFilters
 
 import httpx
 from httpx import AsyncClient, Response
@@ -259,65 +261,45 @@ class NetSchoolAPI:
             requests_timeout: int = None,
             json: bool = False,
             json_data: dict = None,
-            Class_data: schemas.ParamsAverageMark = await params_average_mark()
+            class_data: BodyRQFromInitFilters = None
             ) -> schemas.ParamsAverageMark | dict | Exception:
-        if Class_data != None:
-            rq_bodys: list[dict] = []
 
-            for TERMID in Class_data.TERMIDs:
-                rq_bodys.append(
-                    {
-                        "selectedData":
-                            [
-                                {
-                                    "filterId":f"{Class_data.SID.filterId}",
-                                    "filterValue":f"{Class_data.SID.filterText}",
-                                    "filterText":f"{Class_data.SID.filterValue}"
-                                },
-                                {
-                                    "filterId":f"{Class_data.MarkType.filterId}",
-                                    "filterValue":f"{Class_data.MarkType.filterText}",
-                                    "filterText":f"{Class_data.MarkType.filterValue}"
-                                },
-                                {
-                                    "filterId":f"{Class_data.PCLID.filterId}",
-                                    "filterValue":f"{Class_data.PCLID.filterText}",
-                                    "filterText":f"{Class_data.PCLID.filterValue}"
-                                },
-                                {
-                                    "filterId":f"{TERMID.filterId}",
-                                    "filterValue":f"{TERMID.filterText}",
-                                    "filterText":f"{TERMID.filterValue}"
+        if class_data != None:
+            response = await self._request_with_optional_relogin(
+                requests_timeout,
+                self._wrapped_client.client.build_request(
+                    method="POST",
+                    url="v2/reports/studentaveragemarkdyn/initfilters",
+                    json={
+                            "selectedData":
+                                [
+                                    {
+                                        "filterId": class_data.SID_filterId,
+                                        "filterValue": class_data.SID_filterValue,
+                                        "filterText": class_data.SID_filterText
+                                    },
+                                    {
+                                        "filterId": class_data.MarksType_filterId,
+                                        "filterValue": class_data.MarksType_filterValue,
+                                        "filterText": class_data.MarksType_filterText
+                                    },
+                                    {
+                                        "filterId": class_data.PCLID_filterId,
+                                        "filterValue": class_data.PCLID_filterValue,
+                                        "filterText": class_data.PCLID_filterText
+                                    },
+                                    {
+                                        "filterId": class_data.TERM_filterId,
+                                        "filterValue": class_data.TERM_filterValue,
+                                        "filterText": class_data.TERM_filterText
                                     }
-                            ],
-                        "params":"null"
-                    }
-                )
-
-            responses_json: list[dict] = []
-
-            for rq_body in rq_bodys:
-                try:
-                    response = (await self._request_with_optional_relogin(
-                        requests_timeout,
-                        self._wrapped_client.client.build_request(
-                            method="POST",
-                            url="v2/reports/studentaveragemarkdyn/initfilters",
-                            json=rq_body
-                            )
-                        )).json()
-
-                    responses_json.append(
-                            {  
-                                'start': response[0]['minValue'],
-                                'end': response[0]['maxValue']
+                                ]
                             }
-                        )
-                    return responses_json
-                except Exception as Error:
-                    raise Error
+                    )
+            )
 
-        return schemas.ParamsAverageMark(responses_json)  # type: ignore
+        if json: return response.json()
+        return AttributeError('Argument (json == False) are not supported !')
 
     async def overdue(
         self,
