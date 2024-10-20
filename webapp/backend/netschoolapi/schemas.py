@@ -162,6 +162,15 @@ class ParamsAverageMark(NetSchoolAPISchema):
             )
 
 
+class InitFilters():
+    start: datetime.date
+    end: datetime.date
+
+    def __init__(self, start: datetime.date, end: datetime.date):
+        self.start = start
+        self.end = end
+
+
 @dataclass
 class ShortSchool(NetSchoolAPISchema):
     name: str

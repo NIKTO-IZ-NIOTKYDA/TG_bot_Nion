@@ -1,6 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped
-from sqlalchemy import BigInteger, String, Boolean, JSON
 from sqlalchemy.orm._orm_constructors import mapped_column
+from sqlalchemy import BigInteger, Integer, String, Boolean, JSON, LargeBinary
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 
 from bot.config import __DATABASE__
@@ -50,11 +50,12 @@ class NetSchool(Base):
 class NetSchoolData(Base):
     __tablename__ = 'NetSchoolData'
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id = mapped_column(BigInteger, unique=True)
     dairy_data = mapped_column(JSON)
-    average_mark_data = mapped_column(JSON)
+    average_mark_data = mapped_column(LargeBinary)
     average_mark_init_data = mapped_column(JSON)
+    init_filters = mapped_column(JSON)
 
 
 async def init_db():
@@ -62,4 +63,3 @@ async def init_db():
     async with engine.begin() as conn:
         log.init('Creating tables')
         await conn.run_sync(Base.metadata.create_all)
-#5731571131	0JDRgNGC0LXQvNGM0LXQstCQMzY=	gAAAAABnB9KkxiVTf7pgHSAwaoABqaGYuEUym6MLnvk50CqYeVdPvHORTnQRpZitwFcWYJjkp1L1VJNz4LnyrxmldjzkM8bVpA==	eHl6

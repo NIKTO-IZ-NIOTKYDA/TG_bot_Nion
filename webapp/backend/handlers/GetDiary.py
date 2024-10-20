@@ -19,7 +19,7 @@ async def GetDiary(start: date, end: date, cookies: Annotated[Cookies, Cookie()]
     try: SessionNetSchool = await SessionManager.GetSession(cookies.UserID, cookies.SessionID)
     except NotFoundErr: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Сессия не найдена')
 
-    try: return JSONResponse(status_code=status.HTTP_200_OK, content=await NetSchoolAPI.diary(SessionNetSchool, start, end))
+    try: return JSONResponse(status_code=status.HTTP_200_OK, content=await NetSchoolAPI.diary(SessionNetSchool, start, end, json=True))
     except Exception as Error:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                                                    detail=f'UserID: {cookies.UserID} | SessionID: {cookies.SessionID} | Critical error: {Error}')

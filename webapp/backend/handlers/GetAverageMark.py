@@ -34,7 +34,7 @@ async def InitFilters(body: BodyRQFromInitFilters, cookies: Annotated[Cookies, C
 
 
 @router.get('/GetInitDataAverageMark', summary='Get data to initialize the receipt of average assessments')
-async def GetAverageMark(cookies: Annotated[Cookies, Cookie()]):
+async def GetInitDataAverageMark(cookies: Annotated[Cookies, Cookie()]):
     if not await SessionManager.isSession(cookies.UserID): raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
     detail='Вы не авторизованны')
 

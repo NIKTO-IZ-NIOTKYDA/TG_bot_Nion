@@ -1,4 +1,4 @@
-from json import dumps
+from ast import Try
 from io import BytesIO
 from hashlib import md5
 from datetime import date, timedelta
@@ -260,7 +260,6 @@ class NetSchoolAPI:
             self,
             requests_timeout: int = None,
             json: bool = False,
-            json_data: dict = None,
             class_data: BodyRQFromInitFilters = None
             ) -> schemas.ParamsAverageMark | dict | Exception:
 
@@ -299,7 +298,22 @@ class NetSchoolAPI:
             )
 
         if json: return response.json()
-        return AttributeError('Argument (json == False) are not supported !')
+
+        response_json = response.json()
+        return schemas.InitFilters(response_json['range']['start'][0.9], response_json['range']['end'][0.9])
+
+    async def diary_assigns(self, id: str, requests_timeout: int = None, json: bool = True) -> Any:
+        response = await self._request_with_optional_relogin(
+                requests_timeout,
+                self._wrapped_client.client.build_request(
+                    method="POST",
+                    url=f"student/diary/assigns/{id}",
+                    params={
+                        "studentId": self._student_id
+                    }
+                )
+            )
+        return response.json()
 
     async def overdue(
         self,

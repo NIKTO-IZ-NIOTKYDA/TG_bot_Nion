@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, status, HTTPException
-
+import bot.utils as utils
 import bot.database.requests as rq
 from webapp.backend.session_manager import SessionManager
 
@@ -39,5 +39,5 @@ async def login(user_id: int, key: str):
     response = JSONResponse(status_code=status.HTTP_201_CREATED, content={'SessionID': SessionID})
     response.set_cookie(key='UserID', value=user_id, httponly=True, secure=False, expires=expire)
     response.set_cookie(key='SessionID', value=SessionID, httponly=True, secure=False, expires=expire)
-
+    await utils.sync_database(user_id, await SessionManager.GetSession(user_id, SessionID))
     return response
