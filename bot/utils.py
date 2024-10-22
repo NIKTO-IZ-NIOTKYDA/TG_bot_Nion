@@ -1,4 +1,5 @@
 import json
+from os import EX_CANTCREAT
 from time import sleep
 from shutil import move
 
@@ -147,67 +148,32 @@ def format_date(date):
     return f'{day_of_week}, {day} {month} {year} г.'
 
 
-async def sync_database(user_id: int, SessionNetSchool: NetSchoolAPI):
-    log.info(user_id, 'Started DB synchronization')
-    try:
-        params_average_mark = await SessionNetSchool.params_average_mark()
-        log.debug(user_id, f'{params_average_mark}')
+# async def sync_database(user_id: int, SessionNetSchool: NetSchoolAPI):
+#     log.info(user_id, 'Started DB synchronization')
+#     try:
+#         init_filters = await SessionNetSchool.initfilters(class_data=await SessionNetSchool.params_average_mark(), json = True)
 
-        dairy_data_db = {}
-        average_mark_data_db = {}
-        params_average_mark_db = await SessionNetSchool.params_average_mark(json=True)
-        log.debug(user_id, f'{params_average_mark_db}')
-        init_filters_db = {}
+#         dairy = await SessionNetSchool.diary(
+#             start=init_filters['start'],
+#             end=init_filters['end'],
+#             json=True
+#         )
+#         log.debug(user_id, f'{dairy}')
 
-        for TERMID in params_average_mark.TERMIDs:
-            BRQFIF = BodyRQFromInitFilters()
-            BRQFIF.SID_filterId = params_average_mark.SID.filterId,
-            BRQFIF.SID_filterText = params_average_mark.SID.filterText,
-            BRQFIF.SID_filterValue = params_average_mark.SID.filterValue,
+#         for day in dairy['weekDays']:
+#             log.debug(user_id, f'{day}')
+#             for lesson in day['lessons']:
+#                 log.debug(user_id, f'{lesson}')
+#                 for assignment in lesson['assignments']:
+#                     log.debug(user_id, f'{assignment}')
+#                     if assignment['mark'] != None:
+#                         # TODO: Check была ли оценка
 
-            BRQFIF.MarksType_filterId = params_average_mark.MarkType.filterId,
-            BRQFIF.MarksType_filterText = params_average_mark.MarkType.filterText,
-            BRQFIF.MarksType_filterValue = params_average_mark.MarkType.filterValue,
-
-            BRQFIF.PCLID_filterId = params_average_mark.PCLID.filterId,
-            BRQFIF.PCLID_filterText = params_average_mark.PCLID.filterText,
-            BRQFIF.PCLID_filterValue = params_average_mark.PCLID.filterValue,
-
-            BRQFIF.TERM_filterId = TERMID.filterId,
-            BRQFIF.TERM_filterText = TERMID.filterText,
-            BRQFIF.TERM_filterValue = TERMID.filterValue
-
-            init_filters = await NetSchoolAPI.initfilters(class_data=BRQFIF, json = True)
-            log.debug(user_id, f'{init_filters}')
-            init_filters_db.update({TERMID.filterId: init_filters})
-            log.debug(user_id, f'{init_filters_db}')
-
-            dairy = await SessionNetSchool.diary(
-                start=init_filters['range']['start'][0.9],
-                end=init_filters['range']['end'][0.9],
-                json=True
-            )
-            dairy_data_db.update({init_filters['range']['end'][0.9]: dairy})
-            log.debug(user_id, f'{dairy_data_db}')
-
-            for day in dairy['weekDays']:
-                log.debug(user_id, f'{day}')
-                for lesson in day['lessons']:
-                    log.debug(user_id, f'{lesson}')
-                    for assignment in lesson['assignments']:
-                        log.debug(user_id, f'{assignment}')
-                        if assignment['mark'] != None:
-                            # TODO: Check была ли оценка
-
-                            data = await SessionNetSchool.diary_assigns(assignment['mark']['assignmentId'])
-                            log.debug(user_id, f'{data}')
+#                         data = await SessionNetSchool.diary_assigns(assignment['mark']['assignmentId'])
+#                         log.debug(user_id, f'{data}')
                             
         
-        await rq.SetNetSchoolData(
-            user_id,
-            params_average_mark_db,
-            dairy_data_db,
-            average_mark_data_db,
-            init_filters_db,
-        )
-    except Exception as Error: log.error(user_id, str(Error))
+#         await rq.SetNetSchoolData(user_id, dairy)
+#     except Exception:
+#         import traceback
+#         print(traceback.format_exc())

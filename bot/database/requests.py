@@ -158,34 +158,26 @@ async def SetNetSchool(user_id: int, login: str, password: str, key: str) -> Non
             return Error
 
 
-async def SetNetSchoolData(user_id_: int,
-                           dairy_data_,
-                           average_mark_data_,
-                           init_filters_,
-                           average_mark_init_data_
-    ) -> None | AttributeError | IntegrityError | Exception:
-            log.info(user_id=str(user_id_), msg='Setting NetSchoolData')
+async def SetNetSchoolData(user_id_: int, dairy_data_) -> None | AttributeError | IntegrityError | Exception:
+    log.info(user_id=str(user_id_), msg='Setting NetSchoolData')
 
-            async with async_session() as session:
-                try:
-                    session.add(User(
-                        user_id = user_id_,
-                        dairy_data = dairy_data_,
-                        average_mark_data = average_mark_data_,
-                        average_mark_init_data = average_mark_init_data_,
-                        init_filters = init_filters_
-                    ))
+    async with async_session() as session:
+        try:
+            session.add(User(
+                user_id = user_id_,
+                dairy_data = dairy_data_
+            ))
 
-                    await __SaveData(user_id_, session)
-                    return
+            await __SaveData(user_id_, session)
+            return
 
-                except IntegrityError as Error:
-                    log.error(user_id_, f'ERROR: {Error.orig} REQUESTS: {Error.statement}')
-                    return Error
-                
-                except Exception as Error:
-                    log.error(user_id_, str(Error))
-                    return Error
+        except IntegrityError as Error:
+            log.error(user_id_, f'ERROR: {Error.orig} REQUESTS: {Error.statement}')
+            return Error
+        
+        except Exception as Error:
+            log.error(user_id_, str(Error))
+            return Error
 
 
 ### GETTING

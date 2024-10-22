@@ -132,7 +132,7 @@ class ParamsAverageMark_TERMID(NetSchoolAPISchema):
 
 class ParamsAverageMark(NetSchoolAPISchema):
     SID: ParamsAverageMark_SID = None
-    MarkType: ParamsAverageMark_MarksType = None
+    MarksType: ParamsAverageMark_MarksType = None
     PCLID: ParamsAverageMark_PCLID = None
     TERMIDs: list[ParamsAverageMark_TERMID] = []
 
@@ -145,7 +145,7 @@ class ParamsAverageMark(NetSchoolAPISchema):
             filterText=response['filterSources'][0]['items'][0]['title'],
             filterValue=response['filterSources'][0]['items'][0]['value'])
         
-        self.MarkType = ParamsAverageMark_MarksType(
+        self.MarksType = ParamsAverageMark_MarksType(
             filterText=response['filterSources'][1]['items'][0]['title'],
             filterValue=response['filterSources'][1]['items'][0]['value'])
         

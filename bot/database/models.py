@@ -53,9 +53,6 @@ class NetSchoolData(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id = mapped_column(BigInteger, unique=True)
     dairy_data = mapped_column(JSON)
-    average_mark_data = mapped_column(LargeBinary)
-    average_mark_init_data = mapped_column(JSON)
-    init_filters = mapped_column(JSON)
 
 
 async def init_db():

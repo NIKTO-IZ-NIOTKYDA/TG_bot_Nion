@@ -260,43 +260,112 @@ class NetSchoolAPI:
             self,
             requests_timeout: int = None,
             json: bool = False,
-            class_data: BodyRQFromInitFilters = None
+            class_data: BodyRQFromInitFilters | schemas.ParamsAverageMark = None
             ) -> schemas.ParamsAverageMark | dict | Exception:
-
+        print('q')
         if class_data != None:
-            response = await self._request_with_optional_relogin(
-                requests_timeout,
-                self._wrapped_client.client.build_request(
-                    method="POST",
-                    url="v2/reports/studentaveragemarkdyn/initfilters",
-                    json={
-                            "selectedData":
-                                [
-                                    {
-                                        "filterId": class_data.SID_filterId,
-                                        "filterValue": class_data.SID_filterValue,
-                                        "filterText": class_data.SID_filterText
-                                    },
-                                    {
-                                        "filterId": class_data.MarksType_filterId,
-                                        "filterValue": class_data.MarksType_filterValue,
-                                        "filterText": class_data.MarksType_filterText
-                                    },
-                                    {
-                                        "filterId": class_data.PCLID_filterId,
-                                        "filterValue": class_data.PCLID_filterValue,
-                                        "filterText": class_data.PCLID_filterText
-                                    },
-                                    {
-                                        "filterId": class_data.TERM_filterId,
-                                        "filterValue": class_data.TERM_filterValue,
-                                        "filterText": class_data.TERM_filterText
-                                    }
-                                ]
-                            }
-                    )
-            )
-
+            if class_data == BodyRQFromInitFilters:
+                response = await self._request_with_optional_relogin(
+                    requests_timeout,
+                    self._wrapped_client.client.build_request(
+                        method="POST",
+                        url="v2/reports/studentaveragemarkdyn/initfilters",
+                        json={
+                                "selectedData":
+                                    [
+                                        {
+                                            "filterId": class_data.SID_filterId,
+                                            "filterValue": class_data.SID_filterValue,
+                                            "filterText": class_data.SID_filterText
+                                        },
+                                        {
+                                            "filterId": class_data.MarksType_filterId,
+                                            "filterValue": class_data.MarksType_filterValue,
+                                            "filterText": class_data.MarksType_filterText
+                                        },
+                                        {
+                                            "filterId": class_data.PCLID_filterId,
+                                            "filterValue": class_data.PCLID_filterValue,
+                                            "filterText": class_data.PCLID_filterText
+                                        },
+                                        {
+                                            "filterId": class_data.TERM_filterId,
+                                            "filterValue": class_data.TERM_filterValue,
+                                            "filterText": class_data.TERM_filterText
+                                        }
+                                    ]
+                                }
+                        )
+                )
+            elif class_data == schemas.ParamsAverageMark:
+                response_start = await self._request_with_optional_relogin(
+                    requests_timeout,
+                    self._wrapped_client.client.build_request(
+                        method="POST",
+                        url="v2/reports/studentaveragemarkdyn/initfilters",
+                        json={
+                                "selectedData":
+                                    [
+                                        {
+                                            "filterId": class_data.SID.filterId,
+                                            "filterValue": class_data.SID.filterValue,
+                                            "filterText": class_data.SID.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.MarksType.filterId,
+                                            "filterValue": class_data.MarksType.filterValue,
+                                            "filterText": class_data.MarksType.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.PCLID.filterId,
+                                            "filterValue": class_data.PCLID.filterValue,
+                                            "filterText": class_data.PCLID.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.TERMIDs[0].filterId,
+                                            "filterValue": class_data.TERMIDs[0].filterValue,
+                                            "filterText": class_data.TERMIDs[0].filterText
+                                        }
+                                    ]
+                                }
+                        )
+                )
+                response_end = await self._request_with_optional_relogin(
+                    requests_timeout,
+                    self._wrapped_client.client.build_request(
+                        method="POST",
+                        url="v2/reports/studentaveragemarkdyn/initfilters",
+                        json={
+                                "selectedData":
+                                    [
+                                        {
+                                            "filterId": class_data.SID.filterId,
+                                            "filterValue": class_data.SID.filterValue,
+                                            "filterText": class_data.SID.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.MarksType.filterId,
+                                            "filterValue": class_data.MarksType.filterValue,
+                                            "filterText": class_data.MarksType.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.PCLID.filterId,
+                                            "filterValue": class_data.PCLID.filterValue,
+                                            "filterText": class_data.PCLID.filterText
+                                        },
+                                        {
+                                            "filterId": class_data.TERMIDs[-1].filterId,
+                                            "filterValue": class_data.TERMIDs[-1].filterValue,
+                                            "filterText": class_data.TERMIDs[-1].filterText
+                                        }
+                                    ]
+                                }
+                        )
+                )
+                return {
+                    "start": response_start.json()['range']['start'][0.9],
+                    "end": response_end.json()['range']['end'][0.9]
+                    }
         if json: return response.json()
 
         response_json = response.json()
