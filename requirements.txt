@@ -10,3 +10,4 @@ annotated-types==0.7.0
 fastapi[standard]
 python-jose
 uvicorn
+python-multipart
