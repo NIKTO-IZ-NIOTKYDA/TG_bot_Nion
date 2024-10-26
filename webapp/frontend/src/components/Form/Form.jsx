@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
 import { strToBase64 } from '../../hooks/base64'
+import { TextAnimator } from '../TextAnimator/TextAnimator'
 
 const Form = () => {
     const { tg } = useTelegram();
@@ -40,7 +41,7 @@ const Form = () => {
             tg.MainButton.show();
         }
     }, [login, password, key]);
-
+    
     const onChangeLogin = (e) => { setLogin(e.target.value); };
     const onChangePassword = (e) => { setPassword(e.target.value); };
     const onChangeKey = (e) => { setKey(e.target.value); };
@@ -74,14 +75,14 @@ const Form = () => {
     
     return (
         <div className="form">
-            <h3>Введите ваши данные</h3>
+            <h3 className="text-info"><TextAnimator text="введите ваши данные" /></h3>
             <input
                 className="input"
                 type="text"
                 placeholder="Логин"
                 value={login}
                 onChange={onChangeLogin}
-                maxlength="1024"
+                maxLength="1024"
             />
             <input
                 className="input"
@@ -89,7 +90,7 @@ const Form = () => {
                 placeholder="Пароль"
                 value={password}
                 onChange={onChangePassword}
-                maxlength="1024"
+                maxLength="1024"
             />
             <input
                 className="input"
@@ -97,7 +98,7 @@ const Form = () => {
                 placeholder="Ключ для шифрования данных"
                 value={key}
                 onChange={onChangeKey}
-                maxlength="1024"
+                maxLength="1024"
             />
         </div>
     );
