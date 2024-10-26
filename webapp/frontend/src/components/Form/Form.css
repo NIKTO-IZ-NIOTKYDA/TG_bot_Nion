@@ -36,3 +36,8 @@
 .input::placeholder {
     color: var(--tg-theme-hint-color);
 }
+
+:focus {
+    outline: none;
+    border-color: var(--tg-theme-bg-color);
+}
