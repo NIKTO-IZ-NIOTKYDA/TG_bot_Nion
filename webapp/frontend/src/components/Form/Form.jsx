@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { useLocation } from 'react-router-dom';
 import { strToBase64 } from '../../hooks/base64'
 
 const Form = () => {
@@ -70,6 +69,9 @@ const Form = () => {
         };
     }, []);
 
+    tg.ready();
+    tg.expand();
+    
     return (
         <div className="form">
             <h3>Введите ваши данные</h3>
@@ -90,7 +92,7 @@ const Form = () => {
             <input
                 className="input"
                 type="password"
-                placeholder="Ключ шифрования"
+                placeholder="Ключ для шифрования данных"
                 value={key}
                 onChange={onChangeKey}
             />

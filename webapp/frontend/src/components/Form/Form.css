@@ -2,62 +2,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 20px;
+    padding: 50px;
 }
 
 .input {
     width: 100%;
     padding: 10px;
     margin-top: 15px;
-}
-
-.select {
-    padding: 10px;
-    margin-top: 15px;
-}
-.cart-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.cart-item-img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-.cart-item-details {
-    flex-grow: 1;
-}
-
-.cart-item-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.cart-item-description {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
-}
-
-.cart-item-price {
-    font-size: 16px;
-    font-weight: bold;
-}
-.input-error {
-    border: 1px solid red;
-}
-
-.error {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
+    border-radius: 20%;
+    color: var(--tg-theme-text-color);
 }
