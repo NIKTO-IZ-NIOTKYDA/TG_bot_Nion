@@ -24,7 +24,7 @@
     color: var(--tg-theme-text-color);
     background-color: var(--tg-theme-bg-color);
     background-clip: padding-box;
-    border: 10px solid;
+    border: 3px solid;
     border-radius: 0.25rem;
     border-image-source: linear-gradient(-45deg, #fc1ba6, #4094f6);
     border-image-slice: 1;
