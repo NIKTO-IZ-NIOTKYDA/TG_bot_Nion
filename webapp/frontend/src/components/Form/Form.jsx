@@ -18,7 +18,6 @@ const Form = () => {
             key: strToBase64(key)
         };
         tg.sendData(JSON.stringify(data));
-        tg.close();
     }, [login, password, key]);
 
     useEffect(() => {
