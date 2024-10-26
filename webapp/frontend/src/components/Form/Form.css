@@ -35,6 +35,7 @@
     background-color: var(--tg-theme-bg-color);
     background-clip: padding-box;
     border-radius: 0.25rem;
+    border-color: var(--tg-theme-bg-color);
 }
 
 .input::placeholder {
