@@ -81,6 +81,7 @@ const Form = () => {
                 placeholder="Логин"
                 value={login}
                 onChange={onChangeLogin}
+                maxlength="1024"
             />
             <input
                 className="input"
@@ -88,6 +89,7 @@ const Form = () => {
                 placeholder="Пароль"
                 value={password}
                 onChange={onChangePassword}
+                maxlength="1024"
             />
             <input
                 className="input"
@@ -95,6 +97,7 @@ const Form = () => {
                 placeholder="Ключ для шифрования данных"
                 value={key}
                 onChange={onChangeKey}
+                maxlength="1024"
             />
         </div>
     );

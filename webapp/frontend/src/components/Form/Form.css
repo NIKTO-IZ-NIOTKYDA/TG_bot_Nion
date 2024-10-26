@@ -1,14 +1,35 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 1rem;
     width: 100%;
     padding: 50px;
 }
 
 .input {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.375rem 0.75rem;
+    margin: 0;
+
+    font-size: 1rem;
+
     width: 100%;
     padding: 10px;
     margin-top: 15px;
-    border-radius: 20%;
-    color: var(--tg-theme-text-color);
+
+    color: var(--tg-theme-bg-color);
+    background-color: var(--tg-theme-bg-color);
+    background-clip: padding-box;
+    border: 1px;
+    border-radius: 0.25rem;
+}
+
+.input::placeholder {
+    color: var(--tg-theme-hint-color);
 }
