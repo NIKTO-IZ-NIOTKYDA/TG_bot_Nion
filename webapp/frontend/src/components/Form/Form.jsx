@@ -6,11 +6,10 @@ import { strToBase64 } from '../../hooks/base64'
 
 const Form = () => {
     const { tg } = useTelegram();
-    const [Error, setError] = useState(false);
 
-    cosnt [ login, setLogin ] = useState('');
-    cosnt [ password, setPassword ] = useState('');
-    cosnt [ key, setKey ] = useState('');
+    const [ login, setLogin ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [ key, setKey ] = useState('');
 
     const onSendData = useCallback(() => {
         const data = {
