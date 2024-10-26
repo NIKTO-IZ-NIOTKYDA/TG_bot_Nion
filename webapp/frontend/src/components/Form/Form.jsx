@@ -1,33 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
-import { useTelegram } from "../../hooks/useTelegram";
+import { useTelegram } from '../../hooks/useTelegram';
 import { useLocation } from 'react-router-dom';
+import { strToBase64 } from '../../hooks/base64'
 
 const Form = () => {
-    const [city, setCity] = useState('');
-    const [sdekaddress, setSdek] = useState('');
-    const [phone, setPhone] = useState('');
-    const [subject, setSubject] = useState('physical');
-    const [phoneError, setPhoneError] = useState(false);
     const { tg } = useTelegram();
-    const location = useLocation();
-    const { addedItems } = location.state || { addedItems: [] };
+    const [Error, setError] = useState(false);
+
+    cosnt [ login, setLogin ] = useState('');
+    cosnt [ password, setPassword ] = useState('');
+    cosnt [ key, setKey ] = useState('');
 
     const onSendData = useCallback(() => {
         const data = {
-            city,
-            sdekaddress,
-            phone,
-            addedItems: addedItems.map(item => ({
-                id: item.id,
-                title: item.title,
-                description: item.description,
-                selectedSize: item.selectedSize,
-                price: item.price,
-            })),
+            login,
+            password,
+            key: strToBase64(key)
         };
         tg.sendData(JSON.stringify(data));
-    }, [city, sdekaddress, phone, addedItems]);
+    }, [login, password, key]);
+        
+    tg.close();
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -43,30 +37,16 @@ const Form = () => {
     }, [tg.MainButton]);
 
     useEffect(() => {
-        if (!city || !sdekaddress || !phone || phoneError) {
+        if (!login || !password || !key) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
         }
-    }, [city, sdekaddress, phone, phoneError]);
+    }, [login, password, key]);
 
-    const onChangeCity = (e) => {
-        const value = e.target.value;
-        if (/^[a-zA-Zа-яА-Я\s]*$/.test(value)) {
-            setCity(value);
-        }
-    };
-
-    const onChangeSdek = (e) => {
-        setSdek(e.target.value);
-    };
-
-    const onChangePhone = (e) => {
-        const value = e.target.value;
-        setPhone(value);
-        setPhoneError(!(value.startsWith('+7') && value.length === 12));
-    };
-
+    const onChangeLogin = (e) => { setLogin(e.target.value); };
+    const onChangePassword = (e) => { setPassword(e.target.value); };
+    const onChangeKey = (e) => { setKey(e.target.value); };
 
 
     // Функция прокрутки страницы вниз
@@ -94,48 +74,28 @@ const Form = () => {
 
     return (
         <div className="form">
-            <h3>Товары в корзине</h3>
-            <ul className="cart-list">
-                {addedItems.length > 0 ? (
-                    addedItems.map((item) => (
-                        <li key={item.id} className="cart-item">
-                            <img src={item.img} alt={item.title} className="cart-item-img" />
-                            <div className="cart-item-details">
-                                <p className="cart-item-title">{item.title}</p>
-                                <p className="cart-item-description">{item.description}</p>
-                                <p className="cart-item-size">Размер: {item.selectedSize}</p>
-                                <p className="cart-item-price">Цена: {item.price} ₽</p>
-                            </div>
-                        </li>
-                    ))
-                ) : (
-                    <div>Корзина пуста</div>
-                )}
-            </ul>
-
             <h3>Введите ваши данные</h3>
             <input
                 className="input"
                 type="text"
-                placeholder="Город"
-                value={city}
-                onChange={onChangeCity}
+                placeholder="Логин"
+                value={login}
+                onChange={onChangeLogin}
             />
             <input
                 className="input"
-                type="text"
-                placeholder="Адрес"
-                value={sdekaddress}
-                onChange={onChangeSdek}
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={onChangePassword}
             />
             <input
                 className="input"
-                type="text"
-                placeholder="Телефон"
-                value={phone}
-                onChange={onChangePhone}
+                type="password"
+                placeholder="Ключ шифрования"
+                value={key}
+                onChange={onChangeKey}
             />
-            {phoneError && <div className="error">Неправильный номер.</div>}
         </div>
     );
 };
