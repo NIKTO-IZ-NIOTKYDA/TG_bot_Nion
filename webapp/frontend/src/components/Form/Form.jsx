@@ -15,13 +15,13 @@ const Form = () => {
         AddNetSchool(tg.initDataUnsafe.chat.id, login, password, key)
         .then(data => console.log('Success:', data))
         .catch(err => console.error('Failed:', err));
+        tg.close();
     }
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
             tg.offEvent('mainButtonClicked', onSendData);
-            
         };
     }, [onSendData]);
 
