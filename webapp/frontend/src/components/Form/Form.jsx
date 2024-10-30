@@ -11,7 +11,7 @@ const Form = () => {
     const [ password, setPassword ] = useState('');
     const [ key, setKey ] = useState('');
 
-    const onSendData = useCallback(() => {
+    const onSendData = useEffect(() => {
         AddNetSchool(tg.initDataUnsafe.chat.id, login, password, key)
         .then(data => console.log('Success:', data))
         .catch(err => console.error('Failed:', err));
