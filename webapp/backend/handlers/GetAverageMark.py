@@ -1,5 +1,4 @@
 from datetime import date
-from xml.dom import NotFoundErr
 from typing import Annotated, Literal
 
 from fastapi.responses import JSONResponse
@@ -22,7 +21,7 @@ async def InitFilters(body: BodyRQFromInitFilters, cookies: Annotated[Cookies, C
     detail='Вы не авторизованны')
 
     try: SessionNetSchool = await SessionManager.GetSession(cookies.UserID, cookies.SessionID)
-    except NotFoundErr: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Сессия не найдена')
+    except Exception: raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Сессия не найдена')
     
     try:
         return JSONResponse(status_code=status.HTTP_200_OK,

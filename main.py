@@ -15,11 +15,11 @@ from bot.logging.logging import logging
 
 import bot.handlers.core as core
 
-import bot.handlers.start
 import bot.handlers.menu
+import bot.handlers.start
 import bot.handlers.lessons
-import bot.handlers.schedule
 import bot.handlers.profile
+import bot.handlers.schedule
 import bot.handlers.admin_panel
 import bot.handlers.update_lesson
 

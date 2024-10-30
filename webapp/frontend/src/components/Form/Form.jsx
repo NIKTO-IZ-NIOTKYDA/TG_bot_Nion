@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { strToBase64 } from '../../hooks/base64'
 import { TextAnimator } from '../TextAnimator/TextAnimator'
+import { AddNetSchool } from '../../hooks/api'
 
 const Form = () => {
     const { tg } = useTelegram();
@@ -12,13 +12,9 @@ const Form = () => {
     const [ key, setKey ] = useState('');
 
     const onSendData = useCallback(() => {
-        const data = {
-            login,
-            password,
-            key: strToBase64(key)
-        };
-        tg.sendData(JSON.stringify(data));
-        tg.close();
+        AddNetSchool(tg.initDataUnsafe.chat.id, login, password, key)
+        .then(data => console.log('Success:', data))
+        .catch(err => console.error('Failed:', err));
     }, [login, password, key]);
 
     useEffect(() => {

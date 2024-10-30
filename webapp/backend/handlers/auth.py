@@ -2,10 +2,9 @@ from base64 import b64decode
 from datetime import datetime, timedelta, timezone
 
 from pydantic import BaseModel
+import bot.database.requests as rq
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, status, HTTPException
-import bot.utils as utils
-import bot.database.requests as rq
 from webapp.backend.session_manager import SessionManager
 
 
