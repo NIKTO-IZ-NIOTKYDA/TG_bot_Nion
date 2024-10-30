@@ -11,16 +11,17 @@ const Form = () => {
     const [ password, setPassword ] = useState('');
     const [ key, setKey ] = useState('');
 
-    const onSendData = useEffect(() => {
+    const onSendData = () => {
         AddNetSchool(tg.initDataUnsafe.chat.id, login, password, key)
         .then(data => console.log('Success:', data))
         .catch(err => console.error('Failed:', err));
-    }, [login, password, key]);
+    }
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
             tg.offEvent('mainButtonClicked', onSendData);
+            
         };
     }, [onSendData]);
 
