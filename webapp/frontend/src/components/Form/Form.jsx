@@ -1,20 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
-import { tg } from '../../hooks/useTelegram';
+import {useTelegram} from "../../hooks/useTelegram";
 import { TextAnimator } from '../TextAnimator/TextAnimator'
 import { AddNetSchool } from '../../hooks/api'
 
 const Form = () => {
+    const {tg, chat, onClose} = useTelegram();
+
     const [ login, setLogin ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ key, setKey ] = useState('');
 
-    const onSendData = () => {
-        AddNetSchool(tg.initDataUnsafe.chat.id, login, password, key)
+    const onSendData = useCallback(() => {
+        AddNetSchool(chat.id, login, password, key)
         .then(data => console.log('Success:', data))
         .catch(err => console.error('Failed:', err));
-        tg.close();
-    }
+        
+        onClose();
+    })
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData)
