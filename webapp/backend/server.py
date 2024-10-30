@@ -7,6 +7,7 @@ from bot.config import __WEBAPP_FRONTEND_PORT__
 from webapp.backend.handlers.auth import router as login_router
 from webapp.backend.handlers.GetDiary import router as GetDiary_router
 from webapp.backend.handlers.GetLessons import router as GetLessons_router
+from webapp.backend.handlers.AddNetSchool import router as AddNetSchool_router
 from webapp.backend.handlers.GetLessonPhoto import router as GetLessonsPhoto_router
 from webapp.backend.handlers.GetAverageMark import router as GetAverageMark_router
 
@@ -44,5 +45,6 @@ def start(host: str, port: int) -> None:
     app.include_router(GetLessons_router)
     app.include_router(GetLessonsPhoto_router)
     app.include_router(GetAverageMark_router)
+    app.include_router(AddNetSchool_router)
 
     uvicorn.run(app=app, host=host, port=port)

@@ -1,6 +1,6 @@
 const __URL_API__ = 'http://localhost/api';
 
-const AddNetSchool = async (UserID, Login, Password, Key) => {
+export const AddNetSchool = async (UserID, Login, Password, Key) => {
     // Create the request body
     const requestBody = {
         UserID,
