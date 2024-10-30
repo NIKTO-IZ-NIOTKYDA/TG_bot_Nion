@@ -33,8 +33,3 @@ const AddNetSchool = async (UserID, Login, Password, Key) => {
         throw error; // Rethrow the error for further handling if needed
     }
 };
-
-// Usage Example
-AddNetSchool(1, 'exampleUser', 'examplePass', 'exampleKey')
-    .then(data => console.log('Success:', data))
-    .catch(err => console.error('Failed:', err));
