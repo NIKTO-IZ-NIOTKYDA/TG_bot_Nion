@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
-import { useTelegram } from '../../hooks/useTelegram';
+import { tg } from '../../hooks/useTelegram';
 import { TextAnimator } from '../TextAnimator/TextAnimator'
 import { AddNetSchool } from '../../hooks/api'
 
 const Form = () => {
-    const { tg } = useTelegram();
-
     const [ login, setLogin ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ key, setKey ] = useState('');
@@ -19,11 +17,11 @@ const Form = () => {
     }
 
     useEffect(() => {
-        tg.onEvent('mainButtonClicked', onSendData);
+        tg.onEvent('mainButtonClicked', onSendData)
         return () => {
-            tg.offEvent('mainButtonClicked', onSendData);
-        };
-    }, [onSendData]);
+          tg.offEvent('mainButtonClicked', onSendData)
+        }
+      }, [onSendData])
 
     useEffect(() => {
         tg.MainButton.setParams({
