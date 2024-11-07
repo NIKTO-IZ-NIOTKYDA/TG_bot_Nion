@@ -641,7 +641,7 @@ def logic(message: Any) -> Any:
                 bot.send_message(chat_id=message.chat.id, text=f'❌ Произошла ошибка. Пожалуйста, отправте данный отчёт разработчику бота [@{config.main_admin_url}]: {Error}', reply_markup=types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton(back_in_main_menu)))
 
         # Notifications admin
-        elif [message.chat.id == user_id for user_id in tmp_vars.press_button_notification_admin_list_users]:
+        elif False:
             log.info(user_id=str(message.chat.id), msg=f'User: {message.chat.id} requested a D/Z update')
 
             if str(message.text)[0] == '/':
