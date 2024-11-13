@@ -3,10 +3,10 @@ const __URL_API__ = 'http://localhost/api';
 export const AddNetSchool = async (UserID, Login, Password, Key) => {
     // Create the request body
     const requestBody = {
-        UserID,
-        Login,
-        Password,
-        Key
+        "UserID": UserID,
+        "Login": Login,
+        "Password": Password,
+        "Key": Key
     };
 
     try {

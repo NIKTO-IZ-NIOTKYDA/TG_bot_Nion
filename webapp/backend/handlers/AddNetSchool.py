@@ -7,6 +7,7 @@ from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI
 from bot.config import __API_NETSCHOOL__, __SCHOOL_NAME__, __DAIRY_DATE__
 from webapp.backend.handlers.bodys.AddNetSchool import Body as BodyRQFromAddNetSchool
 
+
 router = APIRouter(tags=['Auth'])
 
 
