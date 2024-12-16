@@ -1,7 +1,7 @@
+.vscode
 __pycache__
 __pycache__/*
 webapp/frontend/build
 .mypy_cache
-.vscode
 .env
 .venv

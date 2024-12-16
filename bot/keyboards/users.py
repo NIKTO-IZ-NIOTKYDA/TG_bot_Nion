@@ -1,13 +1,13 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
-import bot.database.requests as rq
-from bot.utils import CheckForAdmin
-import bot.logging.colors as colors
-import bot.logging.logging as logging
-from bot.config import __WEBAPP_URL__
-from bot.handlers.core import GetLessons
-from bot.keyboards.admins import __DELETE_SCHEDULE_WARN__
-from bot.keyboards.other import GenLesson, GenButtonBack, __BACK_IN_MAIN_MENU__
+import database.requests as rq
+from utils import CheckForAdmin
+import log.colors as colors
+import log.logging as logging
+from config import config
+from handlers.core import GetLessons
+from keyboards.admins import __DELETE_SCHEDULE_WARN__
+from keyboards.other import GenLesson, GenButtonBack, __BACK_IN_MAIN_MENU__
 
 log = logging.logging(Name='INIT', Color=colors.purple)
 
@@ -30,7 +30,7 @@ async def GenStart(user_id: int) -> InlineKeyboardMarkup:
     ]
 
     if await rq.GetNetSchool(user_id=user_id, decode=False) != None:
-        buttons.append([InlineKeyboardButton(text='СГО 💀', web_app=WebAppInfo(url=__WEBAPP_URL__))])
+        buttons.append([InlineKeyboardButton(text='СГО 💀', web_app=WebAppInfo(url=config.WEBAPP_URL))])
 
     if await CheckForAdmin(user_id):
         buttons.append([InlineKeyboardButton(text='Админ-панель‼️', callback_data='admin_panel')])

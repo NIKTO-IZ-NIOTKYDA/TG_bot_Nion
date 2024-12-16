@@ -1,24 +1,21 @@
-from os import remove
-
 import aiofiles
 from datetime import datetime
 from time import strftime, localtime
 
 from aiogram import F
-from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.types import CallbackQuery, Message
-from aiogram.exceptions import TelegramNetworkError
+from aiogram.types.input_file import BufferedInputFile
 
-import bot.database.requests as rq
-from bot.keyboards.users import GenSchedule
-from bot.handlers.core import log, GetRouter
-from bot.keyboards.other import __BACK_IN_MAIN_MENU__
-from bot.handlers.states.update_lesson import FormUpdate
-from bot.config import __SCHEDULE_PATH_FILE__, __TEMP_PHOTO_PATH_FILE__
-from bot.keyboards.admins import __DELETE_SCHEDULE__, __UPDATE_HOMEWORK_AND_PHOTO__
-from bot.utils import CheckForAdmin, RQReporter, NotificationAdmins, newsletter, rename, GetTimeToLesson
+from config import config
+import database.requests as rq
+from keyboards.users import GenSchedule
+from handlers.core import log, GetRouter
+from keyboards.other import __BACK_IN_MAIN_MENU__
+from handlers.states.update_lesson import FormUpdate
+from keyboards.admins import __DELETE_SCHEDULE__, __UPDATE_HOMEWORK_AND_PHOTO__
+from utils import CheckForAdmin, RQReporter, NotificationAdmins, newsletter, GetTimeToLesson
 
 
 router = GetRouter()
@@ -28,19 +25,22 @@ router = GetRouter()
 async def schedule(callback: CallbackQuery):
     log.info(str(callback.message.chat.id), msg=f'Received \'[{callback.data}]\'')
 
-    try:
-        photo = FSInputFile(__SCHEDULE_PATH_FILE__, filename=__SCHEDULE_PATH_FILE__)
-        
-        await callback.bot.send_chat_action(callback.message.chat.id, action='upload_photo')
-        await callback.bot.send_photo(callback.message.chat.id, photo=photo, reply_markup=await GenSchedule(callback.message.chat.id))
+    schedule = await rq.GetSchedule(callback.message.chat.id)
+
+    if schedule == FileNotFoundError:
+        log.info(user_id=str(callback.message.chat.id), msg='Schedule not found!')
     
-    except TelegramNetworkError:
-        log.info(user_id=str(callback.message.chat.id), msg='Schedule not found !')
-        
         await callback.answer(text='‼️ ERROR: FILE NOT FOUND ‼️', show_alert=True)
- 
-        await NotificationAdmins(text='Файл расписание не найден.\nПожалуйста добавьте расписание !', bot=callback.bot,
+
+        await NotificationAdmins(text='Расписание не найдено.\nПожалуйста добавьте расписание !', bot=callback.bot,
             reply_markup=InlineKeyboardMarkup(row_width=1, inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
+    else:
+        await callback.bot.send_chat_action(callback.message.chat.id, action='upload_photo')
+        await callback.bot.send_photo(
+                callback.message.chat.id,
+                photo=BufferedInputFile(file=schedule.photo, filename='schedule.png'),
+                reply_markup=await GenSchedule(callback.message.chat.id)
+            )
 
 
 @router.message(F.photo)
@@ -49,27 +49,26 @@ async def schedule_add_from_photo(message: Message, state: FSMContext) -> None:
         file = await message.bot.get_file(message.photo[-1].file_id)
         downloaded_file = await message.bot.download_file(file.file_path)
 
-        async with aiofiles.open(__TEMP_PHOTO_PATH_FILE__, mode='wb') as file:
-            await file.write(downloaded_file.read())
-            await file.flush()
-            await file.close()
-
-        downloaded_file.close()
-
         if message.caption != None:
             await message.answer('👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=__UPDATE_HOMEWORK_AND_PHOTO__)
-
             await state.set_state(FormUpdate.select_lesson)
-            await state.set_data({'homework': message.caption})
-        else:
-            await rename(message.chat.id, __TEMP_PHOTO_PATH_FILE__, __SCHEDULE_PATH_FILE__)
 
-            await message.answer(text='⚠ Активирована система уведомлений . . .', reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
+            await state.set_data({
+                'homework': message.caption,
+                'photo': downloaded_file.read()
+                })
+            
+            downloaded_file.close()
+
+        else:
+            await rq.UpdateSchedule(message.chat.id, downloaded_file.read())
+
+            await message.answer('⚠ Активирована система уведомлений . . .', reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
             await newsletter(message.chat.id, '⚠ Обновлено расписание.', True, message.bot)
 
 
 @router.message(F.document)
-async def schedule_add_from_photo(message: Message, state: FSMContext) -> None:
+async def schedule_add_from_file(message: Message, state: FSMContext) -> None:
     if await CheckForAdmin(message.chat.id):
         if not message.document.thumbnail.file_size * 0.000001 <= 1:
             await message.answer('❌ Файл слишком большой! Максимальный размер 1Mb!',
@@ -84,20 +83,19 @@ async def schedule_add_from_photo(message: Message, state: FSMContext) -> None:
         file = await message.bot.get_file(message.document.file_id)
         downloaded_file = await message.bot.download_file(file.file_path)
 
-        async with aiofiles.open(__TEMP_PHOTO_PATH_FILE__, mode='wb') as file:
-            await file.write(downloaded_file.read())
-            await file.flush()
-            await file.close()
-
-        downloaded_file.close()
-
         if message.caption != None:
             await message.answer('👇 Выберете предмет по которому хотите заменить Д/З', reply_markup=__UPDATE_HOMEWORK_AND_PHOTO__)
-
             await state.set_state(FormUpdate.select_lesson)
-            await state.set_data({'homework': message.caption})
+
+
+            await state.set_data({
+                'homework': message.caption,
+                'photo': downloaded_file.read()
+                })
+            
+            downloaded_file.close()
         else:
-            await rename(message.chat.id, __TEMP_PHOTO_PATH_FILE__, __SCHEDULE_PATH_FILE__)
+            await rq.UpdateSchedule(message.chat.id, downloaded_file.read())
 
             await message.answer('⚠ Активирована система уведомлений . . .', reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
             await newsletter(message.chat.id, '⚠ Обновлено расписание.', True, message.bot)
@@ -166,7 +164,7 @@ async def schedule_delete_warn(callback: CallbackQuery) -> None:
     log.info(str(callback.message.chat.id), msg=f'Received \'[{callback.data}]\'')
 
     if not await CheckForAdmin(callback.message.chat.id):
-        user = await rq.GetUser(callback.message.chat.id)
+        user = await rq.GetUser(callback.message.chat.id, callback.message.chat.id)
 
         await NotificationAdmins(
             f'⚠️ Пользователь: {user.username} [{user.user_id}] уведомил вас в неактуальности расписания',
@@ -192,9 +190,8 @@ async def schedule_delete(callback: CallbackQuery) -> None:
     log.info(str(callback.message.chat.id), msg=f'Received \'[{callback.data}]\'')
 
     if await CheckForAdmin(callback.message.chat.id):
-        try:
-            remove(__SCHEDULE_PATH_FILE__)
+        if (await rq.GetSchedule(callback.message.chat.id)).photo != None:
+            await rq.UpdateSchedule(callback.message.chat.id, None)
             await callback.message.edit_text('✅ Успешно !', reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
-        except FileNotFoundError:
-            await callback.answer(text='Ошибка: файл не найден.', show_alert=True)
+        else: await callback.answer(text='Ошибка: файл не найден.', show_alert=True)
     else: RQReporter(callback)

@@ -1,11 +1,11 @@
 from aiogram.types import Message
 from aiogram.filters import Command
 
-from bot.config import __VERSION__
-import bot.database.requests as rq
-from bot.utils import CheckAuthUser
-from bot.keyboards.users import GenStart
-from bot.handlers.core import log, GetRouter
+from config import config
+import database.requests as rq
+from utils import CheckAuthUser
+from keyboards.users import GenStart
+from handlers.core import log, GetRouter
 
 
 router = GetRouter()
@@ -24,4 +24,4 @@ async def start(message: Message) -> None:
                 message.from_user.language_code
             )
 
-    await message.answer(f'Добро пожаловать !\n\nVersion: {__VERSION__}', reply_markup=await GenStart(message.chat.id))
+    await message.answer(f'Добро пожаловать !\n\nVersion: {config.GetRELEASE}', reply_markup=await GenStart(message.chat.id))

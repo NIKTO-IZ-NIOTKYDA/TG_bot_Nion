@@ -1,20 +1,20 @@
 from os import remove
 
 from aiogram import F
-from aiogram.types import FSInputFile
+from aiogram.types import BufferedInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup
 
-import bot.database.requests as rq
-from bot.database.models import Lesson
-from bot.config import __NO_FOUND_HOMEWORK_MSG__
-from bot.keyboards.admins import GenDeleteLesson
-from bot.keyboards.users import __HOMEWORK__, GenLesson
-from bot.handlers.core import GetLessons, log, GetRouter
-from bot.handlers.states.lessons import FormNotificationAdmins
-from bot.utils import CheckForAdmin, NotificationAdmins, RQReporter
-from bot.keyboards.other import __BACK_IN_MAIN_MENU__, GenButtonBack
+from config import config
+import database.requests as rq
+from database.models import Lesson
+from keyboards.admins import GenDeleteLesson
+from keyboards.users import __HOMEWORK__, GenLesson
+from handlers.core import GetLessons, log, GetRouter
+from handlers.states.lessons import FormNotificationAdmins
+from utils import CheckForAdmin, NotificationAdmins, RQReporter
+from keyboards.other import __BACK_IN_MAIN_MENU__, GenButtonBack
 
 
 router = GetRouter()
@@ -36,12 +36,11 @@ async def lesson_show(callback: CallbackQuery, state: FSMContext):
     calldata = callback.data.replace('lesson:show:', '')
     lesson: Lesson = await rq.GetLesson(callback.message.chat.id, calldata)
 
-    if lesson.homework == None: lesson.homework = __NO_FOUND_HOMEWORK_MSG__
+    if lesson.homework == None: lesson.homework = config.NO_FOUND_HOMEWORK_MSG
 
     # Photo
     if lesson.photo:
-        #TODO: Check
-        photo = FSInputFile(f'bot/database/photo/{calldata}.png', filename=f'{calldata}.png')
+        photo = BufferedInputFile(file=lesson.photo, filename=f'image.png')
         await callback.bot.send_photo(
                 chat_id=callback.message.chat.id,
                 photo=photo,
@@ -81,7 +80,7 @@ async def lesson_nftadmins_comment(callback: CallbackQuery, state: FSMContext):
 async def lesson_nftadmins(message: Message, state: FSMContext):
     log.info(str(message.chat.id), msg=f'Received \'{message.text}\'')
 
-    user = await rq.GetUser(message.chat.id)
+    user = await rq.GetUser(message.chat.id, message.chat.id)
 
     await NotificationAdmins(
         f'⚠️ Пользователь: @{user.username} [{user.user_id}] уведомил вас в неактуальности данный по уроку \'{await GetLessons().GetName((await state.get_data())['lesson_id'])}\'\n\nКомментарий: {message.text}',

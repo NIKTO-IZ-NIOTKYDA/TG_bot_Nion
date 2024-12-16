@@ -1,7 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from bot.lessons import Lessons
+from backend.app.lessons import Lessons
 
 __BACK_IN_MAIN_MENU__: InlineKeyboardButton = InlineKeyboardButton(text='⏪ Вернуться в главное меню', callback_data='menu')
 

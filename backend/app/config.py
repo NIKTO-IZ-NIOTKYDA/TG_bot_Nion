@@ -26,7 +26,6 @@ def GetLogLevel(log_level: int) -> LogLevel:
 class CONFIG(BaseSettings):
     # Telegram bot
     BOT_TOKEN: str
-    ROOT_ID: int
     TG_USERNAME_DEVELOPER: str
 
     # Backend
@@ -44,9 +43,7 @@ class CONFIG(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_DB: str
     POSTGRES_URL: str
-    NETSCHOOL_API: str
     NO_FOUND_HOMEWORK_MSG: str
-    SCHOOL_NAME: str
     SECRET_KEY: str
     ALGORITHM: str
     SALT512: bytes

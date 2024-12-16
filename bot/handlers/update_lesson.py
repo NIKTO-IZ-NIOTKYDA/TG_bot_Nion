@@ -1,16 +1,13 @@
-from os import remove
-
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup
 
-import bot.database.requests as rq
-from bot.handlers.core import log, GetRouter
-from bot.config import __TEMP_PHOTO_PATH_FILE__
-from bot.keyboards.other import __BACK_IN_MAIN_MENU__
-from bot.handlers.states.update_lesson import FormUpdate
-from bot.utils import CheckForAdmin, RQReporter, SendUpdateLesson, rename
-from bot.keyboards.admins import __UPDATE_MENU__, __UPDATE_HOMEWORK__, __UPDATE_URL__
+import database.requests as rq
+from handlers.core import log, GetRouter
+from keyboards.other import __BACK_IN_MAIN_MENU__
+from handlers.states.update_lesson import FormUpdate
+from utils import CheckForAdmin, RQReporter, SendUpdateLesson
+from keyboards.admins import __UPDATE_MENU__, __UPDATE_HOMEWORK__, __UPDATE_URL__
 
 
 router = GetRouter()
@@ -52,27 +49,22 @@ async def update(callback: CallbackQuery, state: FSMContext) -> None:
 
         if callback.data.startswith('update:homework:'):   
             await rq.SetLesson(
-                callback.message.chat.id,
-                lesson_id,
-                homework=(await state.get_data())['text']
+                    callback.message.chat.id,
+                    lesson_id,
+                    homework=(await state.get_data())['text']
                 )
-
-            try: remove('photo/' + lesson_id + '.png')
-            except FileNotFoundError: pass
 
             await callback.message.edit_text('✅ Успешно !')
 
             await callback.message.edit_text('⚠ Активирована система уведомлений . . .', reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
             await SendUpdateLesson(callback.message.chat.id, lesson_id, bot=callback.bot)
         elif callback.data.startswith('update:homework_and_photo:'):
-            await rename(callback.message.chat.id, file_name_in=__TEMP_PHOTO_PATH_FILE__, file_name_out=f'bot/database/photo/{lesson_id}.png')
-
             await rq.SetLesson(
                 callback.message.chat.id,
                 lesson_id,
                 homework=(await state.get_data())['homework'],
-                photo=True
-            )
+                photo=(await state.get_data())['photo']
+                )
 
             await callback.message.edit_text('✅ Успешно !')
 

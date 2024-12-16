@@ -1,11 +1,11 @@
 from aiogram import F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup
 
-import bot.database.requests as rq
-from bot.handlers.core import log, GetRouter
-from bot.utils import CheckForAdmin, CheckAuthUser
-from bot.keyboards.other import GenButtonBack, __BACK_IN_MAIN_MENU__
-from bot.keyboards.users import GenProfile, __OFF__NOTIFICATIONS__
+import database.requests as rq
+from handlers.core import log, GetRouter
+from utils import CheckForAdmin, CheckAuthUser
+from keyboards.other import GenButtonBack, __BACK_IN_MAIN_MENU__
+from keyboards.users import GenProfile, __OFF__NOTIFICATIONS__
 
 
 router = GetRouter()
@@ -17,7 +17,7 @@ async def profile(callback: CallbackQuery):
 
     await CheckAuthUser(callback.message, callback.message.bot)
 
-    user = await rq.GetUser(callback.message.chat.id)
+    user = await rq.GetUser(callback.message.chat.id, callback.message.chat.id)
     net_school = await rq.GetNetSchool(callback.message.chat.id, False)
 
     if user.send_notifications: notifications_status = '✅'

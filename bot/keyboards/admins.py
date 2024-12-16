@@ -1,9 +1,9 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-import bot.logging.colors as colors
-import bot.logging.logging as logging
-from bot.handlers.core import GetLessons
-from bot.keyboards.other import GenLesson, __BACK_IN_MAIN_MENU__
+import log.colors as colors
+import log.logging as logging
+from handlers.core import GetLessons
+from keyboards.other import GenLesson, __BACK_IN_MAIN_MENU__
 
 log = logging.logging(Name='INIT', Color=colors.purple)
 

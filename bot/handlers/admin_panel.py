@@ -1,4 +1,3 @@
-from aiosqlite import sqlite_version
 from platform import system, release, python_version
 
 import psutil
@@ -6,11 +5,11 @@ from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup
 
-from bot.handlers.core import log, GetRouter
-from bot.utils import CheckForAdmin, RQReporter, newsletter
-from bot.handlers.states.newsletter import FormNewsletter
-from bot.keyboards.other import GenButtonBack, __BACK_IN_MAIN_MENU__
-from bot.keyboards.admins import __ADMIN_PANEL__, __NEWSLETTER_WARN__
+from handlers.core import log, GetRouter
+from utils import CheckForAdmin, RQReporter, newsletter
+from handlers.states.newsletter import FormNewsletter
+from keyboards.other import GenButtonBack, __BACK_IN_MAIN_MENU__
+from keyboards.admins import __ADMIN_PANEL__, __NEWSLETTER_WARN__
 
 
 router = GetRouter()
@@ -77,13 +76,10 @@ async def admin_panel_status_server(callback: CallbackQuery):
         SystemName = str(system())
 
         log.debug(callback.message.chat.id, 'Generating information about: SystemRelease')
-        SystemRelease = str(release())
+        SystemRelease = str(RELEASE)
 
         log.debug(callback.message.chat.id, 'Generating information about: PythonVersion')
         PythonVersion = str(python_version())
-
-        log.debug(callback.message.chat.id, 'Generating information about: SQLite3Version')
-        SQLite3Version = str(sqlite_version)
 
         # Загруженость
         # CPU
@@ -109,7 +105,7 @@ async def admin_panel_status_server(callback: CallbackQuery):
 
         log.info(callback.message.chat.id, 'Generating a report based on the data received . . .')
         
-        report = f'OS: {SystemName} {SystemRelease}\nPython: {PythonVersion}\nSQLite3: {SQLite3Version}\n\nЗагруженость:\n\nCPU: {CPU}%\nMemory: {Memory.percent}%\nMemory Swap: {Memory_Swap.percent}%\nDisks: {Disks.percent}%\nNetwork: {Network}'
+        report = f'OS: {SystemName} {SystemRelease}\nPython: {PythonVersion}\n\nЗагруженость:\n\nCPU: {CPU}%\nMemory: {Memory.percent}%\nMemory Swap: {Memory_Swap.percent}%\nDisks: {Disks.percent}%\nNetwork: {Network}'
         
         log.info(callback.message.chat.id, 'Successfully !')
 

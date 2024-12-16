@@ -1,37 +1,38 @@
-import json
-from os import EX_CANTCREAT
 from time import sleep
-from shutil import move
 
 import aiogram
 import aiogram.utils
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import InlineKeyboardMarkup, Message, CallbackQuery
 
-import bot.config as config
-import bot.database.requests as rq
-import bot.logging.colors as colors
-from bot.database.models import User
-import bot.logging.logging as logging
-from bot.handlers.core import GetLessons
-from bot.keyboards.other import __BACK_IN_MAIN_MENU__
-from webapp.backend.netschoolapi.netschoolapi import NetSchoolAPI, schemas
-from webapp.backend.handlers.bodys.InitFilters import Body as BodyRQFromInitFilters
+from config import config
+import log.colors as colors
+import log.logging as logging
+import database.requests as rq
+from handlers.core import GetLessons
+from database.models import Admin, User
+from keyboards.other import __BACK_IN_MAIN_MENU__
 
 
 log = logging.logging(Name='UTILS', Color=colors.blue)
 auth_users: list[int] = []
+LIST_ADMIN_ID: list[int] = []
 
 
-async def rename(user_id: int, file_name_in: str, file_name_out: str) -> None:
-    log.info(str(user_id), f'Rename {file_name_in} -> {file_name_out}')
-    
-    try:
-        move(file_name_in, file_name_out)
-        log.info(str(user_id), 'Successfully !')
+async def GetAdminsID(user_id: int) -> list[int] | Exception:
+    if LIST_ADMIN_ID != []: return LIST_ADMIN_ID
+    else:
+        try:
+            admins: list[Admin] = await rq.GetAdmins(user_id)
 
-    except Exception as Error:
-        log.error(str(user_id), str(Error))
+            for admin in admins:
+                LIST_ADMIN_ID.append(admin.user_id)
+            
+            return LIST_ADMIN_ID
+
+        except Exception as Error:
+            log.error(user_id, str(Error))
+            return Error
 
 
 async def GetTimeToLesson(lessons: list[dict[str, str]], current_time: str) -> tuple[int, float] | tuple[int, None]:
@@ -74,7 +75,8 @@ async def newsletter(user_id: int, text: str, auto: bool, bot: aiogram.Bot) -> N
 
             except TelegramBadRequest:
                 log.warn(str(user.user_id), f'User {user.user_id} has blocked the bot!')
-                await rq.DeleteUser(user.user_id, await rq.GetUser(user.user_id))
+                # TODO: MARK: DELETE
+                #await rq.DeleteUser(user.user_id, await rq.GetUser(user.user_id, user.user_id))
 
             timer += 1
 
@@ -90,7 +92,7 @@ async def SendUpdateLesson(user_id: int, lesson_id: str, bot: aiogram.Bot) -> No
 
 
 async def CheckForAdmin(user_id: int) -> bool:
-    for admin_id in config.__LIST_ADMIN_ID__:
+    for admin_id in await GetAdminsID(user_id):
         if user_id == admin_id:
             log.debug(str(user_id), 'Admin check: success')
             return True
@@ -104,7 +106,7 @@ async def CheckAuthUser(message: Message, bot: aiogram.Bot) -> bool:
         if user_id == message.chat.id:
             return True
 
-    if await rq.GetUser(message.chat.id) == AttributeError:
+    if await rq.GetUser(message.chat.id, message.chat.id) == AttributeError:
         log.info(str(message.chat.id), 'User unauthenticated !')
 
         await rq.SetUser(
@@ -113,7 +115,7 @@ async def CheckAuthUser(message: Message, bot: aiogram.Bot) -> bool:
             first_name=message.chat.first_name,
             last_name=message.chat.last_name,
         )
-        await bot.send_message(message.chat.id, f'❌ Ошибка аутентификации !\n\n ✅ Данные добавлены !\n\nVersion: {config.__VERSION__}',
+        await bot.send_message(message.chat.id, f'❌ Ошибка аутентификации !\n\n ✅ Данные добавлены !\n\nVersion: {config.GetRELEASE}',
                                reply_markup=InlineKeyboardMarkup(inline_keyboard=[[__BACK_IN_MAIN_MENU__]]))
         return False
     else:
@@ -123,8 +125,9 @@ async def CheckAuthUser(message: Message, bot: aiogram.Bot) -> bool:
 
 async def NotificationAdmins(text: str, bot: aiogram.Bot, reply_markup: aiogram.types.InlineKeyboardMarkup | None = None) -> None:
     log.info(None, 'Sending notifications to admins')
-    
-    for admin_id in config.__LIST_ADMIN_ID__:
+    admins_id = await GetAdminsID(config.ROOT_ID)
+
+    for admin_id in admins_id:
         try:
             await bot.send_message(chat_id=admin_id, text=text, reply_markup=reply_markup)
             log.info(None, f'Send {admin_id}')
